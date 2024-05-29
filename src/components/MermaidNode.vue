@@ -1,0 +1,108 @@
+<template>
+    <node-view-wrapper class="main-mer">
+        <button class="button print" @click="edit" v-show="!isEdit">编辑</button>
+        <button class="button print" @click="save" v-show="isEdit">保存</button>
+        <div v-show="!isEdit" :id="id" v-html="svg"></div>
+        <textarea v-model="data2" v-show="isEdit" class="edit" name="" id="" cols="30" rows="10"></textarea>
+        <!-- <button @click="test">1</button> -->
+    </node-view-wrapper>
+</template>
+
+<script>
+import { nodeViewProps, NodeViewWrapper, NodeViewContent } from '@tiptap/vue-3'
+import { v1 as uuid } from 'uuid'
+import mermaid from 'mermaid'
+export default {
+    name: 'mermaid',
+    components: { NodeViewWrapper, NodeViewContent },
+    props: nodeViewProps,
+    data() {
+        return {
+            id: 'm-' + uuid().substring(0, 5),
+            isEdit: false,
+            data2: '',
+            svg: null,
+        }
+    },
+
+    methods: {
+        // qwq() {
+        //     this.updateAttributes({
+        //         data: this.node.attrs.data + 1
+        //     })
+        // },
+        edit() {
+            this.isEdit = true;
+        },
+        async save() {
+            this.updateAttributes({
+                data: this.data2
+            })
+            this.isEdit = false;
+            try {
+                this.svg = (await mermaid.render(this.id + '2', this.data2)).svg;
+            } catch (error) {
+                document.getElementById(this.id).innerHTML = `<div style="height: 80px; color: #aaa; display: flex; justify-content: center; align-items: center;">渲染失败</div>`;
+            }
+            // const { svg } = await mermaid.render('graphDiv', this.data2);
+            // document.getElementById(`m-${this.id}`).innerHTML = svg;
+        },
+        test() {
+            console.log(this.svg);
+        }
+    },
+
+    async mounted() {
+        // const graphDefinition = 'graph TB\n使用mermaid-->创建您的图表';
+        const graphDefinition = this.node.attrs.data;
+        this.data2 = graphDefinition;
+        mermaid.render(this.id + '2', graphDefinition).then(({ svg }) => {
+            this.svg = svg;
+        });
+        // this.$forceUpdate();
+
+        // this.$nextTick(() => {
+        //     console.log(document.getElementById(this.id));
+        //     document.getElementById(this.id).innerHTML = svg;
+        // })
+        // document.getElementById(this.id).innerHTML = svg;
+        // console.log(this.id);
+    },
+}
+</script>
+
+<style scoped>
+.main-mer {
+    width: 100%;
+    position: relative;
+    border: #ccc 1px solid;
+    max-height: 500px;
+}
+
+.edit {
+    width: calc(100% - 80px);
+    height: 100%;
+    resize: none;
+    margin: 0 auto;
+    padding: 5px;
+    /* border: 1px solid #ccc; */
+    border: none
+}
+
+.edit:focus {
+    outline: none;
+    border: none;
+}
+
+.button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    padding: 5px 10px;
+    background-color: #409eff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+</style>
