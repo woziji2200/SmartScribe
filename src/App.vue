@@ -2,16 +2,41 @@
     <div class="appview">
         <div class="title print">
             <div class="title-left">
-                <div v-if="route.path != '/'">智慧笔匠 - {{$store.state.DocTitle}}{{ $store.state.isSave ? '' : '*' }}</div>
+                <div v-if="route.path != '/'">智慧笔匠 - {{ store.DocTitle }}{{ store.isSave ? '' : '*' }}
+                </div>
                 <div v-if="route.path == '/'">智慧笔匠 - 首页</div>
                 <!-- <test v-model:msg="a"></test> -->
             </div>
             <div class="title-middle">
             </div>
             <div class="title-right">
-                <button class="title-right-login"  @click="isLogin = true"><font-awesome-icon :icon="'user'" /><span>{{ '登录' }}</span></button>
+                <!-- <button class="title-right-login" @click="isLogin = true">
+                    <font-awesome-icon :icon="'user'" />
+                    <span>{{ store.UserInfo.name === '' ? '匿名用户' : (store.UserInfo.name || '登录') }}</span>
+                </button> -->
+                <el-dropdown size="large" :hide-timeout="300">
+                    <button class="title-right-login" @click="login">
+                        <font-awesome-icon :icon="'user'" v-if="!store.UserInfo.avatar" />
+                        <img v-else :src="baseUrl + store.UserInfo.avatar" alt=""
+                            style="width: 20px;height: 20px;border-radius: 6px;">
+                        <span>{{ store.UserInfo.name === '' ? '匿名用户' : (store.UserInfo.name || '登录') }}</span>
+                    </button>
+                    <template #dropdown v-if="store.UserInfo.name !== undefined">
+                        <el-dropdown-menu>
+                            <!-- <div>
+                                <font-awesome-icon :icon="'user'" v-if="!store.UserInfo.avatar" />
+                                <img v-else :src="baseUrl + store.UserInfo.avatar" alt=""
+                                    style="width: 50px;height: 50px;border-radius: 6px;">
+                                <span>{{ store.UserInfo.name === '' ? '匿名用户' : (store.UserInfo.name || '登录') }}</span>
+                            </div> -->
+                            <el-dropdown-item @click='logout'>退出登录</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
                 <button v-if="isElectron2" @click="MinWindow"><font-awesome-icon :icon="'minus'" /></button>
-                <button v-if="isElectron2" @click="MaxWindow"><font-awesome-icon :icon="['far', 'square']" v-show="!isMax" /><font-awesome-icon v-show="isMax":icon="['far', 'window-restore']" /></button>
+                <button v-if="isElectron2" @click="MaxWindow"><font-awesome-icon :icon="['far', 'square']"
+                        v-show="!isMax" /><font-awesome-icon v-show="isMax"
+                        :icon="['far', 'window-restore']" /></button>
                 <button v-if="isElectron2" @click="CloseWindow"><font-awesome-icon icon="times" /></button>
             </div>
         </div>
@@ -19,18 +44,27 @@
         <transition>
             <LoginVue v-show="isLogin" @close="isLogin = false" style="position: fixed;z-index: 200;"></LoginVue>
         </transition>
-        <router-view></router-view>
+        <!-- <router-view></router-view> -->
+        <router-view v-slot="{ Component }">
+            <transition name="fade">
+                <component :is="Component" />
+            </transition>
+        </router-view>
     </div>
 </template>
 <script setup>
 import { ref, reactive, onMounted, watch, computed } from 'vue'
 import { CloseWindow, MinWindow, MaxWindow, isElectron } from './method.js'
+import { useStore } from '@/store/index.js'
 import { useRoute } from 'vue-router'
 import LoginVue from '@/components/Login.vue'
+import { getUserInfo, request, baseUrl } from './axios'
+
+const store = useStore()
 // import test from './test.vue'
 const route = useRoute()
 const isElectron2 = ref(isElectron)
-
+// console.log(store.DocTitle);
 // function test() {
 //     CloseWindow()
 // }
@@ -54,8 +88,19 @@ if (isElectron) {
 
 const isLogin = ref(false)
 
-onMounted(() => {
+function logout() {
+    localStorage.removeItem('login')
+    store.UserInfo = {}
+}
+function login() {
+    if (store.UserInfo.name === undefined) {
+        isLogin.value = true
+    }
+}
 
+onMounted(async () => {
+    await getUserInfo()
+    console.log(store);
 })
 </script>
 <style>
@@ -63,18 +108,20 @@ onMounted(() => {
     .print {
         display: none;
     }
-    .appview{
+
+    .appview {
         overflow: visible !important;
         height: auto !important;
     }
 }
 </style>
 <style scoped>
-.appview{
+.appview {
     overflow: hidden;
     /* overflow: overlay; */
     height: 100vh;
 }
+
 .title {
     user-select: none;
     display: flex;
@@ -121,14 +168,17 @@ onMounted(() => {
     border-radius: 5px;
     transition: all 0.3s
 }
-.title-right .title-right-login{
+
+.title-right .title-right-login {
     width: auto;
     padding: 0 13px;
 }
-.title-right .title-right-login span{
+
+.title-right .title-right-login span {
     margin-left: 5px;
 
 }
+
 .title-right button:active {
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -137,11 +187,14 @@ onMounted(() => {
     /* color: rgb(0, 0, 0); */
     background-color: rgba(255, 255, 255, 0.1);
 }
-.v-enter-active,.v-leave-active {
-  transition: opacity 0.2s ease;
-}
-.v-enter-from,.v-leave-to {
-  opacity: 0;
+
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.2s ease;
 }
 
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
 </style>

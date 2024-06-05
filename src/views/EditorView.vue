@@ -1,6 +1,14 @@
 <template>
     <div style="display: flex;flex-direction: column;  position: relative;" class="editview">
         <div class="tools print">
+            <transition>
+                <div v-show="store.isAI" class='ai-tip'>
+                    正在使用AI助手
+                    <el-button @click="store.ctrl.abort(); store.isAI = false">停止输出</el-button>
+                </div>
+            </transition>
+
+
             <div class="tools-1">
                 <el-dropdown size="large" :hide-timeout="300">
                     <div @click="GotoHome()" class="tools-1-group"><font-awesome-icon icon="home" />首页</div>
@@ -11,6 +19,7 @@
                         <el-dropdown-menu>
                             <el-dropdown-item @click="NewFile" class="tools-1-sec">新建</el-dropdown-item>
                             <el-dropdown-item @click="SaveLocal">保存到本地</el-dropdown-item>
+                            <el-dropdown-item @click="SaveServer">保存到云端</el-dropdown-item>
                             <el-dropdown-item @click="OpenLocal">
                                 打开本地文件
                                 <input type="file" id="OpenLocal2" @change="OpenLocal2" style="display: none;">
@@ -253,6 +262,8 @@
                         <el-select v-model="AISelect" placeholder="AI功能" style="margin-bottom: 10px;">
                             <el-option label="翻译选中文本" :value="1" />
                             <el-option label="全文总结" :value="2" />
+                            <el-option label="全文摘要" :value="3" />
+                            <el-option label="文章续写" :value="4" />
                         </el-select>
                         <div v-if='AISelect == 1'>
                             <span class="ai-title-2">源语言</span>
@@ -261,17 +272,29 @@
                             </el-select>
                             <span class="ai-title-2">目标语言</span>
                             <el-select v-model="AItransitionTo" placeholder="源语言" style="margin-bottom: 10px;">
-                                <el-option v-for="i in ['中文（简体）','中文（文言文）','英语','日语','俄语','德语']" :label="i" :value='i' />
+                                <el-option v-for="i in ['中文（简体）', '中文（文言文）', '英语', '日语', '俄语', '德语']" :label="i"
+                                    :value='i' />
                             </el-select>
+                        </div>
+                        <div v-if='AISelect == 4'>
+                            <span class="ai-title-2">续写目标</span>
+                            <el-input v-model="AIcontiunegoal" placeholder="正常续写"
+                                style="margin-bottom: 10px;"></el-input>
                         </div>
                         <div v-loading="isAILoading" element-loading-text="生成中..."
                             element-loading-background="rgba(255, 255, 255, 0.1)">
                             <el-input :readonly='true' placeholder='AI输出...' class="ai-textarea" rows="8"
-                                type='textarea' v-model="AIData"></el-input>
+                                type='textarea' id="scroll_text" v-model="AIData"></el-input>
                         </div>
                         <div class="bubble-menu2-button">
-                            <el-button @click="AIAgain" size="small">重新生成</el-button>
-                            <el-button @click="AIInsert" size="small">确定使用</el-button>
+                            <el-button @click="AIAgain" v-if="AIData == '' && !isAILoading"
+                                size="small">开始生成</el-button>
+
+                            <el-button @click="AIAgain" v-if="AIData != '' || isAILoading" size="small">{{ isAILoading ?
+                                '停止生成'
+                                : '重新生成' }}</el-button>
+                            <el-button @click="AIInsert" v-if="AIData != '' || isAILoading"
+                                size="small">确定使用</el-button>
                         </div>
                     </div>
                 </div>
@@ -375,7 +398,7 @@ import VueMermaid from '@/components/MermaidNode.vue'
 import Paper from '../components/Draw.js'
 import { ElNotification } from 'element-plus'
 import { ElMessageBox } from 'element-plus'
-import { useStore } from 'vuex'
+import { useStore } from '@/store/index.js'
 import BubbleMenu2 from '@tiptap/extension-bubble-menu'
 import UniqueID from '@tiptap-pro/extension-unique-id'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
@@ -385,8 +408,11 @@ import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
 import EchartsPie from "@/components/EchartsPie.js";
-import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { request } from '../axios.js'
 import Gapcursor from '@tiptap/extension-gapcursor'
+import Commands from '@/components/CommandsList.js'
+import suggestion from '@/components/CommandsListSug.js'
+import Placeholder from '@tiptap/extension-placeholder'
 // import VueEchartsPie from "@/components/EchartsPie.vue";
 const lowlight = createLowlight(common)
 // lowlight./
@@ -405,7 +431,7 @@ if (route.query.template == 'graph') {
     Template = `<h1 style="text-align: center" id="h-dc42ebe3">标题111</h1><p><strong>加粗文<span style="font-size: 18pt">字</span><em><span style="font-size: 18pt">斜体文</span>字</em></strong><u><strong><em>下划线<s>删除线</s></em></strong></u></p><p></p><p style="text-align: right"><u><strong><em><s><span style="color: #FF0000">炫</span><span style="color: #0C11C7">彩文</span><span style="color: #00FF40">字哦</span></s></em></strong></u></p><p></p><h2 id="h-3d6be47f"><strong><em><span style="color: #FF0000">二级标题</span></em></strong></h2><ul><li><p>无序列表</p></li><li><p>2222</p></li><li><p>3333</p></li><li><p>4444</p></li></ul><ul data-type="taskList"><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>待办事项1</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>完成了哦</p></div></li><li data-checked="true" data-type="taskItem"><label><input type="checkbox" checked="checked"><span></span></label><div><p>撒大苏打</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>撒大苏打</p></div></li></ul><p>a<sup>2</sup>+b<sup>2</sup>=c<sup>2</sup></p>`
 } else if (route.query.template == 'open') {
     Template = ''
-    store.state.isSave = true
+    store.isSave = true
     // 打开文件
     nextTick(() => {
         OpenLocal()
@@ -413,7 +439,7 @@ if (route.query.template == 'graph') {
 }
 
 function GotoHome() {
-    if (store.state.isSave) {
+    if (store.isSave) {
         router.push('/')
     } else {
         ElMessageBox.confirm('当前文件还没有保存，确定要返回首页吗', '警告', {
@@ -443,7 +469,8 @@ const state = reactive({
             Link.configure({ autolink: true, linkOnPaste: true, openOnClick: false }),
             Heading.configure({ levels: [1, 2, 3, 4] }),
             TaskList, TaskItem, EchartsPie,
-            mermaid, Paper,Gapcursor,
+            mermaid, Paper, Gapcursor, Commands.configure({ suggestion }),
+            Placeholder.configure({placeholder: 'Write something …',}),
             // BubbleMenu2,
             // BubbleMenu2.config({pluginKey: 'aiMenu', element: document.querySelector('#aiMenu')}), 
             UniqueID.configure({ types: ['heading', 'paragraph'], }),
@@ -490,7 +517,7 @@ function GetDocTitle(str) {
 }
 
 function SaveLocal() {
-    store.state.isSave = true
+    store.isSave = true
     let html = state.editor.getHTML()
     let blob = new Blob([JSON.stringify({
         content: html
@@ -499,25 +526,28 @@ function SaveLocal() {
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.download = (GetDocTitle(html) || '文档') + '.smd';
-    store.state.DocTitle = GetDocTitle(html) || '文档'
+    store.DocTitle = GetDocTitle(html) || '文档'
     link.click();
+}
+function SaveServer() {
+
 }
 
 window.addEventListener('beforeunload', function (e) {
-    if (!store.state.isSave) {
+    if (!store.isSave) {
         e.returnValue = '当前文件还没有保存，确定要离开吗';
     }
 });
 
 function OpenLocal() {
-    if (!store.state.isSave) {
+    if (!store.isSave) {
         ElMessageBox.confirm('当前文件还没有保存，确定要打开新文件吗', '警告', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
         }).then(() => {
             setTimeout(() => {
-                store.state.isSave = true
+                store.isSave = true
                 document.getElementById('OpenLocal2').click();
             }, 0);
         }).catch(() => {
@@ -538,8 +568,8 @@ function OpenLocal2(e) {
                 console.log(file);
                 let html = JSON.parse(e.target.result).content
                 state.editor.commands.setContent(html)
-                store.state.DocTitle = file.name.split('.').slice(0, -1).join('.')
-                store.state.isSave = true
+                store.DocTitle = file.name.split('.').slice(0, -1).join('.')
+                store.isSave = true
                 state.editor.state.history$.prevRanges = null;
                 state.editor.state.history$.done.eventCount = 0
                 CanUndo.value = state.editor.can().undo()
@@ -568,15 +598,15 @@ function OpenLocal2(e) {
 }
 
 function NewFile() {
-    if (!store.state.isSave) {
+    if (!store.isSave) {
         ElMessageBox.confirm('当前文件还没有保存，确定要新建文件吗', '警告', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
         }).then(() => {
-            store.state.isSave = true
+            store.isSave = true
             state.editor.commands.setContent('')
-            store.state.DocTitle = '文档'
+            store.DocTitle = '文档'
             state.editor.state.history$.prevRanges = null;
             state.editor.state.history$.done.eventCount = 0
             CanUndo.value = state.editor.can().undo()
@@ -586,7 +616,7 @@ function NewFile() {
         });
     } else {
         state.editor.commands.setContent('')
-        store.state.DocTitle = '文档'
+        store.DocTitle = '文档'
     }
 }
 
@@ -889,9 +919,15 @@ function EditorContext(event) {
             children: [{
                 label: 'AI翻译',
                 onClick: () => { AItransition() }
-            },{
+            }, {
                 label: 'AI全文总结',
                 onClick: () => { AIsummary() }
+            }, {
+                label: 'AI全文摘要',
+                onClick: () => { AIabstract() }
+            }, {
+                label: 'AI文章续写',
+                onClick: () => { AIcontiune() }
             }]
         }]
     })
@@ -903,88 +939,180 @@ const AISelect = ref(null)
 const isAILoading = ref(false)
 const AItransitionFrom = ref('自动识别')
 const AItransitionTo = ref('中文')
+let ctrl = new AbortController()
 function AIInsert() {
     state.editor.chain().focus().insertContent(AIData.value).run()
 }
 function AItransition() {
+    ctrl = new AbortController()
     AISelect.value = 1
     isAIOpen.value = true
     AIData.value = ''
-    const ctrl = new AbortController()
     const view = state.editor.view
     const state2 = state.editor.state
     const { from, to } = view.state.selection
     const text = state2.doc.textBetween(from, to, '')
     console.log(text);
     isAILoading.value = true
-    fetchEventSource('http://81.70.143.162:8000/api/ai/translate/', {
+    request({
+        url: '/api/ai/translate/',
         method: 'POST',
+        isEventSource: true,
         signal: ctrl.signal, // AbortSignal
-        body: JSON.stringify({
+        body: {
             content: text,
             type: AItransitionTo.value
-        }),
+        },
         headers: {
             'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
             'content-type': 'application/json',
         },
-        onmessage(ev) {
+        onmessage: (ev) => {
             if (ev.data != '[DONE]') {
                 AIData.value += ev.data
                 console.log(ev.data, 111);
             }
         },
-        onerror(ev) {
+        onerror: (ev) => {
             ctrl.abort()
             isAILoading.value = false
             throw ev
         },
-        onclose() {
+        onclose: () => {
             isAILoading.value = false
         }
-    });
+    })
 }
 
 function AIsummary() {
+    ctrl = new AbortController()
     AISelect.value = 2
     isAIOpen.value = true
     AIData.value = ''
-    const ctrl = new AbortController()
     const text = state.editor.getText()
-    console.log(text);
     isAILoading.value = true
-    fetchEventSource('http://81.70.143.162:8000/api/ai/summary/', {
+    request({
+        url: '/api/ai/summary/',
         method: 'POST',
+        isEventSource: true,
         signal: ctrl.signal, // AbortSignal
-        body: JSON.stringify({
-            content: text,
-        }),
+        body: { content: text },
         headers: {
             'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
             'content-type': 'application/json',
         },
-        onmessage(ev) {
+        onmessage: (ev) => {
             if (ev.data != '[DONE]') {
                 AIData.value += ev.data
                 console.log(ev.data, 111);
             }
         },
-        onerror(ev) {
+        onerror: (ev) => {
             ctrl.abort()
             isAILoading.value = false
             throw ev
         },
-        onclose() {
+        onclose: () => {
             isAILoading.value = false
         }
-    });
+    })
+}
+
+function AIabstract() {
+    ctrl = new AbortController()
+    AISelect.value = 3
+    isAIOpen.value = true
+    AIData.value = ''
+    const text = state.editor.getText()
+    console.log(text);
+    isAILoading.value = true
+    request({
+        url: '/api/ai/abstract/',
+        method: 'POST',
+        isEventSource: true,
+        signal: ctrl.signal, // AbortSignal
+        body: { content: text, goal: AIcontiunegoal.value || '' },
+        headers: {
+            'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
+            'content-type': 'application/json',
+        },
+        onmessage: (ev) => {
+            if (ev.data != '[DONE]') {
+                AIData.value += ev.data
+                console.log(ev.data, 111);
+            }
+        },
+        onerror: (ev) => {
+            ctrl.abort()
+            isAILoading.value = false
+            throw ev
+        },
+        onclose: () => {
+            isAILoading.value = false
+        }
+    })
+}
+
+
+const AIcontiunegoal = ref('')
+function AIcontiune() {
+    ctrl = new AbortController()
+    AISelect.value = 4
+    isAIOpen.value = true
+    AIData.value = ''
+    const text = state.editor.getText()
+    console.log(text);
+    isAILoading.value = true
+    request({
+        url: '/api/ai/continue/',
+        method: 'POST',
+        isEventSource: true,
+        signal: ctrl.signal, // AbortSignal
+        body: { content: text, goal: AIcontiunegoal.value || '正常续写' },
+        headers: {
+            'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
+            'content-type': 'application/json',
+        },
+        onmessage: (ev) => {
+            if (ev.data != '[DONE]') {
+                nextTick(() => {
+                    setTimeout(() => {
+                        AIData.value += ev.data
+                        const textarea = document.querySelector('#scroll_text');
+                        textarea.scrollTop = textarea.scrollHeight;
+                    }, 0)
+                })
+
+            }
+        },
+        onerror: (ev) => {
+            ctrl.abort()
+            isAILoading.value = false
+            throw ev
+        },
+        onclose: () => {
+            isAILoading.value = false
+        }
+    })
 }
 
 function AIAgain() {
+
+    if (isAILoading.value) {
+        ctrl.abort()
+        isAILoading.value = false
+        return
+    }
+
+
     if (AISelect.value == 1) {
         AItransition()
     } else if (AISelect.value == 2) {
         AIsummary()
+    } else if (AISelect.value == 3) {
+        AIabstract()
+    } else if (AISelect.value == 4) {
+        AIcontiune()
     }
 }
 
@@ -1035,7 +1163,7 @@ const CharacterCount2 = ref(0)
 const CharacterWordCount = ref(0)
 
 state.editor.on('update', () => {
-    store.state.isSave = false
+    store.isSave = false
     CanUndo.value = state.editor.can().undo()
     CanRedo.value = state.editor.can().redo()
     debounce(extractHeadings, 2000)()
@@ -1057,6 +1185,13 @@ state.editor.on('update', () => {
 
 </script>
 <style>
+/* .tiptap p.is-empty:last-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+} */
 [contenteditable] {
     outline: 0px solid transparent;
 }
@@ -1117,7 +1252,8 @@ ul[data-type="taskList"] li p {
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
 }
-.tiptap *::selection{
+
+.tiptap *::selection {
     background: #79b8ebad;
     color: #FFF;
 }
@@ -1268,6 +1404,11 @@ ul[data-type="taskList"] li p {
     .main {
         height: auto !important;
         overflow: visible !important;
+        overflow-x: hidden !important;
+        width: 90% !important;
+        min-width: 90% !important;
+        max-width: 90% !important;
+        position: relative !important;
     }
 
     .editor {
@@ -1276,11 +1417,11 @@ ul[data-type="taskList"] li p {
         box-shadow: none !important;
         height: auto !important;
         overflow: visible !important;
-        width: 100vw !important;
-        min-width: 100vw !important;
-        max-width: 100vw !important;
-        padding-left: 70px !important;
-        padding-right: 70px !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        /* padding-left: 70px !important;
+        padding-right: 70px !important; */
     }
 
     .editor-space {
@@ -1472,8 +1613,9 @@ ul[data-type="taskList"] li p {
     width: 200px;
     padding: 10px;
     resize: horizontal;
-    transform:rotateY(180deg);
+    transform: rotateY(180deg);
 }
+
 .main-right-ai::-webkit-scrollbar {
     width: 200px;
     height: 200px;
@@ -1487,6 +1629,7 @@ ul[data-type="taskList"] li p {
     cursor: pointer;
     color: #666;
 }
+
 .main-right-close {
     position: absolute;
     top: 25px;
@@ -1557,6 +1700,24 @@ ul[data-type="taskList"] li p {
 
 .tools-1-sec {
     padding: 5px 20px;
+}
+
+.ai-tip {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 50px;
+    background-color: #fafcff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+    font-size: 14px;
 }
 
 .tools-1-group {
@@ -1761,7 +1922,8 @@ ul[data-type="taskList"] li p {
 .tools-2-1-nologo:hover {
     /* background-color: #ffffff; */
 }
-.ai-title-2{
+
+.ai-title-2 {
     font-size: 11px;
     margin-bottom: 10px;
     position: relative;
@@ -1770,18 +1932,20 @@ ul[data-type="taskList"] li p {
     align-items: center;
     color: #0a99ff;
 }
-.ai-title-2::after{
+
+.ai-title-2::after {
     content: '';
     margin-left: 6px;
     width: 100%;
     height: 1px;
     background-color: #0a99ff;
 }
-.ai-title-2::before{
+
+.ai-title-2::before {
     content: '';
     width: 20px;
     height: 1px;
-    margin-right: 6px; 
+    margin-right: 6px;
     background-color: #0a99ff;
 }
 </style>
