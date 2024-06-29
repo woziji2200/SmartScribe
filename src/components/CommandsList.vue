@@ -92,7 +92,7 @@ export default {
 .items {
     padding: 0.2rem;
     position: relative;
-    border-radius: 0.5rem;
+    border-radius: 5px;
     background: #FFF;
     color: rgba(0, 0, 0, 0.8);
     overflow: hidden;
@@ -109,12 +109,14 @@ export default {
     width: 100%;
     text-align: left;
     background: transparent;
-    border-radius: 0.4rem;
+    border-radius: 5px;
     border: 1px solid transparent;
-    padding: 0.2rem 0.4rem;
-
+    padding: 0.3rem 0.6rem;
+    transition: all 0.3s;
     &.is-selected {
-        border-color: #000;
+        // border-color: #000;
+        background-image: linear-gradient(90deg, #3164ff, #2982ff 100%);
+        color: white;
     }
 }
 </style>

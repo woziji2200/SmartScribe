@@ -1,7 +1,7 @@
 import { mergeAttributes, Node, VueNodeViewRenderer } from '@tiptap/vue-3'
-import Component from './EchartsPie.vue'
+import Component from './EchartsBar.vue'
 export default Node.create({
-    name: 'EchartsPie',
+    name: 'EchartsBar',
     group: 'block',
     atom: true,
     addAttributes() {
@@ -14,13 +14,13 @@ export default Node.create({
     parseHTML() {
         return [
             {
-                tag: 'vue-echarts-pie',
+                tag: 'vue-echarts-bar',
             },
         ]
     },
 
     renderHTML({ HTMLAttributes }) {
-        return ['vue-echarts-pie', mergeAttributes(HTMLAttributes)]
+        return ['vue-echarts-bar', mergeAttributes(HTMLAttributes)]
     },
     addNodeView() {
         return VueNodeViewRenderer(Component)

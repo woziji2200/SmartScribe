@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory,createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import EditorView from '../views/EditorView.vue'
+import { defineAsyncComponent } from 'vue';
+import loading from './loading.vue'
+// import EditorView from '../views/EditorView.vue'
 
 const routes = [
     {
@@ -11,7 +13,11 @@ const routes = [
     {
         path: '/editor',
         name: 'editor',
-        component: EditorView
+        component: defineAsyncComponent({
+            loader: () => import('../views/EditorView.vue'),
+            loadingComponent: loading,
+            delay: 100,
+        })
     }
 ]
 

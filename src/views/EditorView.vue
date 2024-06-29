@@ -3,7 +3,7 @@
         <div class="tools print">
             <transition>
                 <div v-show="store.isAI" class='ai-tip'>
-                    正在使用AI助手
+                    正在生成中🚀
                     <el-button @click="store.ctrl.abort(); store.isAI = false">停止输出</el-button>
                 </div>
             </transition>
@@ -14,7 +14,7 @@
                     <div @click="GotoHome()" class="tools-1-group"><font-awesome-icon icon="home" />首页</div>
                 </el-dropdown>
                 <el-dropdown size="large" :hide-timeout="300">
-                    <div class="tools-1-group"><font-awesome-icon :icon="['far', 'file-alt']" />文件</div>
+                    <div class="tools-1-group"><font-awesome-icon :icon="['fas', 'file-alt']" />文件</div>
                     <template #dropdown>
                         <el-dropdown-menu>
                             <el-dropdown-item @click="NewFile" class="tools-1-sec">新建</el-dropdown-item>
@@ -29,7 +29,7 @@
                     </template>
                 </el-dropdown>
                 <el-dropdown size="large" :hide-timeout="300">
-                    <div class="tools-1-group"><font-awesome-icon :icon="['far', 'file-alt']" />视图</div>
+                    <div class="tools-1-group"><font-awesome-icon :icon="['fas', 'window-restore']" />视图</div>
                     <template #dropdown>
                         <el-dropdown-menu>
                             <el-dropdown-item class="tools-1-sec"
@@ -134,9 +134,27 @@
                             icon='tasks'></font-awesome-icon></span>
                     <span @click="SetCode" :class="!isCode ? '' : 'tools-select'"><font-awesome-icon
                             icon='code'></font-awesome-icon></span>
-                    <span @click="InsertGraph"><font-awesome-icon icon='chart-pie'></font-awesome-icon></span>
+                    <!-- <span @click="InsertGraph"><font-awesome-icon icon='chart-pie'></font-awesome-icon></span> -->
                     <span @click="InsertDraw"><font-awesome-icon icon='pencil-ruler'></font-awesome-icon></span>
-                    <span @click="test"><font-awesome-icon icon='pencil-ruler'></font-awesome-icon></span>
+                    <!-- <span @click="test"><font-awesome-icon icon='pencil-ruler'></font-awesome-icon></span> -->
+                    <el-dropdown>
+                        <span><font-awesome-icon icon='chart-pie'></font-awesome-icon></span>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item @click="InsertGraph(1)">
+                                    <span style="font-size: 12px">插入图表（Mermaid）</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="InsertGraph(2)">
+                                    <span style="font-size: 12px">插入柱状图</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="InsertGraph(3)">
+                                    <span style="font-size: 12px">插入饼图</span>
+                                </el-dropdown-item>
+
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+
 
 
 
@@ -206,12 +224,36 @@
                                 p-id="15810"></path>
                         </svg>
                     </span>
-                    <!-- <span @click="AItransition()" class="tools-2-1" style="font-size: 8px;width: 40px;margin-left: 10px">
-                        AI工具：
-                    </span> -->
-                    <span @click="AItransition()">
-                        <font-awesome-icon icon='language'></font-awesome-icon>
-                    </span>
+
+                    <el-dropdown>
+                        <span style="padding: 0px 5px;">
+                            <svg t="1719580485285" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="25402">
+                                <path
+                                    d="M512 85.333333c235.648 0 426.666667 191.018667 426.666667 426.666667s-191.018667 426.666667-426.666667 426.666667S85.333333 747.648 85.333333 512 276.352 85.333333 512 85.333333z m0 85.333334a341.333333 341.333333 0 1 0 0 682.666666 341.333333 341.333333 0 0 0 0-682.666666z m-40.405333 156.586666l121.856 369.706667h-83.968l-27.050667-89.685333H361.898667l-27.648 89.685333H256L378.453333 327.253333h93.141334z m256.213333 0v369.706667h-78.549333V327.253333h78.506666z m-303.36 75.562667H420.693333l-43.306666 144.64h89.898666L424.448 402.773333z"
+                                    p-id="25403"></path>
+                            </svg>
+                        </span>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item @click="AItransition()">
+                                    <span style="font-size: 12px">翻译选中文本</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AIsummary()">
+                                    <span style="font-size: 12px">全文总结</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AIabstract()">
+                                    <span style="font-size: 12px">全文摘要</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AIcontiune()">
+                                    <span style="font-size: 12px">文章续写</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AIwrong2right2()">
+                                    <span style="font-size: 12px">修改病句</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
 
                     <div id="qwq"></div>
                 </div>
@@ -259,11 +301,12 @@
                         AI助手
                     </div>
                     <div class="bubble-menu2">
-                        <el-select v-model="AISelect" placeholder="AI功能" style="margin-bottom: 10px;">
+                        <el-select v-model="AISelect" placeholder="选择AI小助手" style="margin-bottom: 10px;">
                             <el-option label="翻译选中文本" :value="1" />
                             <el-option label="全文总结" :value="2" />
                             <el-option label="全文摘要" :value="3" />
                             <el-option label="文章续写" :value="4" />
+                            <el-option label="修改病句" :value="5" />
                         </el-select>
                         <div v-if='AISelect == 1'>
                             <span class="ai-title-2">源语言</span>
@@ -281,9 +324,37 @@
                             <el-input v-model="AIcontiunegoal" placeholder="正常续写"
                                 style="margin-bottom: 10px;"></el-input>
                         </div>
-                        <div v-loading="isAILoading" element-loading-text="生成中..."
+                        <div v-if='AISelect == 5'>
+                            <span class="ai-title-2">修改结果</span>
+                            <div v-loading="isAILoading">
+                                <div class="wrong2right"
+                                    v-for='i in AIwrong2right || [{ "Original sentence": "错误的原句😭", "Corrected sentence": "修改后正确的句子😊", "Error type": "错误的原因⚡", "Reasons for modification": "对修改病句的解释说明🚀" }]'
+                                    @mouseenter="state.editor.commands.setSearchTerm(i['Original sentence'])"
+                                    @mouseleave="state.editor.commands.setSearchTerm('')">
+                                    <span class="ai-title-2" style='margin-bottom: 3px;margin-top: 6px;'>原句</span>
+                                    <el-input :readonly='true' placeholder='AI输出❤...' class="ai-textarea" rows="3"
+                                        type='textarea' id="scroll_text" v-model="i['Original sentence']">
+                                    </el-input>
+                                    <span class="ai-title-2" style='margin-bottom: 3px;margin-top: 6px;'>修改结果</span>
+                                    <el-input :readonly='true' placeholder='AI输出❤...' class="ai-textarea" rows="3"
+                                        type='textarea' id="scroll_text" v-model="i['Corrected sentence']">
+                                    </el-input>
+                                    <span class="ai-title-2" style='margin-bottom: 3px;margin-top: 6px;'>病句原因</span>
+                                    <span style="font-size: 14px; margin-bottom: 10px;">{{ i['Error type'] }}</span>
+                                    <span class="ai-title-2" style='margin-bottom: 3px;margin-top: 6px;'>修改说明</span>
+                                    <el-input :readonly='true' placeholder='AI输出❤...' class="ai-textarea" rows="3"
+                                        type='textarea' id="scroll_text" v-model="i['Reasons for modification']">
+                                    </el-input>
+                                    <el-button style="margin-top: 10px;"
+                                        @click="state.editor.commands.setReplaceTerm(i['Corrected sentence']); state.editor.commands.replace()"
+                                        size="small">替换本句</el-button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div v-show="AISelect != 5" v-loading="isAILoading" element-loading-text="生成中..."
                             element-loading-background="rgba(255, 255, 255, 0.1)">
-                            <el-input :readonly='true' placeholder='AI输出...' class="ai-textarea" rows="8"
+                            <el-input :readonly='true' placeholder='AI输出❤...' class="ai-textarea" rows="8"
                                 type='textarea' id="scroll_text" v-model="AIData"></el-input>
                         </div>
                         <div class="bubble-menu2-button">
@@ -293,7 +364,7 @@
                             <el-button @click="AIAgain" v-if="AIData != '' || isAILoading" size="small">{{ isAILoading ?
                                 '停止生成'
                                 : '重新生成' }}</el-button>
-                            <el-button @click="AIInsert" v-if="AIData != '' || isAILoading"
+                            <el-button v-show="AISelect != 5" @click="AIInsert" v-if="AIData != '' || isAILoading"
                                 size="small">确定使用</el-button>
                         </div>
                     </div>
@@ -361,6 +432,39 @@
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
+
+                    <el-dropdown>
+                        <span style="margin-left: 5px;padding: 0px 5px;">
+                            <svg t="1719580485285" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="25402">
+                                <path
+                                    d="M512 85.333333c235.648 0 426.666667 191.018667 426.666667 426.666667s-191.018667 426.666667-426.666667 426.666667S85.333333 747.648 85.333333 512 276.352 85.333333 512 85.333333z m0 85.333334a341.333333 341.333333 0 1 0 0 682.666666 341.333333 341.333333 0 0 0 0-682.666666z m-40.405333 156.586666l121.856 369.706667h-83.968l-27.050667-89.685333H361.898667l-27.648 89.685333H256L378.453333 327.253333h93.141334z m256.213333 0v369.706667h-78.549333V327.253333h78.506666z m-303.36 75.562667H420.693333l-43.306666 144.64h89.898666L424.448 402.773333z"
+                                    p-id="25403"></path>
+                            </svg>
+                            <font-awesome-icon style="margin-left: 3px;" icon='caret-down'></font-awesome-icon>
+                        </span>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item @click="AItransition()">
+                                    <span style="font-size: 12px">翻译选中文本</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AIsummary()">
+                                    <span style="font-size: 12px">全文总结</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AIabstract()">
+                                    <span style="font-size: 12px">全文摘要</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AIcontiune()">
+                                    <span style="font-size: 12px">文章续写</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AIwrong2right2()">
+                                    <span style="font-size: 12px">修改病句</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+
+
                 </div>
                 <div class='bubble-menu-1'>
 
@@ -373,7 +477,7 @@
     </div>
 </template>
 <script setup>
-import { getCurrentInstance, nextTick, onMounted, reactive, ref } from "vue";
+import { getCurrentInstance, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { useRouter, useRoute } from 'vue-router';
 import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3";
 import StarterKit from "@tiptap/starter-kit";
@@ -407,13 +511,17 @@ import Table from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
+import EchartsBar from "@/components/EchartsBar.js";
 import EchartsPie from "@/components/EchartsPie.js";
 import { request } from '../axios.js'
 import Gapcursor from '@tiptap/extension-gapcursor'
 import Commands from '@/components/CommandsList.js'
 import suggestion from '@/components/CommandsListSug.js'
 import Placeholder from '@tiptap/extension-placeholder'
-// import VueEchartsPie from "@/components/EchartsPie.vue";
+import Image from '@tiptap/extension-image'
+import ImageResize from 'tiptap-extension-resize-image';
+import { SearchAndReplace } from "@sereneinserenade/tiptap-search-and-replace";
+// import { ImageUploadExtension, ImagePlaceholder } from 'tiptap-extension-image-upload'
 const lowlight = createLowlight(common)
 // lowlight./
 // import mermaid from 'mermaid'
@@ -468,20 +576,31 @@ const state = reactive({
             Focus.configure({ className: 'focus', }),
             Link.configure({ autolink: true, linkOnPaste: true, openOnClick: false }),
             Heading.configure({ levels: [1, 2, 3, 4] }),
-            TaskList, TaskItem, EchartsPie,
+            TaskList, TaskItem, EchartsBar, EchartsPie, Image.configure({
+                inline: true,
+            }), ImageResize,
+            // ImageUploadExtension.configure({
+            //     acceptMimes: ['image/jpeg', 'image/gif', 'image/png', 'image/jpg'],
+            //     upload: uploadImage,
+            // }),
+            // ImagePlaceholder.configure({
+            //     inline: false
+            // }),
             mermaid, Paper, Gapcursor, Commands.configure({ suggestion }),
-            Placeholder.configure({placeholder: 'Write something …',}),
+            Placeholder.configure({ placeholder: 'Write something …', }),
             // BubbleMenu2,
             // BubbleMenu2.config({pluginKey: 'aiMenu', element: document.querySelector('#aiMenu')}), 
-            UniqueID.configure({ types: ['heading', 'paragraph'], }),
+            // UniqueID.configure({ types: ['heading', 'paragraph'], }),
             CodeBlockLowlight.configure({ lowlight, languageClassPrefix: 'language-', }),
             Table.configure({ resizable: true, }), TableRow, TableHeader, TableCell,
+            SearchAndReplace.configure({
+                searchResultClass: "search-result"
+            }),
         ],
         autofocus: true,
         editable: true,
         injectCSS: true,
         content: Template,
-        // content: `<vue-echarts-pie></vue-echarts-pie>`,
     }),
     result: "",
 });
@@ -489,10 +608,35 @@ const state = reactive({
 onMounted(() => {
     // state.editor.registerPlugin(BubbleMenu2.config({pluginKey: 'bubbleMenu', element: document.querySelector('#bubbleMenu')}));
 })
+
+
+function uploadImage(file) {
+    console.log(111);
+    var formData = new FormData();
+    formData.append("photo", file);
+    return request.post({
+        url: '/api/file/photo/',
+        data: formData,
+        headers: {
+            'Content-Type': 'application/form-data'
+        }
+    }).then((response) => {
+        return response.data.url
+    })
+    // return req.post('/tools/guidelines/media', formData)
+    // .then((response) => {
+    //     return response.data.url
+    // })
+    // .catch((e) => {
+    //     //Optionaly you can send only throw
+    //     throw(e.response.data.error);
+    // }); 
+}
+
 function test() {
     // document.execCommand('paste')
     // state.editor.commands.deleteSelection()
-    state.editor.commands.insertContent('<vue-echarts-pie></vue-echarts-pie>')
+    state.editor.commands.insertContent('<vue-echarts-bar></vue-echarts-bar>')
 }
 //设置颜色
 const onColor = ($event) => {
@@ -784,8 +928,14 @@ function SetTasks() {
     isTasks.value = state.editor.isActive('taskList')
 }
 
-function InsertGraph() {
-    state.editor.chain().focus().insertContent('<vue-mermaid data="graph TB\n使用mermaid-->创建您的图表"></vue-mermaid>').run()
+function InsertGraph(type) {
+    if (type == 1) {
+        state.editor.chain().focus().insertContent('<vue-mermaid data="graph TB\n使用mermaid-->创建您的图表"></vue-mermaid>').run()
+    } else if (type == 2) {
+        state.editor.commands.insertContent('<vue-echarts-bar></vue-echarts-bar>')
+    } else if (type == 3) {
+        state.editor.commands.insertContent('<vue-echarts-pie></vue-echarts-pie>')
+    }
 }
 
 function InsertDraw() {
@@ -928,12 +1078,15 @@ function EditorContext(event) {
             }, {
                 label: 'AI文章续写',
                 onClick: () => { AIcontiune() }
+            }, {
+                label: 'AI修改病句',
+                onClick: () => { AIwrong2right2() }
             }]
         }]
     })
 }
-const ShowTree = ref(true)
-const isAIOpen = ref(false)
+const ShowTree = ref(window.innerWidth >= 768)
+const isAIOpen = ref(true)
 const AIData = ref('')
 const AISelect = ref(null)
 const isAILoading = ref(false)
@@ -952,6 +1105,14 @@ function AItransition() {
     const state2 = state.editor.state
     const { from, to } = view.state.selection
     const text = state2.doc.textBetween(from, to, '')
+    if (text == '') {
+        ElNotification({
+            title: '错误',
+            message: '请先选中一段文本',
+            type: 'error',
+        })
+        return
+    }
     console.log(text);
     isAILoading.value = true
     request({
@@ -1096,6 +1257,45 @@ function AIcontiune() {
     })
 }
 
+const AIwrong2right = ref()
+function AIwrong2right2() {
+    isAILoading.value = true
+    ctrl = new AbortController()
+    isAIOpen.value = true
+    AIData.value = ''
+    const view = state.editor.view
+    const state2 = state.editor.state
+    const { from, to } = view.state.selection
+    const text = state2.doc.textBetween(from, to, '')
+    if (text == '') {
+        ElNotification({
+            title: '错误',
+            message: '请先选中一段文本',
+            type: 'error',
+        })
+        return
+    }
+    request({
+        url: '/api/ai/wrong2right/',
+        method: 'POST',
+        body: { content: text },
+        signal: ctrl.signal, // AbortSignal
+    }).then(res => {
+        AIwrong2right.value = res.data
+        isAILoading.value = false
+        console.log(res.data);
+    }).catch(err => {
+        isAILoading.value = false
+        ElNotification({
+            title: '错误',
+            message: '修改病句失败',
+            type: 'error',
+        })
+
+        console.log(err);
+    })
+}
+
 function AIAgain() {
 
     if (isAILoading.value) {
@@ -1113,8 +1313,19 @@ function AIAgain() {
         AIabstract()
     } else if (AISelect.value == 4) {
         AIcontiune()
+    } else if (AISelect.value == 5) {
+        AIwrong2right2()
+
     }
 }
+
+//watch AISelect
+watch(AISelect, (value) => {
+    AIData.value = ''
+    // if (!state.editor.value) return;
+    // state.editor.commands.setSearchTerm('111');
+    // console.log(111,state.editor.storage.searchAndReplace);
+})
 
 state.editor.on('selectionUpdate', () => {
     isBold.value = state.editor.isActive('bold')
@@ -1185,6 +1396,14 @@ state.editor.on('update', () => {
 
 </script>
 <style>
+.search-result {
+    background-color: rgba(172, 229, 255, 0.5);
+
+    &-current {
+        background-color: rgba(13, 255, 0, 0.5);
+    }
+}
+
 /* .tiptap p.is-empty:last-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);
@@ -1444,7 +1663,8 @@ ul[data-type="taskList"] li p {
 } */
 @media screen and (max-width: 768px) {
     .main-left {
-        display: none;
+        /* display: none; */
+        position: fixed;
     }
 
     .editor {
@@ -1598,6 +1818,7 @@ ul[data-type="taskList"] li p {
 .main-right {
     /* max-height: 100%;
     overflow-y: auto; */
+
 }
 
 .main-right-ai {
@@ -1617,7 +1838,7 @@ ul[data-type="taskList"] li p {
 }
 
 .main-right-ai::-webkit-scrollbar {
-    width: 200px;
+    /* width: 200px; */
     height: 200px;
 }
 
@@ -1947,5 +2168,20 @@ ul[data-type="taskList"] li p {
     height: 1px;
     margin-right: 6px;
     background-color: #0a99ff;
+}
+
+.wrong2right {
+    border: 1px solid #91b8ff;
+    background-image: linear-gradient(90deg, #f6f9ff, #e5f2ff);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.wrong2right:hover {
+    background-image: linear-gradient(90deg, #e3ecff, #cee7ff);
+    /* background-image: linear-gradient(90deg, #f6f9ff, #e5f2ff); */
+
 }
 </style>

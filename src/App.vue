@@ -44,12 +44,23 @@
         <transition>
             <LoginVue v-show="isLogin" @close="isLogin = false" style="position: fixed;z-index: 200;"></LoginVue>
         </transition>
-        <!-- <router-view></router-view> -->
-        <router-view v-slot="{ Component }">
-            <transition name="fade">
-                <component :is="Component" />
-            </transition>
-        </router-view>
+        <router-view></router-view>
+
+        <!-- <Suspense>
+            <template #default>
+                <router-view  v-slot="{ Component }">
+                    <transition name="fade">
+                        <component :is="Component" />
+                    </transition>
+                </router-view>
+            </template>
+            <template #fallback>
+                <h1>加载中......</h1>
+            </template>
+        </Suspense> -->
+
+
+
     </div>
 </template>
 <script setup>
@@ -97,6 +108,26 @@ function login() {
         isLogin.value = true
     }
 }
+const debounce = (callback, delay) => {
+    let tid;
+    return function (...args) {
+        const ctx = self;
+        tid && clearTimeout(tid);
+        tid = setTimeout(() => {
+            callback.apply(ctx, args);
+        }, delay);
+    };
+};
+
+const _ = (window).ResizeObserver;
+(window).ResizeObserver = class ResizeObserver extends _ {
+    constructor(callback) {
+        callback = debounce(callback, 20);
+        super(callback);
+    }
+};
+
+
 
 onMounted(async () => {
     await getUserInfo()

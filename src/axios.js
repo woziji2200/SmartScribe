@@ -2,7 +2,7 @@ import axios from 'axios'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { ElMessage } from 'element-plus'
 import { useStore } from '@/store/index.js'
-export const baseUrl = 'http://81.70.143.162:8000'
+export const baseUrl = 'https://funny233.xyz/api2'
 // const store = useStore()
 // console.log(this.store);
 const instance = axios.create({
@@ -108,8 +108,9 @@ export async function request(obj) {
         method: obj.method,
         data: obj.body,
         params: obj.params,
+        signal: obj.signal,
         headers: {
-            'content-type': 'application/json',
+            // 'content-type': 'application/json',
             ...obj.headers,
             ...auth
         }

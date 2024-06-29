@@ -2,7 +2,7 @@
 import * as echarts from "echarts/core";
  
 /** 引入柱状图and折线图图表，图表后缀都为 Chart  */
-import { BarChart, LineChart } from "echarts/charts";
+import { BarChart, LineChart, PieChart } from "echarts/charts";
  
 // 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
 import {
@@ -27,6 +27,7 @@ echarts.use([
   DatasetComponent,
   TransformComponent,
   BarChart,
+  PieChart,
   LabelLayout,
   UniversalTransition,
   CanvasRenderer,

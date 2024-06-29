@@ -1,7 +1,7 @@
 <template>
     <node-view-wrapper class="draw" @contextmenu.stop>
 
-        <div :id='id' v-show="!isEdit" style="width: 100%; height: 350px;"></div>
+        <div :id='id' v-show="!isEdit" style="width: 100%; height: 300px;"></div>
         <div v-show="isEdit" class="table" style="width: 100%; height: 280px;">
             <div style="display: flex; align-items: baseline">
                 <span style="font-size: 12px">图表标题：</span>
@@ -26,6 +26,7 @@ import { HotTable } from "@handsontable/vue3";
 import { registerAllModules } from "handsontable/registry";
 import "handsontable/dist/handsontable.full.css";
 import "handsontable/languages/zh-CN"; //中文包
+import { shallowReactive, shallowRef } from 'vue';
 
 registerAllModules();
 
@@ -37,7 +38,9 @@ export default {
     },
 
     props: nodeViewProps,
-
+    setup(){
+        const myChart = shallowReactive(null)
+    },
     data() {
         return {
             id: uuid(),
@@ -48,7 +51,7 @@ export default {
                 xAxis: [],
                 series: [{ name: '', data: [] }]
             },
-            myChart: null,
+            // myChart: null,
             hotSettings: {
                 data: [],
                 contextMenu: ['row_above', 'row_below', 'remove_row', 'clear_column', 'undo', 'redo', 'copy', 'cut'], //自定义选项右键菜单
@@ -79,106 +82,102 @@ export default {
             this.isEdit = true;
         },
         save() {
-            console.log(this.$refs.hotTableComponent.hotInstance.getData()); // 这是个二维数组，第一行是name，第二行是value，把第一行第i个元素和第二行第i个元素组成一个对象
-            this.data.data = []
-            for(let i = 0; i < this.$refs.hotTableComponent.hotInstance.getData()[0].length; i++) {
-                this.data.data.push({
-                    name: this.$refs.hotTableComponent.hotInstance.getData()[0][i],
-                    value: this.$refs.hotTableComponent.hotInstance.getData()[1][i]
-                })
-            }
-            console.log(this.data.data);
+            this.data.xAxis = this.$refs.hotTableComponent.hotInstance.getDataAtRow(0).filter(item => item !== null)
+            // 跳过全空行
+            // console.log(this.data.series = this.$refs.hotTableComponent.hotInstance.getData());
+            this.data.series = this.$refs.hotTableComponent.hotInstance.getData().slice(1).filter(item => item.some(i => i !== null)).map(item => {
+                return {
+                    name: item[0],
+                    data: item.slice(1)
+                }
+            })
+            this.data.legend = this.$refs.hotTableComponent.hotInstance.getData().map(item => item[0]).filter(item => item !== null)
+            console.log(this.data);
+            // console.log(this.data.series);
+
 
 
             this.updateAttributes({
                 data: JSON.stringify(this.data)
             })
             this.myChart.setOption({
-            title: {
-                text: this.data.title,
-                left: 'center'
-            },
-            legend: {
-                orient: 'vertical',
-                left: 'left'
-            },
-            series: [
-                {
-                    type: 'pie',
-                    radius: '50%',
-                    data: this.data.data,
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
+                title: {
+                    text: this.data.title
+                },
+                tooltip: {},
+                legend: {
+                    data: Array.from(new Set(this.data.series.map(item => item.name? item.name : '')))
+                },
+                xAxis: {
+                    data: this.data.xAxis
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: this.data.series.map(item => {
+                    return {
+                        name: item.name? item.name : '',
+                        type: 'bar',
+                        data: item.data
                     }
-                }
-            ]
-        }, true);
+                })
+            }, true);
             this.isEdit = false;
         },
         getTableData() {
             let dataCopy = structuredClone(this.data)
-            // 获取name作为第一行，value作为第二行，并填充到hotSettings.data
-            let name = dataCopy.data.map(item => item.name)
-            let value = dataCopy.data.map(item => item.value)
+            dataCopy.xAxis.unshift(null)
+            for (let i = 0; i < 100 - dataCopy.xAxis.length; i++) {
+                dataCopy.xAxis.push(null)
+            }
 
-            this.hotSettings.data[0] = name
-            this.hotSettings.data[1] = value
-
-            console.log(this.hotSettings);
-
-
-        
+            this.hotSettings.data[0] = dataCopy.xAxis
+            for (let i = 0; i < this.data.series.length; i++) {
+                this.hotSettings.data[i + 1] = [this.data.series[i].name, ...this.data.series[i].data]
+            }
+            // 补全到5行
+            for (let i = this.data.series.length + 1; i < 5; i++) {
+                this.hotSettings.data[i] = [null, ...Array(100).fill(null)]
+            }
         }
     },
 
     mounted() {
         this.data = JSON.parse(this.node.attrs.data)
         // 判断是否有数据
-        if (!this.data.data) {
+        if (!this.data.xAxis) {
             this.data = {
                 title: '图表示例',
-                data: [
-                    { value: 100, name: '数据项1' },
-                    { value: 50, name: '数据项2' },
-                    { value: 120, name: '数据项3' },
-                    { value: 60, name: '数据项4' },
-                    { value: 150, name: '数据项5' }
-                ],
+                legend: ['销量'],
+                xAxis: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+                series: [{ name: '销量', data: [5, 20, 36, 10, 10, 20] }]
             }
         }
+
 
         const echartsRef = document.getElementById(this.id)
         this.myChart = echarts.init(echartsRef);
         this.myChart.setOption({
             title: {
-                text: this.data.title,
-                left: 'center'
+                text: this.data.title
             },
-            // tooltip: {
-            //     trigger: 'item'
-            // },
+            tooltip: {},
             legend: {
-                orient: 'vertical',
-                left: 'left'
+                data: Array.from(new Set(this.data.series.map(item => item.name ? item.name : '')))
             },
-            series: [
-                {
-                    type: 'pie',
-                    radius: '50%',
-                    data: this.data.data,
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
+            xAxis: {
+                data: this.data.xAxis
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: this.data.series.map(item => {
+                return {
+                    name: item.name? item.name : '',
+                    type: 'bar',
+                    data: item.data
                 }
-            ]
+            })
         }, true);
 
         // document.getElementById(this.id + 1).addEventListener('resize', () => {

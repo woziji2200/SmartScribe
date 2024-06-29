@@ -5,8 +5,11 @@
             <span @click="LeftClick('open')">打开文件</span>
         </div>
         <div class="home-main-right">
-            <div class="home-main-right-title">你好</div>
+            <div class="home-main-right-title">你好😊，这里是笔酱⭐</div>
+            <div class="home-main-right-title-2" style="">有什么要帮助的吗🚀</div>
             <div class="line"></div>
+            <span class="open" @click="LeftClick('open')">打开本地文件</span>
+
             <div class="home-main-right-title2">新建文档</div>
             <div class="home-main-right-content-2">
                 <router-link class="link" to="/editor?template=blank">
@@ -165,7 +168,56 @@
                     </div>
                 </div>
             </div>
+            <div class="home-main-right-file home-main-right-file-mobile">
+                <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
+                    <div>文件名</div>
+                    <div>操作</div>
+                </div>
+                <div class="home-main-right-file-1">
+                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
+                    <div>
+                        <button>打开</button>
+                        <button class="more">...</button>
+                    </div>
+                </div>
+                <div class="home-main-right-file-1">
+                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
+                    <div>
+                        <button>打开</button>
+                        <button class="more">...</button>
+                    </div>
+                </div>
+                <div class="home-main-right-file-1">
+                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
+                    <div>
+                        <button>打开</button>
+                        <button class="more">...</button>
+                    </div>
+                </div>
+                <div class="home-main-right-file-1">
+                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
+                    <div>
+                        <button>打开</button>
+                        <button class="more">...</button>
+                    </div>
+                </div>
+                <div class="home-main-right-file-1">
+                    <div>111111111111111111</div>
+                    <div>
+                        <button>打开</button>
+                        <button class="more">...</button>
+                    </div>
+                </div>
+                <div class="home-main-right-file-1">
+                    <div>1111111111111111111111111</div>
+                    <div>
+                        <button>打开</button>
+                        <button class="more">...</button>
+                    </div>
+                </div>
+            </div>
             <!-- <div class="line"></div> -->
+            
             <div class="home-main-right-title2">个人中心</div>
 
         </div>
@@ -216,6 +268,12 @@ function LeftClick(type) {
 
 </script>
 <style scoped>
+.home-main-right-title-2 {
+    font-size: 26px;
+    margin-top: 10px;
+    color: #666;
+}
+
 .home-main {
     display: flex;
     height: calc(100vh - 40px);
@@ -308,15 +366,18 @@ function LeftClick(type) {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
 .home-main-right-title2 {
     font-size: 20px;
     user-select: none;
 }
+
 .home-main-right-file {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .home-main-right-file-1 {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -325,15 +386,19 @@ function LeftClick(type) {
     border-bottom: 1px solid rgb(211, 211, 211);
     color: #939393;
 }
+
 .home-main-right-file-1:last-child {
     margin-bottom: 40px;
 }
+
 .home-main-right-file-1:hover {
     background-color: #f5f5f5;
 }
+
 .home-main-right-file-1:first-child:hover {
     background-color: transparent;
 }
+
 .home-main-right-file-1 button {
     background-color: transparent;
     border: none;
@@ -342,10 +407,104 @@ function LeftClick(type) {
     transition: all 0.3s;
     margin-right: 10px;
 }
+
 .home-main-right-file-1 div {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     margin-right: 20px;
+}
+
+.home-main-right-file-mobile {
+    display: none;
+}
+
+.more {
+    background-color: #3172ff;
+}
+.open{
+    background-image: linear-gradient(90deg, #5188ff, #64b5ff);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-block;
+    width: 100px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    margin-bottom: 10px;
+
+}
+
+@media screen and (max-width: 768px) {
+    .home-main-left {
+        display: none !important;
+    }
+
+    .home-main-right-title {
+        font-size: 30px;
+    }
+
+    .home-main-right-title-2 {
+        font-size: 20px;
+    }
+
+    .home-main-right-content-2 {
+        flex-direction: column;
+    }
+
+    .link {
+        width: auto;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        border: none;
+        border-bottom: #3172ff solid 1px;
+        border-radius: 0;
+        padding-left: 10px;
+        margin-top: 10px;
+        margin-right: 0;
+    }
+
+    .link .link-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    .link .link-image svg {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 0;
+    }
+
+    .home-main-right-file {
+        display: none;
+    }
+
+    .home-main-right-file-mobile {
+        display: flex;
+    }
+
+    .home-main-right-file-mobile .home-main-right-file-1 {
+        grid-template-columns: 1fr 120px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .home-main-right-file-1 button {
+        margin-right: 0;
+    }
+
+    .home-main-right-file-1 div {
+        margin-right: 0 !important;
+    }
+
+
 }
 </style>

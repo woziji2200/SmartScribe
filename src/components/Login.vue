@@ -183,4 +183,16 @@ function register() {
     margin: 0 auto;
     margin: 0 40px;
 }
+
+@media screen and (max-width: 768px) {
+    .login-main {
+        width: 80%;
+        /* height: 70%; */
+        padding: 20px;
+    }
+    .login-img {
+        display: none;
+    }
+    
+}
 </style>
