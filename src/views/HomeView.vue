@@ -5,7 +5,7 @@
             <span @click="LeftClick('open')">打开文件</span>
         </div>
         <div class="home-main-right">
-            <div class="home-main-right-title">你好😊，这里是笔酱⭐</div>
+            <div class="home-main-right-title">你好😊，这里是笔匠⭐</div>
             <div class="home-main-right-title-2" style="">有什么要帮助的吗🚀</div>
             <div class="line"></div>
             <span class="open" @click="LeftClick('open')">打开本地文件</span>
@@ -106,128 +106,89 @@
             </div>
             <div class="line"></div>
             <div class="home-main-right-title2">我的文件</div>
-            <div class="home-main-right-file">
-                <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
-                    <div>文件名</div>
-                    <div>创建时间</div>
-                    <div>最后修改时间</div>
-                    <div>操作</div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>2021/1/1</div>
-                    <div>昨天</div>
-                    <div>
-                        <button>打开</button>
-                        <button>删除</button>
+            <div v-loading="isLoadingFiles">
+                <div class="home-main-right-file">
+                    <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
+                        <div>文件名</div>
+                        <div>最后修改时间</div>
+                        <div>操作</div>
+                    </div>
+                    <div v-for="(i, index) in filesShow.files" class="home-main-right-file-1">
+                        <div>{{ i.name }}</div>
+                        <div>{{ formatDate(i.time) }}</div>
+                        <div>
+                            <button @click="openFile(i.id)">打开</button>
+                            <button
+                                @click="renameDialogVisible = true; renameId = i.id; renameName = i.name">重命名</button>
+                            <el-popover style="overflow-y: hidden" trigger="click" :visible="i.visible" placement="top">
+                                <p style="margin-bottom: 10px;">确认删除吗</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="small" @click="i.visible = false">取消</el-button>
+                                    <el-button size="small" type="primary" @click="deleteFile(i.id); i.visible = false">
+                                        删除
+                                    </el-button>
+                                </div>
+                                <template #reference>
+                                    <button @click="i.visible = true">删除</button>
+                                </template>
+                            </el-popover>
+                        </div>
+                    </div>
+                    <div v-if="files.files.length == 0"
+                        style="display: flex; justify-content: center; color: #999; margin: 20px;">
+                        <span>没有文件</span>
                     </div>
                 </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>2021/1/1</div>
-                    <div>昨天</div>
-                    <div>
-                        <button>打开</button>
-                        <button>删除</button>
+                <div class="home-main-right-file home-main-right-file-mobile">
+                    <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
+                        <div>文件名</div>
+                        <div>操作</div>
                     </div>
+                    <div class="home-main-right-file-1">
+                        <div>111111111111111111111111111111111111111111111111111111111111111</div>
+                        <div>
+                            <button>打开</button>
+                            <button class="more">...</button>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>2021/1/1</div>
-                    <div>昨天</div>
-                    <div>
-                        <button>打开</button>
-                        <button>删除</button>
-                    </div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>2021/1/1</div>
-                    <div>昨天</div>
-                    <div>
-                        <button>打开</button>
-                        <button>删除</button>
-                    </div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>2021/1/1</div>
-                    <div>昨天</div>
-                    <div>
-                        <button>打开</button>
-                        <button>删除</button>
-                    </div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>2021/1/1</div>
-                    <div>昨天</div>
-                    <div>
-                        <button>打开</button>
-                        <button>删除</button>
-                    </div>
+
+                <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                    <el-pagination layout="prev, pager, next" :total="files.files.length" :page-size="filesPageSize"
+                        v-model:current-page="filesPage" />
                 </div>
             </div>
-            <div class="home-main-right-file home-main-right-file-mobile">
-                <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
-                    <div>文件名</div>
-                    <div>操作</div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>
-                        <button>打开</button>
-                        <button class="more">...</button>
-                    </div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>
-                        <button>打开</button>
-                        <button class="more">...</button>
-                    </div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>
-                        <button>打开</button>
-                        <button class="more">...</button>
-                    </div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111111111111111111111111111111111111111111111111</div>
-                    <div>
-                        <button>打开</button>
-                        <button class="more">...</button>
-                    </div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>111111111111111111</div>
-                    <div>
-                        <button>打开</button>
-                        <button class="more">...</button>
-                    </div>
-                </div>
-                <div class="home-main-right-file-1">
-                    <div>1111111111111111111111111</div>
-                    <div>
-                        <button>打开</button>
-                        <button class="more">...</button>
-                    </div>
-                </div>
-            </div>
-            <!-- <div class="line"></div> -->
-            
+
+
+
             <div class="home-main-right-title2">个人中心</div>
+
+
+            <el-dialog v-model="renameDialogVisible" title="重命名" width="500" align-center>
+                <span>请输入新的文件名：</span>
+                <el-input style="margin-top: 10px" v-model="renameName" placeholder="请输入新的文件名"></el-input>
+                <template #footer>
+                    <div class="dialog-footer">
+                        <el-button @click="renameDialogVisible = false">取消</el-button>
+                        <el-button type="primary" @click="rename()">确认</el-button>
+                    </div>
+                </template>
+            </el-dialog>
 
         </div>
         <!-- <button @click="test">test</button> -->
     </div>
 </template>
 <script setup>
-import { getCurrentInstance, onMounted, reactive, ref } from "vue";
+import { getCurrentInstance, onActivated, onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { request } from "@/axios";
+import { useStore } from "@/store";
+import { ElMessage } from "element-plus";
+
+const store = useStore();
 
 const router = useRouter();
 async function test() {
@@ -258,6 +219,56 @@ async function test() {
     console.log(111);
 }
 
+let renameDialogVisible = ref(false)
+let renameId = ref(0)
+let renameName = ref('')
+function rename() {
+    request({
+        url: '/api/file/text/',
+        method: 'put',
+        body: {
+            update_type: 'name',
+            text_id: renameId.value,
+            name: renameName.value
+        }
+    }).then(res => {
+        renameDialogVisible.value = false
+        ElMessage.success('重命名成功')
+        isLoadingFiles.value = true
+        getFiles()
+    }).catch(err => {
+        renameDialogVisible.value = false
+        ElMessage.error('重命名失败')
+        console.log(err);
+    })
+}
+
+function formatDate(date) {
+    const targetDate = new Date(date);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const dayBeforeYesterday = new Date(today);
+    dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
+
+    // 格式化日期和时间为 xxxx/xx/xx xx:xx 格式
+    const formatDateTime = (date) => {
+        return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    };
+
+    if (targetDate.toDateString() === today.toDateString()) {
+        return `今天 ${formatDateTime(targetDate).split(' ')[1]}`;
+    } else if (targetDate.toDateString() === yesterday.toDateString()) {
+        return `昨天 ${formatDateTime(targetDate).split(' ')[1]}`;
+    } else if (targetDate.toDateString() === dayBeforeYesterday.toDateString()) {
+        return `前天 ${formatDateTime(targetDate).split(' ')[1]}`;
+    } else {
+        // 直接返回格式化的日期和时间字符串
+        return formatDateTime(targetDate);
+    }
+}
+
+
 function LeftClick(type) {
     if (type === 'new') {
         router.push('/editor?template=blank');
@@ -265,6 +276,81 @@ function LeftClick(type) {
         router.push('/editor?template=open');
     }
 }
+
+let files = reactive({ files: [] })
+let filesShow = reactive({ files: [] })
+let filesPage = ref(1)
+let filesPageSize = ref(10)
+let isLoadingFiles = ref(false)
+
+function getFiles() {
+    request({
+        url: '/api/file/textall',
+        method: 'get'
+    }).then(res => {
+        files.files = res.data.texts
+        //按照time排序
+        files.files.sort((a, b) => {
+            return new Date(b.time) - new Date(a.time)
+        })
+        filesShow.files = files.files.slice((filesPage.value - 1) * filesPageSize.value, filesPage.value * filesPageSize.value)
+        // 如果删这一页的最后一个，就要往前一页跳
+        if (filesShow.files.length === 0) {
+            filesPage.value--
+            filesShow.files = files.files.slice((filesPage.value - 1) * filesPageSize.value, filesPage.value * filesPageSize.value)
+        }
+        console.log(filesShow.files);
+        isLoadingFiles.value = false
+
+    }).catch(err => {
+        console.log(err)
+        isLoadingFiles.value = false
+
+    })
+}
+
+onMounted(() => {
+    isLoadingFiles.value = true
+    getFiles()
+})
+watch(filesPage, (val) => {
+    filesShow.files = files.files.slice((val - 1) * filesPageSize.value, val * filesPageSize.value)
+})
+watch(() => store.UserInfo, (val) => {
+    console.log(val);
+    if (val.name) {
+        isLoadingFiles.value = true
+        getFiles()
+    } else {
+        files.files = []
+        console.log('11');
+        isLoadingFiles.value = false
+    }
+})
+
+function deleteFile(id) {
+    isLoadingFiles.value = true
+    request({
+        url: '/api/file/text',
+        method: 'delete',
+        body: {
+            text_id: id
+        }
+    }).then(res => {
+        console.log(res);
+        ElMessage.success('删除成功')
+        getFiles()
+    }).catch(err => {
+        ElMessage.error('删除失败')
+        isLoadingFiles.value = false
+        console.log(err);
+    })
+}
+
+function openFile(id) {
+    router.push(`/editor?template=blank&id=${id}`)
+}
+
 
 </script>
 <style scoped>
@@ -380,7 +466,7 @@ function LeftClick(type) {
 
 .home-main-right-file-1 {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
     padding: 10px;
     border-bottom: 1px solid rgb(211, 211, 211);
@@ -388,7 +474,7 @@ function LeftClick(type) {
 }
 
 .home-main-right-file-1:last-child {
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 
 .home-main-right-file-1:hover {
@@ -422,7 +508,8 @@ function LeftClick(type) {
 .more {
     background-color: #3172ff;
 }
-.open{
+
+.open {
     background-image: linear-gradient(90deg, #5188ff, #64b5ff);
     color: white;
     padding: 10px 20px;

@@ -277,7 +277,7 @@
                     :style="{ 'margin-left': '0', 'text-align': 'center', 'color': '#aaa', 'cursor': 'auto' }"> （暂无索引）
                 </li>
             </div>
-            <div class="main" @keydown.tab.prevent="">
+            <div class="main" v-loading="fileLoading">
                 <div class="main-right">
                     <div style="height: 40px;" class="print main-height"></div>
                     <div class="editor">
@@ -529,7 +529,7 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore()
 let Template = ''
-
+store.DocTitle = '文档'
 // route.query.id
 if (route.query.template == 'graph') {
     Template = '<vue-mermaid data="graph TB\n使用mermaid-->创建您的图表"></vue-mermaid>'
@@ -545,7 +545,36 @@ if (route.query.template == 'graph') {
         OpenLocal()
     })
 }
-
+let fileId = ''
+let fileLoading = ref(false)
+if (route.query.id) {
+    fileLoading.value = true
+    // 获取文件
+    fileId = route.query.id
+    console.log(111);
+    request({
+        url: '/api/file/text/',
+        method: 'get',
+        params: {
+            text_id: route.query.id
+        }
+    }).then((response) => {
+        Template = JSON.parse(response.data.content).content
+        console.log(Template);
+        store.isSave = true
+        store.DocTitle = response.data.name
+        state.editor.commands.setContent(Template)
+        fileLoading.value = false
+    }).catch((error) => {
+        fileLoading.value = false
+        ElNotification({
+            title: '错误',
+            message: '打开文件失败',
+            type: 'error',
+        })
+    })
+}
+console.log(222);
 function GotoHome() {
     if (store.isSave) {
         router.push('/')
@@ -564,7 +593,7 @@ function GotoHome() {
     }
 }
 
-const DocTitle = ref('文档')
+
 console.log(document.getElementById('bubbleMenu1'));
 const state = reactive({
     editor: new Editor({
@@ -669,12 +698,49 @@ function SaveLocal() {
     // let objectURL = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = (GetDocTitle(html) || '文档') + '.smd';
-    store.DocTitle = GetDocTitle(html) || '文档'
+    link.download = ((store.DocTitle === '文档' || store.DocTitle === '') ? (GetDocTitle(html) || '文档') : store.DocTitle )+ '.smd';
+    store.DocTitle = (store.DocTitle === '文档' || store.DocTitle === '') ? (GetDocTitle(html) || '文档') : store.DocTitle
     link.click();
 }
 function SaveServer() {
-
+    let html = state.editor.getHTML()
+    if (fileId) {
+        request({
+            url: '/api/file/text/',
+            method: 'put',
+            body: {
+                text_id: fileId,
+                update_type: 'content',
+                content: JSON.stringify({ content: state.editor.getHTML() })
+            }
+        }).then((response) => {
+            ElNotification({
+                title: '成功',
+                message: '保存成功',
+                type: 'success',
+            })
+            store.isSave = true
+        })
+    } else {
+        request({
+            url: '/api/file/text/',
+            method: 'post',
+            body: {
+                content: JSON.stringify({ content: state.editor.getHTML() }),
+                name: (store.DocTitle === '文档' || store.DocTitle === '') ? (GetDocTitle(html) || '文档'):store.DocTitle,
+                location_type: 0
+            }
+        }).then((response) => {
+            ElNotification({
+                title: '成功',
+                message: '保存成功',
+                type: 'success',
+            })
+            store.isSave = true
+            store.DocTitle = (store.DocTitle === '文档' || store.DocTitle === '') ? (GetDocTitle(html) || '文档') : store.DocTitle
+            fileId = response.data.id
+        })
+    }
 }
 
 window.addEventListener('beforeunload', function (e) {

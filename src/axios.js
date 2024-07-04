@@ -2,7 +2,7 @@ import axios from 'axios'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { ElMessage } from 'element-plus'
 import { useStore } from '@/store/index.js'
-export const baseUrl = 'https://funny233.xyz/api2'
+export const baseUrl = 'https://editor.daoxuan.cc'
 // const store = useStore()
 // console.log(this.store);
 const instance = axios.create({
