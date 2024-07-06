@@ -6,6 +6,7 @@ export const useStore = defineStore('store', {
         isSave: false,
         isAI: false,
         ctrl: null,
+        isLogin: false,
      }),
     getters: {
       

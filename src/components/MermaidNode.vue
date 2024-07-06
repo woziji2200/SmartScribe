@@ -1,5 +1,5 @@
 <template>
-    <node-view-wrapper class="main-mer">
+    <node-view-wrapper class="main-mer" @contextmenu.stop>
         <button class="button print" @click="edit" v-show="!isEdit">编辑</button>
         <button class="button print" @click="save" v-show="isEdit">保存</button>
         <div v-show="!isEdit" :id="id" v-html="svg"></div>

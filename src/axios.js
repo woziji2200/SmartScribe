@@ -2,7 +2,9 @@ import axios from 'axios'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { ElMessage } from 'element-plus'
 import { useStore } from '@/store/index.js'
-export const baseUrl = 'https://editor.daoxuan.cc'
+export const baseUrl = 'http://81.70.143.162:8000'
+export const baseUrl2 = 'https://funny233.xyz/ws'
+// export const baseUrl2 = 'https://127.0.0.1:1234'
 // const store = useStore()
 // console.log(this.store);
 const instance = axios.create({
@@ -103,12 +105,14 @@ export async function request(obj) {
         });
         return
     }
+    let base = {baseURL: obj.baseUrl} || {}
     return instance({
         url: obj.url,
         method: obj.method,
         data: obj.body,
         params: obj.params,
         signal: obj.signal,
+        ...base,
         headers: {
             // 'content-type': 'application/json',
             ...obj.headers,
@@ -149,7 +153,13 @@ export async function getUserInfo(){
                 Authorization: `Bearer ${getAccess()}`
             }
         })
+        if(!res.data.name){
+            res.data.name = '匿名用户'
+        }
         store.UserInfo = res.data
+        // if(!store.UserInfo.name){
+        //     store.UserInfo.name = '匿名用户'
+        // }
         // console.log(111, store);
         // console.log(res);
     } catch (error) {

@@ -106,8 +106,12 @@
             </div>
             <div class="line"></div>
             <div class="home-main-right-title2">我的文件</div>
-            <div v-loading="isLoadingFiles">
+            <div v-loading="isLoadingFiles" class="file">
+                <div class="nologin" v-if="!store.UserInfo.name">
+                    <span @click="store.isLogin = true">请登录后查看</span>
+                </div>
                 <div class="home-main-right-file">
+
                     <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
                         <div>文件名</div>
                         <div>最后修改时间</div>
@@ -139,20 +143,33 @@
                         <span>没有文件</span>
                     </div>
                 </div>
-                <div class="home-main-right-file home-main-right-file-mobile">
+                <!-- <div class="home-main-right-file home-main-right-file-mobile">
                     <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
                         <div>文件名</div>
                         <div>操作</div>
                     </div>
-                    <div class="home-main-right-file-1">
-                        <div>111111111111111111111111111111111111111111111111111111111111111</div>
+                    <div v-for="(i, index) in filesShow.files" class="home-main-right-file-1">
+                        <div>{{ i.name }}</div>
                         <div>
-                            <button>打开</button>
-                            <button class="more">...</button>
+                            <button @click="openFile(i.id)">打开</button>
+                            <button
+                                @click="renameDialogVisible = true; renameId = i.id; renameName = i.name">重命名</button>
+                            <el-popover style="overflow-y: hidden" trigger="click" :visible="i.visible" placement="top">
+                                <p style="margin-bottom: 10px;">确认删除吗</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="small" @click="i.visible = false">取消</el-button>
+                                    <el-button size="small" type="primary" @click="deleteFile(i.id); i.visible = false">
+                                        删除
+                                    </el-button>
+                                </div>
+                                <template #reference>
+                                    <button @click="i.visible = true">删除</button>
+                                </template>
+                            </el-popover>
                         </div>
                     </div>
 
-                </div>
+                </div> -->
 
                 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
                     <el-pagination layout="prev, pager, next" :total="files.files.length" :page-size="filesPageSize"
@@ -163,7 +180,11 @@
 
 
             <div class="home-main-right-title2">个人中心</div>
-
+            <div class="profile">
+                <div class="nologin" v-if="!store.UserInfo.name">
+                    <span @click="store.isLogin = true">请登录后查看</span>
+                </div>
+            </div>
 
             <el-dialog v-model="renameDialogVisible" title="重命名" width="500" align-center>
                 <span>请输入新的文件名：</span>
@@ -310,14 +331,22 @@ function getFiles() {
 }
 
 onMounted(() => {
-    isLoadingFiles.value = true
-    getFiles()
+    if(store.UserInfo.name) {
+        isLoadingFiles.value = true
+        getFiles()
+    }
+    // isLoadingFiles.value = true
+    // getFiles()
 })
 watch(filesPage, (val) => {
     filesShow.files = files.files.slice((val - 1) * filesPageSize.value, val * filesPageSize.value)
 })
+watch(files, (val) => {
+    filesShow.files = val.files.slice((filesPage.value - 1) * filesPageSize.value, filesPage.value * filesPageSize.value)
+})
 watch(() => store.UserInfo, (val) => {
     console.log(val);
+    console.log(val.name, 222);
     if (val.name) {
         isLoadingFiles.value = true
         getFiles()
@@ -525,6 +554,40 @@ function openFile(id) {
 
 }
 
+.file{
+    position: relative;
+}
+
+.nologin {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    /* width: 100%; */
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff7e;
+    backdrop-filter: blur(5px);
+}
+.nologin span {
+    /* font-size: 20px; */
+    color: #3172ff;
+    border: #3172ff solid 1px;
+    padding: 10px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.nologin span:hover {
+    background-color: #3172ff;
+    color: white;
+}
+.profile {
+    position: relative;
+}
+
 @media screen and (max-width: 768px) {
     .home-main-left {
         display: none !important;
@@ -571,7 +634,7 @@ function openFile(id) {
     }
 
     .home-main-right-file {
-        display: none;
+        /* display: none; */
     }
 
     .home-main-right-file-mobile {
@@ -591,7 +654,9 @@ function openFile(id) {
     .home-main-right-file-1 div {
         margin-right: 0 !important;
     }
-
+    .home-main-right-file-1 {
+        grid-template-columns: 2fr 1fr 140px !important;
+    }
 
 }
 </style>

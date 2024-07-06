@@ -127,7 +127,12 @@ const _ = (window).ResizeObserver;
     }
 };
 
-
+watch(() => store.isLogin, async (newVal) => {
+    if (newVal) {
+        isLogin.value = true
+        store.isLogin = false
+    }
+})
 
 onMounted(async () => {
     await getUserInfo()
