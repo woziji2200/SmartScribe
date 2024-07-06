@@ -28,6 +28,7 @@ import "handsontable/dist/handsontable.full.css";
 import "handsontable/languages/zh-CN"; //中文包
 import { shallowReactive, shallowRef } from 'vue';
 
+
 registerAllModules();
 
 export default {
@@ -38,7 +39,7 @@ export default {
     },
 
     props: nodeViewProps,
-    setup(){
+    setup() {
         const myChart = shallowReactive(null)
     },
     data() {
@@ -106,7 +107,7 @@ export default {
                 },
                 tooltip: {},
                 legend: {
-                    data: Array.from(new Set(this.data.series.map(item => item.name? item.name : '')))
+                    data: Array.from(new Set(this.data.series.map(item => item.name ? item.name : '')))
                 },
                 xAxis: {
                     data: this.data.xAxis
@@ -116,7 +117,7 @@ export default {
                 },
                 series: this.data.series.map(item => {
                     return {
-                        name: item.name? item.name : '',
+                        name: item.name ? item.name : '',
                         type: 'bar',
                         data: item.data
                     }
@@ -173,21 +174,23 @@ export default {
             },
             series: this.data.series.map(item => {
                 return {
-                    name: item.name? item.name : '',
+                    name: item.name ? item.name : '',
                     type: 'bar',
                     data: item.data
                 }
             })
         }, true);
 
-        // document.getElementById(this.id + 1).addEventListener('resize', () => {
-        //     this.myChart.resize()
-        // })
-
+        setTimeout(() => {
+            const resizeOb = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    echarts.getInstanceByDom(entry.target).resize();
+                }
+            });
+            resizeOb.observe(echartsRef);
+        });
 
         this.getTableData()
-
-
     },
 }
 </script>

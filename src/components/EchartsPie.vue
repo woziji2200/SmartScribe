@@ -185,7 +185,14 @@ export default {
         //     this.myChart.resize()
         // })
 
-
+        setTimeout(() => {
+            const resizeOb = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    echarts.getInstanceByDom(entry.target).resize();
+                }
+            });
+            resizeOb.observe(echartsRef);
+        });
         this.getTableData()
 
 

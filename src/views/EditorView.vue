@@ -114,7 +114,7 @@
                         <template #label>
                             <font-awesome-icon icon="edit" style="margin-right: 10px;" />编辑
                         </template>
-                        <div class="top-item-class tools-2-1" style="max-width: 270px;">
+                        <div class="top-item-class tools-2-1 large-flex" style="max-width: 270px;">
                             <span @click="ChangeShowTools" class="tools-show"><font-awesome-icon
                                     :icon='ShowTools ? "angle-up" : "angle-down"'></font-awesome-icon></span>
                             <span @click="undo" :disabled="!CanUndo"><font-awesome-icon
@@ -148,7 +148,7 @@
                                     icon='superscript'></font-awesome-icon></span>
                         </div>
 
-                        <div class="top-item-class tools-2-1" style="max-width: 230px;">
+                        <div class="top-item-class tools-2-1 large-flex" style="max-width: 230px;">
                             <span @click="SetTextAlign('left')"
                                 :class="TextAlign2 != 'left' ? '' : 'tools-select'"><font-awesome-icon
                                     icon='align-left'></font-awesome-icon></span>
@@ -200,6 +200,136 @@
                                     icon='tasks'></font-awesome-icon></span>
                             <span @click="SetCode" :class="!isCode ? '' : 'tools-select'"><font-awesome-icon
                                     icon='code'></font-awesome-icon></span>
+                        </div>
+
+                        <div class="top-item-class tools-2-1 small-flex"
+                            style="width: auto;flex-direction: row;flex-wrap: nowrap;display: flex">
+                            <span @click="undo" :disabled="!CanUndo"><font-awesome-icon
+                                    icon='undo'></font-awesome-icon></span>
+                            <span @click="redo" :disabled="!CanRedo"><font-awesome-icon
+                                    icon='redo'></font-awesome-icon></span>
+                            <el-dropdown :hide-on-click="false">
+                                <span class="el-dropdown-link">
+                                    <font-awesome-icon icon='font'></font-awesome-icon>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-item>
+
+                                        <span @click="bold" class="tools-span"
+                                            :class="!isBold ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='bold'></font-awesome-icon></span>
+                                        <span @click="italic" class="tools-span"
+                                            :class="!isItalic ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='italic'></font-awesome-icon></span>
+                                        <span @click="underline" class="tools-span"
+                                            :class="!isUnderline ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='underline'></font-awesome-icon></span>
+                                        <span @click="strikethrough" class="tools-span"
+                                            :class="!isStrikethrough ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='strikethrough'></font-awesome-icon></span>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
+                                        <span style="width: 70px;">
+                                            <el-select @change="SetFontSize()" v-model="FontSize2" placeholder="字体大小"
+                                                size="small">
+                                                <el-option v-for="item in FontSizeList" :key="item" :label="item"
+                                                    :value="item" />
+                                            </el-select>
+                                            <span style="margin-left: 5px;">
+                                                <pick-colors @change="SetFontColor" v-model:value="FontColor"
+                                                    :colors="['#000000', '#ff4500', '#ffd700', '#00ced1', '#1e90ff', '#c71585',]" />
+                                            </span>
+                                        </span>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
+
+                                        <span @click="SetLink()" class="tools-span"
+                                            :class="!isLink ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='link'></font-awesome-icon></span>
+                                        <span @click="SetSubscript()" class="tools-span"
+                                            :class="!isSubscript ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='subscript'></font-awesome-icon></span>
+                                        <span @click="SetSuperscript()" class="tools-span"
+                                            :class="!isSuperscript ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='superscript'></font-awesome-icon></span>
+                                    </el-dropdown-item>
+                                </template>
+                            </el-dropdown>
+
+                            <el-dropdown :hide-on-click="false">
+                                <span class="el-dropdown-link">
+                                    <font-awesome-icon icon='align-justify'></font-awesome-icon>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-item>
+                                        <span @click="SetTextAlign('left')" class="tools-span"
+                                            :class="TextAlign2 != 'left' ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='align-left'></font-awesome-icon></span>
+                                        <span @click="SetTextAlign('center')" class="tools-span"
+                                            :class="TextAlign2 != 'center' ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='align-center'></font-awesome-icon></span>
+                                        <span @click="SetTextAlign('right')" class="tools-span"
+                                            :class="TextAlign2 != 'right' ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='align-right'></font-awesome-icon></span>
+                                        <span @click="SetTextAlign('justify')" class="tools-span"
+                                            :class="TextAlign2 != 'justify' ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='align-justify'></font-awesome-icon></span>
+                                    </el-dropdown-item>
+
+                                    <el-dropdown-item>
+                                        <span @click="SetHeading(1)" class="tools-span" :class="Heading2 != 1 ? '' : 'tools-select'">
+                                            <svg t="1716215843603" class="tools-svg" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1280" width="200"
+                                                height="200">
+                                                <path
+                                                    d="M584.9 445.3V142.6h86.5v735h-86.5V531.7H152.5v345.9H66.1v-735h86.5v302.6l432.3 0.1zM843.7 877.6v-0.3h-79.8V826h79.8V558.6c-22.5 23.4-49.9 40.4-79.8 49.3v-59.1c17.2-5.2 33.8-12.9 49.1-23 16.2-10.6 30.9-23.7 43.9-38.9h39.9V826h61.7v51.3h-61.7v0.3h-53.1z"
+                                                    p-id="1281"></path>
+                                            </svg>
+                                        </span>
+                                        <span @click="SetHeading(2)" class="tools-span" :class="Heading2 != 2 ? '' : 'tools-select'">
+                                            <svg t="1716215857033" class="tools-svg" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1446" width="200"
+                                                height="200">
+                                                <path
+                                                    d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276z m935.282 448H680c0.479-41.591 10.533-77.923 30.163-108.997 19.63-31.074 46.44-58.084 80.434-81.031 16.279-11.952 33.275-23.544 50.99-34.779 17.714-11.234 33.993-23.305 48.835-36.213 14.842-12.907 27.05-26.89 36.626-41.95 9.576-15.058 14.603-32.388 15.081-51.988 0-9.083-1.077-18.764-3.231-29.042-2.155-10.278-6.344-19.84-12.568-28.683-6.224-8.845-14.842-16.254-25.854-22.23-11.012-5.976-25.375-8.964-43.09-8.964-16.278 0-29.803 3.227-40.576 9.68-10.772 6.455-19.39 15.299-25.854 26.533-6.463 11.235-11.251 24.5-14.363 39.798-3.112 15.298-4.908 31.791-5.386 49.48h-81.87c0-27.728 3.71-53.423 11.13-77.087 7.422-23.664 18.553-44.101 33.395-61.311 14.842-17.21 32.916-30.715 54.222-40.516 21.305-9.8 46.081-14.7 74.33-14.7 30.641 0 56.255 5.02 76.843 15.059 20.587 10.04 37.224 22.707 49.912 38.005 12.688 15.298 21.665 31.91 26.931 49.838 5.267 17.927 7.9 35.018 7.9 51.272 0 20.078-3.112 38.244-9.336 54.498-6.224 16.254-14.603 31.193-25.136 44.818-10.533 13.625-22.502 26.174-35.908 37.647a538.302 538.302 0 0 0-41.653 32.27 1122.27 1122.27 0 0 0-43.09 28.683c-14.364 9.083-27.65 18.166-39.858 27.249-12.209 9.083-22.862 18.525-31.958 28.325-9.097 9.8-15.321 20.198-18.673 31.193h244.894V896z"
+                                                    p-id="1447"></path>
+                                            </svg> </span>
+                                        <span @click="SetHeading(3)" class="tools-span" :class="Heading2 != 3 ? '' : 'tools-select'">
+                                            <svg t="1716215866976" class="tools-svg" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1608" width="200"
+                                                height="200">
+                                                <path
+                                                    d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276zM815.551 597.802c13.128 0.47 26.257-0.469 39.385-2.813 13.129-2.344 24.85-6.447 35.165-12.308 10.316-5.86 18.638-13.948 24.968-24.263 6.33-10.315 9.494-22.975 9.494-37.978 0-21.1-7.15-37.978-21.45-50.638-14.301-12.66-32.704-18.989-55.21-18.989-14.066 0-26.257 2.813-36.572 8.44-10.315 5.626-18.872 13.245-25.67 22.857-6.799 9.612-11.84 20.395-15.121 32.352-3.283 11.956-4.69 24.263-4.22 36.923h-80.177c0.938-23.913 5.392-46.066 13.363-66.462 7.97-20.396 18.872-38.095 32.703-53.099 13.832-15.004 30.594-26.725 50.287-35.165C802.188 388.22 824.459 384 849.31 384c19.223 0 38.095 2.813 56.616 8.44 18.52 5.626 35.165 13.831 49.934 24.615 14.77 10.784 26.609 24.498 35.517 41.143 8.909 16.645 13.363 35.75 13.363 57.318 0 24.85-5.626 46.535-16.88 65.055-11.252 18.52-28.835 32-52.747 40.44v1.407c28.132 5.626 50.052 19.575 65.759 41.846 15.707 22.27 23.56 49.348 23.56 81.23 0 23.444-4.688 44.425-14.065 62.946-9.378 18.52-22.037 34.227-37.979 47.12-15.942 12.894-34.462 22.858-55.561 29.89-21.1 7.034-43.37 10.55-66.814 10.55-28.601 0-53.568-4.103-74.902-12.308-21.334-8.205-39.15-19.81-53.451-34.813-14.3-15.004-25.202-33.055-32.704-54.154-7.502-21.099-11.487-44.542-11.956-70.33h80.177c-0.938 30.008 6.447 54.975 22.154 74.902s39.268 29.89 70.682 29.89c26.726 0 49.114-7.62 67.166-22.857 18.051-15.239 27.077-36.923 27.077-65.055 0-19.224-3.751-34.462-11.253-45.715-7.502-11.252-17.348-19.81-29.539-25.67-12.19-5.86-25.905-9.494-41.143-10.901-15.239-1.407-30.828-1.875-46.77-1.407v-59.78z"
+                                                    p-id="1609"></path>
+                                            </svg>
+                                        </span>
+                                        <span @click="SetHeading(4)" class="tools-span" :class="Heading2 != 4 ? '' : 'tools-select'">
+                                            <svg t="1716215885803" class="tools-svg" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1770" width="200"
+                                                height="200">
+                                                <path
+                                                    d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276z m936.246 331.56h-63.298v116.748h-75.957V779.56H674v-79.472L884.991 404h75.957v312.264h63.298v63.296zM735.89 716.264h149.1V499.648h-1.406L735.89 716.264z"
+                                                    p-id="1771"></path>
+                                            </svg>
+                                        </span>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
+                                        <span @click="SetListul" class="tools-span"
+                                            :class="!isListul ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='list-ul'></font-awesome-icon></span>
+                                        <span @click="SetListol" class="tools-span"
+                                            :class="!isListol ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='list-ol'></font-awesome-icon></span>
+                                        <span @click="SetTasks" class="tools-span"
+                                            :class="!isTasks ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='tasks'></font-awesome-icon></span>
+                                        <span @click="SetCode" class="tools-span" :class="!isCode ? '' : 'tools-select'"><font-awesome-icon
+                                                icon='code'></font-awesome-icon></span>
+                                    </el-dropdown-item>
+
+                                </template>
+                            </el-dropdown>
+
                         </div>
 
                         <div class="top-item">
@@ -260,7 +390,7 @@
                                 <el-button class="button" size="small" @click="InsertTable">插入表格</el-button>
                             </div>
                         </div>
-                        <el-dropdown>
+                        <el-dropdown :hide-on-click="false">
                             <span class="top-button">
                                 <svg t="1720252237657" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg" p-id="55324" width="200" height="200">
@@ -279,6 +409,19 @@
                             </span>
                             <template #dropdown>
                                 <el-dropdown-menu class="tools-2-1" style="flex-direction: column;">
+                                    <el-dropdown-item @click.stop>
+                                        <div class="tools-table2 small">
+                                            <div>
+                                                列:<el-input v-model="InsertTableCol" step="1" size="small"
+                                                    style="width: 30px;"></el-input>
+                                            </div>
+                                            <div>
+                                                行:<el-input v-model="InsertTableRow" size="small"
+                                                    style="width: 30px;"></el-input>
+                                            </div>
+                                            <el-button class="button" size="small" @click="InsertTable">插入</el-button>
+                                        </div>
+                                    </el-dropdown-item>
                                     <el-dropdown-item>
                                         <span @click="InsertTableLine('left')" :disabled="!isTable">
                                             <font-awesome-icon icon='arrow-left'></font-awesome-icon>
@@ -310,7 +453,7 @@
                                                     p-id="11131"></path>
                                             </svg>
                                         </span>
-                                        <span @click="state.editor.commands.mergeCells();" :disabled="!isTable">
+                                        <span @click="editor.commands.mergeCells();" :disabled="!isTable">
                                             <svg t="1716644758298" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                                 xmlns="http://www.w3.org/2000/svg" p-id="13801" width="200"
                                                 height="200">
@@ -319,7 +462,7 @@
                                                     p-id="13802"></path>
                                             </svg>
                                         </span>
-                                        <span @click="state.editor.commands.splitCell();" :disabled="!isTable">
+                                        <span @click="editor.commands.splitCell();" :disabled="!isTable">
                                             <svg t="1716644784112" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                                 xmlns="http://www.w3.org/2000/svg" p-id="15809" width="200"
                                                 height="200">
@@ -333,8 +476,16 @@
                             </template>
                         </el-dropdown>
                         <span class="top-button" @click="InsertPic2()">
-                            <input type="file" @change="InsertPic" id="uploadImg" style="display: none;"/>
-                            <svg t="1720252852899" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="111649" width="200" height="200"><path d="M758.848 487.36L1024 713.28v196.928C1024 972.8 972.8 1024 910.208 1024H113.792C51.2 1024 0 972.8 0 910.208v-50.944l218.944-218.88 155.072 147.968c11.52 10.24 34.496 10.24 45.952 0l338.88-300.992zM910.208 0C972.8 0 1024 51.2 1024 113.792v529.408l-247.936-211.904c-15.104-8.96-30.144-10.048-41.408-3.392l-4.544 3.392-338.816 300.928L230.4 584.32c-11.52-15.36-34.432-10.24-45.952 0L0 779.456V113.792C0 51.2 51.2 0 113.792 0h796.416z" fill="#5BA4EB" p-id="111650"></path><path d="M358.976 370.048c40.832 0 76.48-35.712 76.48-76.48 0-40.832-35.648-76.544-76.48-76.544s-76.544 35.712-76.544 76.544c0 40.768 35.712 76.48 76.544 76.48z m0 51.008a126.272 126.272 0 0 1-127.552-127.488c0-71.424 56.128-127.552 127.552-127.552S486.4 222.144 486.4 293.568A126.272 126.272 0 0 1 359.04 421.056z" fill="#FFFFFF" p-id="111651"></path></svg>
+                            <input type="file" @change="InsertPic" id="uploadImg" style="display: none;" />
+                            <svg t="1720252852899" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="111649" width="200" height="200">
+                                <path
+                                    d="M758.848 487.36L1024 713.28v196.928C1024 972.8 972.8 1024 910.208 1024H113.792C51.2 1024 0 972.8 0 910.208v-50.944l218.944-218.88 155.072 147.968c11.52 10.24 34.496 10.24 45.952 0l338.88-300.992zM910.208 0C972.8 0 1024 51.2 1024 113.792v529.408l-247.936-211.904c-15.104-8.96-30.144-10.048-41.408-3.392l-4.544 3.392-338.816 300.928L230.4 584.32c-11.52-15.36-34.432-10.24-45.952 0L0 779.456V113.792C0 51.2 51.2 0 113.792 0h796.416z"
+                                    fill="#5BA4EB" p-id="111650"></path>
+                                <path
+                                    d="M358.976 370.048c40.832 0 76.48-35.712 76.48-76.48 0-40.832-35.648-76.544-76.48-76.544s-76.544 35.712-76.544 76.544c0 40.768 35.712 76.48 76.544 76.48z m0 51.008a126.272 126.272 0 0 1-127.552-127.488c0-71.424 56.128-127.552 127.552-127.552S486.4 222.144 486.4 293.568A126.272 126.272 0 0 1 359.04 421.056z"
+                                    fill="#FFFFFF" p-id="111651"></path>
+                            </svg>
                             图片
                         </span>
                         <span class="top-button" @click="InsertDraw">
@@ -470,7 +621,7 @@
 
 
         <div class='main2'>
-            <div class="main-left print" v-if='ShowTree'>
+            <div class="main-left print large" v-if='ShowTree'>
                 <span @click='ShowTree = false' class='main-left-close'><font-awesome-icon icon="times" /></span>
                 <li class="main-left-title"
                     style="color: #333;margin-bottom: 14px;margin-top: 14px;margin-left: 15px;font-size: 16px;cursor:auto;">
@@ -484,6 +635,30 @@
                     :style="{ 'margin-left': '0', 'text-align': 'center', 'color': '#aaa', 'cursor': 'auto' }"> （暂无索引）
                 </li>
             </div>
+
+            <translation>
+                <div class="small main-left-2-ghost" v-if='ShowTree' @click.stop="ShowTree = false">
+                    <div class="main-left print small main-left-small" v-if='ShowTree'>
+                        <span @click='ShowTree = false' class='main-left-close'><font-awesome-icon
+                                icon="times" /></span>
+                        <li class="main-left-title"
+                            style="color: #333;margin-bottom: 14px;margin-top: 14px;margin-left: 15px;font-size: 20px;cursor:auto;">
+                            文档索引
+                        </li>
+                        <li v-for="i in TitleList" :key="i" class="main-left-title"
+                            :style="{ 'margin-left': (30 + (i.level - 1) * 30) + 'px', 'color': ['#666', '#888', '#999'][i.level - 1] }"
+                            @click="GotoTitle(i.id)">{{ i.title }}
+                        </li>
+                        <li v-if="TitleList.length == 0" class="main-left-title"
+                            :style="{ 'margin-left': '0', 'text-align': 'center', 'color': '#aaa', 'cursor': 'auto','width': '100%','max-width': '100%'}">
+                            （暂无索引）
+                        </li>
+                    </div>
+                </div>
+            </translation>
+
+
+
             <div class="main" v-loading="fileLoading">
                 <div class="main-right">
                     <div style="height: 40px;" class="print main-height"></div>
@@ -492,9 +667,9 @@
                         <div class="main-sround-tr print"> </div>
                         <div class="main-sround-bl print"> </div>
                         <div class="main-sround-br print"> </div> -->
-                        <editor-content id="pdf" :editor="state.editor" @contextmenu.prevent.stop="EditorContext" />
+                        <editor-content id="pdf" :editor="editor" @contextmenu.prevent.stop="EditorContext" />
                         <div @click="EditorActive"
-                            @contextmenu.prevent.stop="state.editor.chain().focus('end').run(); EditorContext($event)"
+                            @contextmenu.prevent.stop="editor.chain().focus('end').run(); EditorContext($event)"
                             class="editor-space"></div>
                     </div>
                     <div style="height: 60px;" class="print main-height"></div>
@@ -537,8 +712,8 @@
                             <div v-loading="isAILoading">
                                 <div class="wrong2right"
                                     v-for='i in AIwrong2right || [{ "Original sentence": "错误的原句😭", "Corrected sentence": "修改后正确的句子😊", "Error type": "错误的原因⚡", "Reasons for modification": "对修改病句的解释说明🚀" }]'
-                                    @mouseenter="state.editor.commands.setSearchTerm(i['Original sentence'])"
-                                    @mouseleave="state.editor.commands.setSearchTerm('')">
+                                    @mouseenter="editor.commands.setSearchTerm(i['Original sentence'])"
+                                    @mouseleave="editor.commands.setSearchTerm('')">
                                     <span class="ai-title-2" style='margin-bottom: 3px;margin-top: 6px;'>原句</span>
                                     <el-input :readonly='true' placeholder='AI输出❤...' class="ai-textarea" rows="3"
                                         type='textarea' id="scroll_text" v-model="i['Original sentence']">
@@ -554,7 +729,7 @@
                                         type='textarea' id="scroll_text" v-model="i['Reasons for modification']">
                                     </el-input>
                                     <el-button style="margin-top: 10px;"
-                                        @click="state.editor.commands.setReplaceTerm(i['Corrected sentence']); state.editor.commands.replace()"
+                                        @click="editor.commands.setReplaceTerm(i['Corrected sentence']); editor.commands.replace()"
                                         size="small">替换本句</el-button>
                                 </div>
                             </div>
@@ -598,8 +773,8 @@
             </div>
         </div>
 
-        <bubble-menu :shouldShow="shouldShowMenu" id="bubbleMenu" :editor="state.editor"
-            :tippy-options="{ duration: 100 }" v-if="state.editor">
+        <bubble-menu :shouldShow="shouldShowMenu" id="bubbleMenu" :editor="editor" :tippy-options="{ duration: 100 }"
+            v-if="editor">
             <div class="bubble-menu" @contextmenu.prevent>
                 <div class='bubble-menu-1'>
                     <span @click="bold" :class="!isBold ? '' : 'tools-select'"><font-awesome-icon
@@ -809,7 +984,7 @@ if (route.query.id) {
         // console.log(Template);
         store.isSave = true
         store.DocTitle = response.data.name
-        state.editor.commands.setContent(Template)
+        editor.commands.setContent(Template)
         fileLoading.value = false
     }).catch((error) => {
         fileLoading.value = false
@@ -852,83 +1027,58 @@ if (route.query.coopcode) {
     showCoopCode.value = true
     coopCode.value = route.query.coopcode
 }
-const state = reactive({
-    editor: new Editor({
-        // content: "",
-        extensions: [
-            Collaboration.configure({ document: doc }),
+// const state = reactive({
+const editor = new Editor({
+    // content: "",
+    extensions: [
+        Collaboration.configure({ document: doc }),
 
-            Underline, FontSize, StarterKit, TextStyle, CharacterCount, Superscript, Subscript,
-            Color.configure({ types: ["textStyle"], }),
-            TextAlign.configure({ types: ['heading', 'paragraph'], }),
-            Focus.configure({ className: 'focus', }),
-            Link.configure({ autolink: true, linkOnPaste: true, openOnClick: false }),
-            Heading.configure({ levels: [1, 2, 3, 4] }),
-            TaskList, TaskItem, EchartsBar, EchartsPie, Image.configure({
-                inline: true,
-            }), ImageResize,
-            ImageUploadExtension.configure({
-                acceptMimes: ['image/jpeg', 'image/gif', 'image/png', 'image/jpg'],
-                upload: uploadImage,
-            }),
-            ImagePlaceholder.configure({
-                inline: false
-            }),
-            mermaid, Paper, Gapcursor, Commands.configure({ suggestion }),
-            Placeholder.configure({ placeholder: 'Write something …', }),
-            // BubbleMenu2,
-            // BubbleMenu2.config({pluginKey: 'aiMenu', element: document.querySelector('#aiMenu')}), 
-            // UniqueID.configure({ types: ['heading', 'paragraph'], }),
-            CodeBlockLowlight.extend({
-                addKeyboardShortcuts() {
-                    return {
-                        ...this.parent?.(),
-                        'Tab': () => {
-                            if (this.editor.isActive('codeBlock')) { return this.editor.commands.insertContent('    '); }
-                            return true;
-                        }
+        Underline, FontSize, StarterKit, TextStyle, CharacterCount, Superscript, Subscript,
+        Color.configure({ types: ["textStyle"], }),
+        TextAlign.configure({ types: ['heading', 'paragraph'], }),
+        Focus.configure({ className: 'focus', }),
+        Link.configure({ autolink: true, linkOnPaste: true, openOnClick: false }),
+        Heading.configure({ levels: [1, 2, 3, 4] }),
+        TaskList, TaskItem, EchartsBar, EchartsPie, Image.configure({
+            inline: true,
+        }), ImageResize,
+        ImageUploadExtension.configure({
+            acceptMimes: ['image/jpeg', 'image/gif', 'image/png', 'image/jpg'],
+            upload: uploadImage,
+        }),
+        ImagePlaceholder.configure({
+            inline: false
+        }),
+        mermaid, Paper, Gapcursor, Commands.configure({ suggestion }),
+        Placeholder.configure({ placeholder: 'Write something …', }),
+        CodeBlockLowlight.extend({
+            addKeyboardShortcuts() {
+                return {
+                    ...this.parent?.(),
+                    'Tab': () => {
+                        if (this.editor.isActive('codeBlock')) { return this.editor.commands.insertContent('    '); }
+                        return true;
                     }
                 }
-            }).configure({ lowlight, languageClassPrefix: 'language-', }),
-            Table.configure({ resizable: true, }), TableRow, TableHeader, TableCell,
-            SearchAndReplace.configure({
-                searchResultClass: "search-result"
-            }),
-            // CollaborationCursor.configure({
-            //     provider: provider,
-            //     user: {
-            //         name: store.UserInfo.name,
-            //     },
-            // })
-        ],
-        autofocus: true,
-        editable: true,
-        injectCSS: true,
-        content: Template,
-    }),
-    result: "",
-});
-// state.editor.commands.
-// const provider = new HocuspocusProvider({
-//     url: 'ws://127.0.0.1:1234',
-//     name: 'example-document',
-//     document: doc,
-//     onSynced() {
-//       if (!doc.getMap('config').get('initialContentLoaded') && state.editor) {
-//         doc.getMap('config').set('initialContentLoaded', true)
+            }
+        }).configure({ lowlight, languageClassPrefix: 'language-', }),
+        Table.configure({ resizable: true, }), TableRow, TableHeader, TableCell,
+        SearchAndReplace.configure({
+            searchResultClass: "search-result"
+        }),
+        // CollaborationCursor.configure({
+        //     provider: provider,
+        //     user: {
+        //         name: store.UserInfo.name,
+        //     },
+        // })
+    ],
+    autofocus: true,
+    editable: true,
+    injectCSS: true,
+    content: Template,
+})
 
-//         state.editor.commands.setContent(`
-//           <p>
-//             这是 Tiptap 的极简版本。它支持文档，包含段落和文本。仅此而已。对于真正的极简主义者来说可能有点多了。
-//           </p>
-//           <p>
-//             段落扩展实际上并不必要，但至少需要一个节点。当然，这个节点可以是不同的东西。
-//           </p>
-//         `)
-//       }
-//     },
-
-// })
 
 function startCoop() {
     if (!store.UserInfo.name) {
@@ -949,9 +1099,9 @@ function startCoop() {
         name: coopCode.value.toUpperCase(),
         document: doc,
         onSynced() {
-            if (!doc.getMap('config').get('initialContentLoaded') && state.editor) {
+            if (!doc.getMap('config').get('initialContentLoaded') && editor) {
                 doc.getMap('config').set('initialContentLoaded', true)
-                // state.editor.commands.setContent()
+                // editor.commands.setContent()
             }
             ElNotification({
                 title: '成功',
@@ -961,15 +1111,15 @@ function startCoop() {
         },
 
     })
-    // state.editor
-    // state.editor.registerPlugin(CollaborationCursor.configure({
+    // editor
+    // editor.registerPlugin(CollaborationCursor.configure({
     //     provider: provider,
     //     user: {
     //         name: store.UserInfo.name,
     //     },
     //     // PluginKey: 'collaborationCursor',
     // }))
-    // console.log(state.editor.registerPlugin);
+    // console.log(editor.registerPlugin);
 
 }
 
@@ -994,7 +1144,7 @@ function stopCoop() {
         message: '已退出协同编辑',
         type: 'success',
     })
-    // state.editor.unregisterPlugin('collaborationCursor')
+    // editor.unregisterPlugin('collaborationCursor')
 }
 
 function getCoop() {
@@ -1028,13 +1178,13 @@ function joinCoop() {
             method: 'GET',
         }).then((response) => {
             if (response.data.type) {
-                state.editor.commands.setContent('')
+                editor.commands.setContent('')
                 provider = new HocuspocusProvider({
                     url: baseUrl2,
                     name: coopCode.value,
                     document: doc,
                     onSynced() {
-                        if (!doc.getMap('config').get('initialContentLoaded') && state.editor) {
+                        if (!doc.getMap('config').get('initialContentLoaded') && editor) {
                             doc.getMap('config').set('initialContentLoaded', true)
 
                         }
@@ -1078,7 +1228,7 @@ function joinCoop() {
 
 onMounted(() => {
 
-    // state.editor.registerPlugin(BubbleMenu2.config({pluginKey: 'bubbleMenu', element: document.querySelector('#bubbleMenu')}));
+    // editor.registerPlugin(BubbleMenu2.config({pluginKey: 'bubbleMenu', element: document.querySelector('#bubbleMenu')}));
 })
 
 
@@ -1100,27 +1250,27 @@ function uploadImage(file) {
     })
 }
 
-function InsertPic2(){
-    document.getElementById('uploadImage').click()
+function InsertPic2() {
+    document.getElementById('uploadImg').click()
 }
 function InsertPic({ target }) {
-  const file = target.files[0]
-  target.value = ''
-  state.editor.commands.uploadImage({ file })
+    const file = target.files[0]
+    target.value = ''
+    editor.commands.uploadImage({ file })
 }
 function test() {
     // document.execCommand('paste')
-    // state.editor.commands.deleteSelection()
-    state.editor.commands.setContent(``)
+    // editor.commands.deleteSelection()
+    editor.commands.setContent(``)
 }
 //设置颜色
 const onColor = ($event) => {
     // debugger;
-    state.editor.chain().focus().setColor($event.target.value).run();
+    editor.chain().focus().setColor($event.target.value).run();
 };
 //获取Html
 const getHTML = () => {
-    state.result = state.editor.getHTML();
+    state.result = editor.getHTML();
 };
 
 const ShowTools = ref(true)
@@ -1137,7 +1287,7 @@ function GetDocTitle(str) {
 
 function SaveLocal() {
     store.isSave = true
-    let html = state.editor.getHTML()
+    let html = editor.getHTML()
     let blob = new Blob([JSON.stringify({
         content: html
     })], { type: "text/plain;charset=utf-8" });
@@ -1149,7 +1299,7 @@ function SaveLocal() {
     link.click();
 }
 function SaveServer() {
-    let html = state.editor.getHTML()
+    let html = editor.getHTML()
     if (fileId) {
         request({
             url: '/api/file/text/',
@@ -1157,7 +1307,7 @@ function SaveServer() {
             body: {
                 text_id: fileId,
                 update_type: 'content',
-                content: JSON.stringify({ content: state.editor.getHTML() })
+                content: JSON.stringify({ content: editor.getHTML() })
             }
         }).then((response) => {
             ElNotification({
@@ -1172,7 +1322,7 @@ function SaveServer() {
             url: '/api/file/text/',
             method: 'post',
             body: {
-                content: JSON.stringify({ content: state.editor.getHTML() }),
+                content: JSON.stringify({ content: editor.getHTML() }),
                 name: (store.DocTitle === '文档' || store.DocTitle === '') ? (GetDocTitle(html) || '文档') : store.DocTitle,
                 location_type: 0
             }
@@ -1225,13 +1375,13 @@ function OpenLocal2(e) {
             try {
                 console.log(file);
                 let html = JSON.parse(e.target.result).content
-                state.editor.commands.setContent(html)
+                editor.commands.setContent(html)
                 store.DocTitle = file.name.split('.').slice(0, -1).join('.')
                 store.isSave = true
-                state.editor.state.history$.prevRanges = null;
-                state.editor.state.history$.done.eventCount = 0
-                CanUndo.value = state.editor.can().undo()
-                CanRedo.value = state.editor.can().redo()
+                editor.state.history$.prevRanges = null;
+                editor.state.history$.done.eventCount = 0
+                CanUndo.value = editor.can().undo()
+                CanRedo.value = editor.can().redo()
                 ElNotification({
                     title: '成功',
                     message: '打开文件成功',
@@ -1263,17 +1413,17 @@ function NewFile() {
             type: 'warning',
         }).then(() => {
             store.isSave = true
-            state.editor.commands.setContent('')
+            editor.commands.setContent('')
             store.DocTitle = '文档'
-            state.editor.state.history$.prevRanges = null;
-            state.editor.state.history$.done.eventCount = 0
-            CanUndo.value = state.editor.can().undo()
-            CanRedo.value = state.editor.can().redo()
+            editor.state.history$.prevRanges = null;
+            editor.state.history$.done.eventCount = 0
+            CanUndo.value = editor.can().undo()
+            CanRedo.value = editor.can().redo()
         }).catch(() => {
             console.log('取消');
         });
     } else {
-        state.editor.commands.setContent('')
+        editor.commands.setContent('')
         store.DocTitle = '文档'
     }
 }
@@ -1285,7 +1435,7 @@ function SavePDF() {
 }
 
 const EditorActive = () => {
-    state.editor.chain().focus().run();
+    editor.chain().focus().run();
 };
 
 function shouldShowMenu({ editor, view, state, oldState, from, to }) {
@@ -1295,10 +1445,10 @@ function shouldShowMenu({ editor, view, state, oldState, from, to }) {
 }
 
 function undo() {
-    state.editor.chain().undo().run()
+    editor.chain().undo().run()
 }
 function redo() {
-    state.editor.chain().redo().run()
+    editor.chain().redo().run()
 }
 const isBold = ref(false)
 const isItalic = ref(false)
@@ -1306,23 +1456,23 @@ const isUnderline = ref(false)
 const isStrikethrough = ref(false)
 
 function bold() {
-    state.editor.chain().focus().toggleBold().run()
-    isBold.value = state.editor.isActive('bold')
+    editor.chain().focus().toggleBold().run()
+    isBold.value = editor.isActive('bold')
     // isBold.value = !isBold.value
 }
 function italic() {
-    state.editor.chain().focus().toggleItalic().run()
-    isItalic.value = state.editor.isActive('italic')
+    editor.chain().focus().toggleItalic().run()
+    isItalic.value = editor.isActive('italic')
     // isItalic.value = !isItalic.value
 }
 function underline() {
-    state.editor.commands.toggleUnderline()
-    isUnderline.value = state.editor.isActive('underline')
+    editor.commands.toggleUnderline()
+    isUnderline.value = editor.isActive('underline')
     // isUnderline.value = !isUnderline.value
 }
 function strikethrough() {
-    state.editor.chain().focus().toggleStrike().run()
-    isStrikethrough.value = state.editor.isActive('strike')
+    editor.chain().focus().toggleStrike().run()
+    isStrikethrough.value = editor.isActive('strike')
     // isStrikethrough.value = !isStrikethrough.value
 }
 
@@ -1332,23 +1482,23 @@ const CanRedo = ref(false)
 const FontSize2 = ref(12)
 const FontSizeList = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72]
 function SetFontSize() {
-    state.editor.chain().focus().setFontSize(FontSize2.value + 'pt').run()
+    editor.chain().focus().setFontSize(FontSize2.value + 'pt').run()
 }
 
 const FontColor = ref('#000000')
 function SetFontColor() {
-    state.editor.chain().focus().setColor(FontColor.value).run()
+    editor.chain().focus().setColor(FontColor.value).run()
 }
 
 const TextAlign2 = ref('left')
 function SetTextAlign(value) {
-    state.editor.chain().focus().setTextAlign(value).run()
+    editor.chain().focus().setTextAlign(value).run()
     // TextAlign2.value = value
-    if (state.editor.isActive({ textAlign: 'justify' })) {
+    if (editor.isActive({ textAlign: 'justify' })) {
         TextAlign2.value = 'justify'
-    } else if (state.editor.isActive({ textAlign: 'center' })) {
+    } else if (editor.isActive({ textAlign: 'center' })) {
         TextAlign2.value = 'center'
-    } else if (state.editor.isActive({ textAlign: 'right' })) {
+    } else if (editor.isActive({ textAlign: 'right' })) {
         TextAlign2.value = 'right'
     } else {
         TextAlign2.value = 'left'
@@ -1356,21 +1506,21 @@ function SetTextAlign(value) {
 }
 const isSubscript = ref(false)
 function SetSubscript() {
-    state.editor.chain().focus().toggleSubscript().run()
-    isSubscript.value = state.editor.isActive('subscript')
+    editor.chain().focus().toggleSubscript().run()
+    isSubscript.value = editor.isActive('subscript')
 
     // isSubscript.value = !isSubscript.value
 }
 const isSuperscript = ref(false)
 function SetSuperscript() {
-    state.editor.chain().focus().toggleSuperscript().run()
+    editor.chain().focus().toggleSuperscript().run()
     // isSuperscript.value = !isSuperscript.value
-    isSuperscript.value = state.editor.isActive('superscript')
+    isSuperscript.value = editor.isActive('superscript')
 }
 const isLink = ref(false)
 function SetLink() {
     if (isLink.value) {
-        state.editor.chain().focus().unsetLink().run()
+        editor.chain().focus().unsetLink().run()
     } else {
 
     }
@@ -1378,15 +1528,15 @@ function SetLink() {
 
 const isCode = ref(false)
 function SetCode() {
-    state.editor.chain().focus().toggleCodeBlock().run()
-    isCode.value = state.editor.isActive('codeBlock')
+    editor.chain().focus().toggleCodeBlock().run()
+    isCode.value = editor.isActive('codeBlock')
 }
 
 let TitleList = reactive([])
 
 function extractHeadings() {
     let parser = new DOMParser();
-    let doc = parser.parseFromString(state.editor.getHTML(), 'text/html');
+    let doc = parser.parseFromString(editor.getHTML(), 'text/html');
     let headings = [];
     let headingElements = doc.querySelectorAll('h1, h2, h3');
     headingElements.forEach(element => {
@@ -1419,11 +1569,11 @@ function GotoTitle(id) {
 
 const Heading2 = ref(0)
 function SetHeading(value) {
-    state.editor.chain().focus().toggleHeading({ level: value }).run()
+    editor.chain().focus().toggleHeading({ level: value }).run()
     // Heading2.value = value
     let flag = false
     for (let i = 1; i <= 4; i++) {
-        if (state.editor.isActive('heading', { level: i })) {
+        if (editor.isActive('heading', { level: i })) {
             Heading2.value = i
             flag = true
             break
@@ -1432,66 +1582,66 @@ function SetHeading(value) {
 }
 const isListol = ref(false)
 function SetListol() {
-    state.editor.chain().focus().toggleOrderedList().run()
-    isListol.value = state.editor.isActive('orderedList')
-    isListul.value = state.editor.isActive('bulletList')
+    editor.chain().focus().toggleOrderedList().run()
+    isListol.value = editor.isActive('orderedList')
+    isListul.value = editor.isActive('bulletList')
 }
 const isListul = ref(false)
 function SetListul() {
-    state.editor.chain().focus().toggleBulletList().run()
-    isListol.value = state.editor.isActive('orderedList')
-    isListul.value = state.editor.isActive('bulletList')
+    editor.chain().focus().toggleBulletList().run()
+    isListol.value = editor.isActive('orderedList')
+    isListul.value = editor.isActive('bulletList')
 }
 const isTasks = ref(false)
 function SetTasks() {
-    state.editor.chain().focus().toggleTaskList().run()
-    isTasks.value = state.editor.isActive('taskList')
+    editor.chain().focus().toggleTaskList().run()
+    isTasks.value = editor.isActive('taskList')
 }
 
 function InsertGraph(type) {
     if (type == 1) {
-        state.editor.chain().focus().insertContent('<vue-mermaid data="graph TB\n使用mermaid-->创建您的图表"></vue-mermaid>').run()
+        editor.chain().focus().insertContent('<vue-mermaid data="graph TB\n使用mermaid-->创建您的图表"></vue-mermaid>').run()
     } else if (type == 2) {
-        state.editor.commands.insertContent('<vue-echarts-bar></vue-echarts-bar>')
+        editor.commands.insertContent('<vue-echarts-bar></vue-echarts-bar>')
     } else if (type == 3) {
-        state.editor.commands.insertContent('<vue-echarts-pie></vue-echarts-pie>')
+        editor.commands.insertContent('<vue-echarts-pie></vue-echarts-pie>')
     }
 }
 
 function InsertDraw() {
-    state.editor.chain().focus().insertContent('<div data-type="paper"></div>').run()
+    editor.chain().focus().insertContent('<div data-type="paper"></div>').run()
 }
 
 function SaveHTML() {
-    // state.editor.setHTML('<div data-mermaid>qwq</div>')
-    console.log(state.editor.getHTML());
+    // editor.setHTML('<div data-mermaid>qwq</div>')
+    console.log(editor.getHTML());
 }
 
 const isTable = ref(false)
 const InsertTableCol = ref(3)
 const InsertTableRow = ref(3)
 function InsertTable() {
-    // state.editor.
+    // editor.
     // test()
-    state.editor.chain().focus().insertTable({ rows: InsertTableRow.value, cols: InsertTableCol.value }).run()
+    editor.chain().focus().insertTable({ rows: InsertTableRow.value, cols: InsertTableCol.value }).run()
 }
 function InsertTableLine(value) {
     if (value == 'left') {
-        state.editor.commands.addColumnBefore();
+        editor.commands.addColumnBefore();
     } else if (value == 'right') {
-        state.editor.commands.addColumnAfter();
+        editor.commands.addColumnAfter();
     } else if (value == 'up') {
-        state.editor.commands.addRowBefore();
+        editor.commands.addRowBefore();
     } else if (value == 'down') {
-        state.editor.commands.addRowAfter();
+        editor.commands.addRowAfter();
     }
 }
 
 function DeleteTable(value) {
     if (value == 'row') {
-        state.editor.commands.deleteRow();
+        editor.commands.deleteRow();
     } else if (value == 'col') {
-        state.editor.commands.deleteColumn();
+        editor.commands.deleteColumn();
     }
 }
 
@@ -1531,24 +1681,24 @@ function EditorContext(event) {
             label: '粘贴',
             onClick: async (event) => {
                 // const clipboard = await navigator.clipboard.readText()
-                // state.editor.chain().focus().insertContent(clipboard).run()
+                // editor.chain().focus().insertContent(clipboard).run()
                 const clipboardItems = await navigator.clipboard.read();
                 for (const item of clipboardItems) {
                     if (item.types.includes('text/html')) {
                         const blob = await item.getType('text/html');
                         const html = await blob.text();
-                        state.editor.chain().focus().insertContent(html).run();
+                        editor.chain().focus().insertContent(html).run();
                     } else if (item.types.includes('text/plain')) {
                         const blob = await item.getType('text/plain');
                         const text = await blob.text();
-                        state.editor.chain().focus().insertContent(text).run();
+                        editor.chain().focus().insertContent(text).run();
                     }
                 }
             }
         }, {
             label: '全选',
             onClick: () => {
-                state.editor.chain().focus('all').run();
+                editor.chain().focus('all').run();
             }
         }, { divided: true }, {
             label: '撤销',
@@ -1581,10 +1731,10 @@ function EditorContext(event) {
                 onClick: () => { DeleteTable('col') }
             }, { divided: true }, {
                 label: '合并单元格',
-                onClick: () => { state.editor.commands.mergeCells() }
+                onClick: () => { editor.commands.mergeCells() }
             }, {
                 label: '拆分单元格',
-                onClick: () => { state.editor.commands.splitCell() }
+                onClick: () => { editor.commands.splitCell() }
             }]
         }, { divided: true }, {
             label: 'AI工具',
@@ -1616,15 +1766,15 @@ const AItransitionFrom = ref('自动识别')
 const AItransitionTo = ref('中文')
 let ctrl = new AbortController()
 function AIInsert() {
-    state.editor.chain().focus().insertContent(AIData.value).run()
+    editor.chain().focus().insertContent(AIData.value).run()
 }
 function AItransition() {
     ctrl = new AbortController()
     AISelect.value = 1
     isAIOpen.value = true
     AIData.value = ''
-    const view = state.editor.view
-    const state2 = state.editor.state
+    const view = editor.view
+    const state2 = editor.state
     const { from, to } = view.state.selection
     const text = state2.doc.textBetween(from, to, '')
     if (text == '') {
@@ -1672,7 +1822,7 @@ function AIsummary() {
     AISelect.value = 2
     isAIOpen.value = true
     AIData.value = ''
-    const text = state.editor.getText()
+    const text = editor.getText()
     isAILoading.value = true
     request({
         url: '/api/ai/summary/',
@@ -1706,7 +1856,7 @@ function AIabstract() {
     AISelect.value = 3
     isAIOpen.value = true
     AIData.value = ''
-    const text = state.editor.getText()
+    const text = editor.getText()
     console.log(text);
     isAILoading.value = true
     request({
@@ -1743,7 +1893,7 @@ function AIcontiune() {
     AISelect.value = 4
     isAIOpen.value = true
     AIData.value = ''
-    const text = state.editor.getText()
+    const text = editor.getText()
     console.log(text);
     isAILoading.value = true
     request({
@@ -1786,8 +1936,8 @@ function AIwrong2right2() {
     ctrl = new AbortController()
     isAIOpen.value = true
     AIData.value = ''
-    const view = state.editor.view
-    const state2 = state.editor.state
+    const view = editor.view
+    const state2 = editor.state
     const { from, to } = view.state.selection
     const text = state2.doc.textBetween(from, to, '')
     if (text == '') {
@@ -1845,65 +1995,65 @@ function AIAgain() {
 //watch AISelect
 watch(AISelect, (value) => {
     AIData.value = ''
-    // if (!state.editor.value) return;
-    // state.editor.commands.setSearchTerm('111');
-    // console.log(111,state.editor.storage.searchAndReplace);
+    // if (!editor.value) return;
+    // editor.commands.setSearchTerm('111');
+    // console.log(111,editor.storage.searchAndReplace);
 })
 
-state.editor.on('selectionUpdate', () => {
-    isBold.value = state.editor.isActive('bold')
-    isItalic.value = state.editor.isActive('italic')
-    isStrikethrough.value = state.editor.isActive('strike')
-    isUnderline.value = state.editor.isActive('underline')
+editor.on('selectionUpdate', () => {
+    isBold.value = editor.isActive('bold')
+    isItalic.value = editor.isActive('italic')
+    isStrikethrough.value = editor.isActive('strike')
+    isUnderline.value = editor.isActive('underline')
     let flag = false
     for (let i = 0; i < FontSizeList.length; i++) {
-        if (state.editor.isActive('textStyle', { fontSize: FontSizeList[i] + 'pt' })) {
+        if (editor.isActive('textStyle', { fontSize: FontSizeList[i] + 'pt' })) {
             FontSize2.value = FontSizeList[i]
             flag = true
             break
         }
     }
     if (!flag) { FontSize2.value = 12 }
-    FontColor.value = state.editor.getAttributes('textStyle').color || '#000000'
-    if (state.editor.isActive({ textAlign: 'justify' })) {
+    FontColor.value = editor.getAttributes('textStyle').color || '#000000'
+    if (editor.isActive({ textAlign: 'justify' })) {
         TextAlign2.value = 'justify'
-    } else if (state.editor.isActive({ textAlign: 'center' })) {
+    } else if (editor.isActive({ textAlign: 'center' })) {
         TextAlign2.value = 'center'
-    } else if (state.editor.isActive({ textAlign: 'right' })) {
+    } else if (editor.isActive({ textAlign: 'right' })) {
         TextAlign2.value = 'right'
     } else {
         TextAlign2.value = 'left'
     }
-    isSubscript.value = state.editor.isActive('subscript')
-    isSuperscript.value = state.editor.isActive('superscript')
-    isLink.value = state.editor.isActive('link')
+    isSubscript.value = editor.isActive('subscript')
+    isSuperscript.value = editor.isActive('superscript')
+    isLink.value = editor.isActive('link')
     flag = false
     for (let i = 1; i <= 4; i++) {
-        if (state.editor.isActive('heading', { level: i })) {
+        if (editor.isActive('heading', { level: i })) {
             Heading2.value = i
             flag = true
             break
         }
     }
     if (!flag) { Heading2.value = 0 }
-    isListol.value = state.editor.isActive('orderedList')
-    isListul.value = state.editor.isActive('bulletList')
-    isTasks.value = state.editor.isActive('taskList')
-    isCode.value = state.editor.isActive('codeBlock')
-    isTable.value = state.editor.isActive('table')
+    isListol.value = editor.isActive('orderedList')
+    isListul.value = editor.isActive('bulletList')
+    isTasks.value = editor.isActive('taskList')
+    isCode.value = editor.isActive('codeBlock')
+    isTable.value = editor.isActive('table')
 })
 
 const CharacterCount2 = ref(0)
 const CharacterWordCount = ref(0)
 
-state.editor.on('update', () => {
+editor.on('update', () => {
     store.isSave = false
-    CanUndo.value = state.editor.can().undo()
-    CanRedo.value = state.editor.can().redo()
+    CanUndo.value = editor.can().undo()
+    CanRedo.value = editor.can().redo()
     debounce(extractHeadings, 2000)()
     debounce(() => {
-        CharacterCount2.value = state.editor.storage.characterCount.characters()
-        CharacterWordCount.value = state.editor.storage.characterCount.words()
+        CharacterCount2.value = editor.storage.characterCount.characters()
+        CharacterWordCount.value = editor.storage.characterCount.words()
     }, 2000)()
 })
 
@@ -2150,7 +2300,7 @@ ul[data-type="taskList"] li p {
     margin-top: -1px;
 }
 
-.top .el-tabs__nav-scroll {
+.top .el-tabs__nav-wrap {
     background-image: linear-gradient(90deg, #5188ff, #64b5ff);
 }
 
@@ -2185,6 +2335,15 @@ ul[data-type="taskList"] li p {
 .top .el-tabs__content {
     padding: 5px 20px;
     height: 60px;
+}
+
+.top .el-tabs__nav-prev,
+.top .el-tabs__nav-next {
+    height: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media print {
@@ -2223,6 +2382,15 @@ ul[data-type="taskList"] li p {
     .editview {
         height: auto !important;
     }
+}
+
+@media screen and (max-width: 768px) {
+    .top .el-tabs__content {
+        height: 30px;
+        width: auto;
+        padding: 0px 5px;
+    }
+
 }
 </style>
 <style scoped>
@@ -2889,5 +3057,123 @@ ul[data-type="taskList"] li p {
 
 .top-item-svg path {
     fill: currentColor;
+}
+
+.large {
+    display: block;
+}
+
+.small {
+    display: none;
+}
+.large-flex{
+    display: flex !important;
+}
+.small-flex{
+    display: none !important;
+}
+.tools-span {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-left: 2px; */
+    color: #3172ff;
+}
+
+@media screen and (max-width: 768px) {
+    .top-item-class::after {
+        display: none;
+    }
+
+    .top-button svg {
+        width: 14px;
+        height: 14px;
+        margin-bottom: 0px;
+        margin-right: 5px;
+    }
+
+    .top-button {
+        flex-direction: row;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        /* width: 60px; */
+        /* //文字不换行 */
+        white-space: nowrap;
+    }
+
+    .top-item {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        /* justify-content: center; */
+        align-items: center;
+    }
+
+    .large {
+        display: none;
+    }
+
+    .small {
+        display: block;
+    }
+    .large-flex{
+        display: none !important;
+    }
+    .small-flex{
+        display: flex !important;
+    }
+    .main2 {
+        height: calc(100% - 60px);
+    }
+
+    .main-left-small {
+        width: 100%;
+        /* position: ; */
+        bottom: 100px;
+        height: 50vh;
+        border-top: solid 1px #ddd;
+        /* bottom: 0px; */
+        position: absolute;
+    }
+
+    .main-left-small .main-left-close {
+        top: 26px;
+        right: 50px;
+    }
+
+    .main-left-title {
+        font-size: 16px;
+    }
+
+    .main-left-2-ghost {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        background-color: #0000005d;
+        z-index: 1150;
+    }
+
+    .tools-table {
+        display: none
+    }
+
+    .tools-table2 {
+        display: flex;
+        align-items: center;
+    }
+
+    .top-item-ai {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        height: 100%
+    }
+    .tools-select{
+        background-color: #c1efff
+    }
 }
 </style>

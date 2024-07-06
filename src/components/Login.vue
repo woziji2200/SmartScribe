@@ -1,7 +1,7 @@
 <template>
     <div class="login-main-ghost" @click="emits('close')">
         <div class="login-main" @click.stop="">
-            <div class="close" @click="emits('close')">
+            <div class="close" style="z-index: 100;" @click="emits('close')">
                 <font-awesome-icon icon="times" />
             </div>
             <div>
