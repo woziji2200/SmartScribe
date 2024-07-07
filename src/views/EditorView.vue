@@ -11,7 +11,7 @@
 
 
             <div class="top">
-                <el-tabs type="border-card" v-model="TopTabs">
+                <el-tabs type="border-card">
                     <el-tab-pane class="top-item">
                         <template #label>
                             <font-awesome-icon icon="home" style="margin-right: 10px;" />首页
@@ -92,6 +92,7 @@
                                     d="M972.8 236.982857H800.182857c-32.182857 0-57.051429-26.331429-57.051428-58.514286V0L972.8 236.982857z"
                                     fill="#E7F0FF" p-id="39115"></path>
                             </svg>
+                            <input type="file" id="OpenLocal2" style="display: none" accept=".smd" @change="OpenLocal2">
                             打开
                         </span>
                         <span class="top-button" @click="SavePDF">
@@ -277,7 +278,8 @@
                                     </el-dropdown-item>
 
                                     <el-dropdown-item>
-                                        <span @click="SetHeading(1)" class="tools-span" :class="Heading2 != 1 ? '' : 'tools-select'">
+                                        <span @click="SetHeading(1)" class="tools-span"
+                                            :class="Heading2 != 1 ? '' : 'tools-select'">
                                             <svg t="1716215843603" class="tools-svg" viewBox="0 0 1024 1024"
                                                 version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1280" width="200"
                                                 height="200">
@@ -286,7 +288,8 @@
                                                     p-id="1281"></path>
                                             </svg>
                                         </span>
-                                        <span @click="SetHeading(2)" class="tools-span" :class="Heading2 != 2 ? '' : 'tools-select'">
+                                        <span @click="SetHeading(2)" class="tools-span"
+                                            :class="Heading2 != 2 ? '' : 'tools-select'">
                                             <svg t="1716215857033" class="tools-svg" viewBox="0 0 1024 1024"
                                                 version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1446" width="200"
                                                 height="200">
@@ -294,7 +297,8 @@
                                                     d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276z m935.282 448H680c0.479-41.591 10.533-77.923 30.163-108.997 19.63-31.074 46.44-58.084 80.434-81.031 16.279-11.952 33.275-23.544 50.99-34.779 17.714-11.234 33.993-23.305 48.835-36.213 14.842-12.907 27.05-26.89 36.626-41.95 9.576-15.058 14.603-32.388 15.081-51.988 0-9.083-1.077-18.764-3.231-29.042-2.155-10.278-6.344-19.84-12.568-28.683-6.224-8.845-14.842-16.254-25.854-22.23-11.012-5.976-25.375-8.964-43.09-8.964-16.278 0-29.803 3.227-40.576 9.68-10.772 6.455-19.39 15.299-25.854 26.533-6.463 11.235-11.251 24.5-14.363 39.798-3.112 15.298-4.908 31.791-5.386 49.48h-81.87c0-27.728 3.71-53.423 11.13-77.087 7.422-23.664 18.553-44.101 33.395-61.311 14.842-17.21 32.916-30.715 54.222-40.516 21.305-9.8 46.081-14.7 74.33-14.7 30.641 0 56.255 5.02 76.843 15.059 20.587 10.04 37.224 22.707 49.912 38.005 12.688 15.298 21.665 31.91 26.931 49.838 5.267 17.927 7.9 35.018 7.9 51.272 0 20.078-3.112 38.244-9.336 54.498-6.224 16.254-14.603 31.193-25.136 44.818-10.533 13.625-22.502 26.174-35.908 37.647a538.302 538.302 0 0 0-41.653 32.27 1122.27 1122.27 0 0 0-43.09 28.683c-14.364 9.083-27.65 18.166-39.858 27.249-12.209 9.083-22.862 18.525-31.958 28.325-9.097 9.8-15.321 20.198-18.673 31.193h244.894V896z"
                                                     p-id="1447"></path>
                                             </svg> </span>
-                                        <span @click="SetHeading(3)" class="tools-span" :class="Heading2 != 3 ? '' : 'tools-select'">
+                                        <span @click="SetHeading(3)" class="tools-span"
+                                            :class="Heading2 != 3 ? '' : 'tools-select'">
                                             <svg t="1716215866976" class="tools-svg" viewBox="0 0 1024 1024"
                                                 version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1608" width="200"
                                                 height="200">
@@ -303,7 +307,8 @@
                                                     p-id="1609"></path>
                                             </svg>
                                         </span>
-                                        <span @click="SetHeading(4)" class="tools-span" :class="Heading2 != 4 ? '' : 'tools-select'">
+                                        <span @click="SetHeading(4)" class="tools-span"
+                                            :class="Heading2 != 4 ? '' : 'tools-select'">
                                             <svg t="1716215885803" class="tools-svg" viewBox="0 0 1024 1024"
                                                 version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1770" width="200"
                                                 height="200">
@@ -323,7 +328,8 @@
                                         <span @click="SetTasks" class="tools-span"
                                             :class="!isTasks ? '' : 'tools-select'"><font-awesome-icon
                                                 icon='tasks'></font-awesome-icon></span>
-                                        <span @click="SetCode" class="tools-span" :class="!isCode ? '' : 'tools-select'"><font-awesome-icon
+                                        <span @click="SetCode" class="tools-span"
+                                            :class="!isCode ? '' : 'tools-select'"><font-awesome-icon
                                                 icon='code'></font-awesome-icon></span>
                                     </el-dropdown-item>
 
@@ -598,7 +604,7 @@
                             <span @click="AIwrong2right2()">修改病句</span>
                             <span @click="AISelect = 6">文章润色</span>
                         </div>
-                        <span class="top-button" @click="AISelect = 6">
+                        <span class="top-button" @click="isAIOpen = true; AISelect = 6">
                             <svg t="1720252611570" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                 xmlns="http://www.w3.org/2000/svg" p-id="99918" width="200" height="200">
                                 <path
@@ -636,7 +642,7 @@
                 </li>
             </div>
 
-            <translation>
+            <Transition>
                 <div class="small main-left-2-ghost" v-if='ShowTree' @click.stop="ShowTree = false">
                     <div class="main-left print small main-left-small" v-if='ShowTree'>
                         <span @click='ShowTree = false' class='main-left-close'><font-awesome-icon
@@ -650,12 +656,12 @@
                             @click="GotoTitle(i.id)">{{ i.title }}
                         </li>
                         <li v-if="TitleList.length == 0" class="main-left-title"
-                            :style="{ 'margin-left': '0', 'text-align': 'center', 'color': '#aaa', 'cursor': 'auto','width': '100%','max-width': '100%'}">
+                            :style="{ 'margin-left': '0', 'text-align': 'center', 'color': '#aaa', 'cursor': 'auto', 'width': '100%', 'max-width': '100%' }">
                             （暂无索引）
                         </li>
                     </div>
                 </div>
-            </translation>
+            </Transition>
 
 
 
@@ -667,7 +673,9 @@
                         <div class="main-sround-tr print"> </div>
                         <div class="main-sround-bl print"> </div>
                         <div class="main-sround-br print"> </div> -->
-                        <editor-content id="pdf" :editor="editor" @contextmenu.prevent.stop="EditorContext" />
+                        <div>
+                            <editor-content id="pdf" :editor="editor" @contextmenu.prevent.stop="EditorContext" />
+                        </div>
                         <div @click="EditorActive"
                             @contextmenu.prevent.stop="editor.chain().focus('end').run(); EditorContext($event)"
                             class="editor-space"></div>
@@ -737,8 +745,33 @@
                         </div>
                         <div v-if="AISelect == 6">
                             <el-tabs class="demo-tabs" v-model="LayoutTabs">
-                                <el-tab-pane label="User" name="first">User</el-tab-pane>
-                                <el-tab-pane label="Config" name="second">Config</el-tab-pane>
+                                <el-tab-pane label="快速排版" name="first">
+                                    <el-collapse accordion>
+                                        <el-collapse-item title="标准文章模板" name="1">
+                                            <div>
+                                                自动识别大写数字、小写数字作为标题，自动识别正文部分。适合长篇文章。
+                                            </div>
+                                            <img src="./../assets/model1.png" alt="" srcset="" style="width: 100%;">
+                                            <el-button @click="QuickLayout(1)">点击应用</el-button>
+                                        </el-collapse-item>
+                                        <el-collapse-item title="信件模板" name="2">
+                                            <div>
+                                                自动识别标题、称呼语、正文部分、日期。适用于信件。
+                                            </div>
+                                            <img src="./../assets/model2.png" alt="" srcset="" style="width: 100%;">
+                                            <el-button @click="QuickLayout(2)">点击应用</el-button>
+                                        </el-collapse-item>
+                                    </el-collapse>
+
+                                </el-tab-pane>
+                                <el-tab-pane label="AI排版" name="second">
+                                    <span class="ai-title-2">排版需求</span>
+                                    <el-input v-loading="AILayoutLoading" type='textarea' placeholder="优化格式"
+                                        style="margin-bottom: 10px;" rows="6"></el-input>
+                                    <el-button @click="ShowAILayout()">预览结果</el-button>
+                                    <el-button @click="">{{ AILayoutLoading ? '停止生成' : '开始生成' }}</el-button>
+
+                                </el-tab-pane>
 
                             </el-tabs>
                         </div>
@@ -749,9 +782,8 @@
                                 type='textarea' id="scroll_text" v-model="AIData"></el-input>
                         </div>
                         <div class="bubble-menu2-button" v-show="AISelect != 6">
-                            <el-button @click="AIAgain" v-if="AIData == '' && !isAILoading"
-                                size="small">开始生成</el-button>
-
+                            <el-button @click="AIAgain" v-if="AIData == '' && !isAILoading" size="small">{{ '开始生成'
+                                }}</el-button>
                             <el-button @click="AIAgain" v-if="AIData != '' || isAILoading" size="small">{{ isAILoading ?
                                 '停止生成'
                                 : '重新生成' }}</el-button>
@@ -763,7 +795,23 @@
             </div>
         </div>
 
+        <el-dialog v-model="isShowAILayout" title="预览" height="80vh" style="position: relative;" align-center>
+            <div class="temp-edit">
 
+
+                <editor-content :editor="editor2" />
+            </div>
+            <template #footer>
+                <div class="dialog-footer">
+                    <span v-show="AILayoutLoading" style="display: inline-flex; align-items: center; height: 40px">
+                        <span v-loading="true" style="margin-right: 50px"></span>
+                        <span style="font-size: 18px">生成中</span>
+                    </span>
+                    <el-button @click="HideAILayout">取消</el-button>
+                    <el-button type="primary" @click="UseAILayout">使用</el-button>
+                </div>
+            </template>
+        </el-dialog>
 
         <div class="main-buttom print">
             <div>
@@ -853,7 +901,7 @@
                                 <el-dropdown-item @click="AIwrong2right2()">
                                     <span style="font-size: 12px">修改病句</span>
                                 </el-dropdown-item>
-                                <el-dropdown-item @click="AISelect = 6">
+                                <el-dropdown-item @click="isAIOpen = true; AISelect = 6">
                                     <span style="font-size: 12px">智能排版</span>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
@@ -938,9 +986,10 @@ import { ImagePlaceholder } from "@/components/uploadImage/imagePlaceholder.js";
 import Collaboration from '@tiptap/extension-collaboration'
 import * as Y from 'yjs'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
-// import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import { HocuspocusProvider } from '@hocuspocus/provider'
-// import { ImageUploadExtension, ImagePlaceholder } from 'tiptap-extension-image-upload'
+import * as layout from '@/layout.js'
+import { Indent } from "@/components/Indent.js";
+import { Node, mergeAttributes, nodeInputRule } from '@tiptap/core';
 const lowlight = createLowlight(common)
 // lowlight./
 // import mermaid from 'mermaid'
@@ -965,6 +1014,63 @@ if (route.query.template == 'graph') {
     })
 }
 
+
+function CreateEditor(isCoop = false, useDoc = true) {
+    let cc = isCoop ?
+        [CollaborationCursor.configure({
+            provider: provider,
+            user: {
+                name: store.UserInfo.name,
+            },
+        })] : []
+    let ccdoc = useDoc ? [Collaboration.configure({ document: doc })] : []
+    return new Editor({
+        // content: "",
+        extensions: [
+            ...ccdoc,
+
+            Underline, FontSize, StarterKit, TextStyle, CharacterCount, Superscript, Subscript,
+            Color.configure({ types: ["textStyle"], }),
+            TextAlign.configure({ types: ['heading', 'paragraph'], }),
+            Focus.configure({ className: 'focus', }),
+            Link.configure({ autolink: true, linkOnPaste: true, openOnClick: false }),
+            Heading.configure({ levels: [1, 2, 3, 4] }),
+            TaskList, TaskItem, EchartsBar, EchartsPie, Image.configure({
+                inline: true,
+            }), ImageResize,
+            ImageUploadExtension.configure({
+                acceptMimes: ['image/jpeg', 'image/gif', 'image/png', 'image/jpg'],
+                upload: uploadImage,
+            }),
+            ImagePlaceholder.configure({
+                inline: false
+            }),
+            mermaid, Paper, Gapcursor, Commands.configure({ suggestion }),
+            Placeholder.configure({ placeholder: 'Write something …', }),
+            CodeBlockLowlight.extend({
+                addKeyboardShortcuts() {
+                    return {
+                        ...this.parent?.(),
+                        'Tab': () => {
+                            if (this.editor.isActive('codeBlock')) { return this.editor.commands.insertContent('    '); }
+                            return true;
+                        }
+                    }
+                }
+            }).configure({ lowlight, languageClassPrefix: 'language-', }),
+            Table.configure({ resizable: true, }), TableRow, TableHeader, TableCell,
+            SearchAndReplace.configure({
+                searchResultClass: "search-result"
+            }),
+            ...cc,
+            Indent
+        ],
+        autofocus: true,
+        editable: true,
+        injectCSS: true,
+        content: Template,
+    })
+}
 
 let fileId = ''
 let fileLoading = ref(false)
@@ -1017,7 +1123,7 @@ function GotoHome() {
 
 console.log(document.getElementById('bubbleMenu1'));
 const LayoutTabs = ref('first')
-const doc = new Y.Doc()
+let doc = new Y.Doc()
 let provider = undefined
 const isCoop = ref(false)
 const coopCode = ref('')
@@ -1028,56 +1134,7 @@ if (route.query.coopcode) {
     coopCode.value = route.query.coopcode
 }
 // const state = reactive({
-const editor = new Editor({
-    // content: "",
-    extensions: [
-        Collaboration.configure({ document: doc }),
-
-        Underline, FontSize, StarterKit, TextStyle, CharacterCount, Superscript, Subscript,
-        Color.configure({ types: ["textStyle"], }),
-        TextAlign.configure({ types: ['heading', 'paragraph'], }),
-        Focus.configure({ className: 'focus', }),
-        Link.configure({ autolink: true, linkOnPaste: true, openOnClick: false }),
-        Heading.configure({ levels: [1, 2, 3, 4] }),
-        TaskList, TaskItem, EchartsBar, EchartsPie, Image.configure({
-            inline: true,
-        }), ImageResize,
-        ImageUploadExtension.configure({
-            acceptMimes: ['image/jpeg', 'image/gif', 'image/png', 'image/jpg'],
-            upload: uploadImage,
-        }),
-        ImagePlaceholder.configure({
-            inline: false
-        }),
-        mermaid, Paper, Gapcursor, Commands.configure({ suggestion }),
-        Placeholder.configure({ placeholder: 'Write something …', }),
-        CodeBlockLowlight.extend({
-            addKeyboardShortcuts() {
-                return {
-                    ...this.parent?.(),
-                    'Tab': () => {
-                        if (this.editor.isActive('codeBlock')) { return this.editor.commands.insertContent('    '); }
-                        return true;
-                    }
-                }
-            }
-        }).configure({ lowlight, languageClassPrefix: 'language-', }),
-        Table.configure({ resizable: true, }), TableRow, TableHeader, TableCell,
-        SearchAndReplace.configure({
-            searchResultClass: "search-result"
-        }),
-        // CollaborationCursor.configure({
-        //     provider: provider,
-        //     user: {
-        //         name: store.UserInfo.name,
-        //     },
-        // })
-    ],
-    autofocus: true,
-    editable: true,
-    injectCSS: true,
-    content: Template,
-})
+let editor = CreateEditor()
 
 
 function startCoop() {
@@ -1109,8 +1166,11 @@ function startCoop() {
                 type: 'success',
             })
         },
-
     })
+    let temp = editor.getHTML()
+    editor.destroy()
+    editor = CreateEditor(true)
+    editor.commands.setContent(temp)
     // editor
     // editor.registerPlugin(CollaborationCursor.configure({
     //     provider: provider,
@@ -1122,7 +1182,7 @@ function startCoop() {
     // console.log(editor.registerPlugin);
 
 }
-
+const TopTabs = ref()
 const CoopCount = ref(0)
 setInterval(() => {
     if (isCoop.value) {
@@ -1144,6 +1204,10 @@ function stopCoop() {
         message: '已退出协同编辑',
         type: 'success',
     })
+    let temp = editor.getHTML()
+    editor.destroy()
+    editor = CreateEditor(false)
+    editor.commands.setContent(temp)
     // editor.unregisterPlugin('collaborationCursor')
 }
 
@@ -1179,6 +1243,7 @@ function joinCoop() {
         }).then((response) => {
             if (response.data.type) {
                 editor.commands.setContent('')
+                provider = undefined
                 provider = new HocuspocusProvider({
                     url: baseUrl2,
                     name: coopCode.value,
@@ -1197,6 +1262,8 @@ function joinCoop() {
                         isCoop.value = true
                     },
                 })
+                editor.destroy()
+                editor = CreateEditor(true)
             } else {
                 ElNotification({
                     title: '错误',
@@ -1665,6 +1732,28 @@ const contextMenuStyle = ref({
     top: '0px',
 })
 function EditorContext(event) {
+    let isImage = editor.isActive('image') ? [{
+        label: 'AI识图', onClick: () => {
+            console.log(editor.commands.getSrc())
+        }
+    }] : []
+    let isText = (!editor.isActive('image') && !editor.isActive('paper') && !editor.isActive('EchartsBar') && !editor.isActive('EchartsPie') && !editor.isActive('mermaid'))
+        ? [{
+            label: 'AI翻译',
+            onClick: () => { AItransition() }
+        }, {
+            label: 'AI全文总结',
+            onClick: () => { AIsummary() }
+        }, {
+            label: 'AI全文摘要',
+            onClick: () => { AIabstract() }
+        }, {
+            label: 'AI文章续写',
+            onClick: () => { AIcontiune() }
+        }, {
+            label: 'AI修改病句',
+            onClick: () => { AIwrong2right2() }
+        }] : []
     ContextMenu.showContextMenu({
         preserveIconWidth: false,
         x: event.x, y: event.y, theme: 'flat',
@@ -1738,22 +1827,7 @@ function EditorContext(event) {
             }]
         }, { divided: true }, {
             label: 'AI工具',
-            children: [{
-                label: 'AI翻译',
-                onClick: () => { AItransition() }
-            }, {
-                label: 'AI全文总结',
-                onClick: () => { AIsummary() }
-            }, {
-                label: 'AI全文摘要',
-                onClick: () => { AIabstract() }
-            }, {
-                label: 'AI文章续写',
-                onClick: () => { AIcontiune() }
-            }, {
-                label: 'AI修改病句',
-                onClick: () => { AIwrong2right2() }
-            }]
+            children: [...isText, ...isImage]
         }]
     })
 }
@@ -2075,6 +2149,38 @@ onBeforeUnmount(() => {
     document.removeEventListener('keydown', saveAsKeydown)
 })
 
+
+
+function QuickLayout(type) {
+    let a = layout.layout(editor.getHTML(), type)
+    console.log(a);
+    editor.commands.setContent(a)
+    // editor.commands.setContent()
+}
+
+const isShowAILayout = ref(false)
+const AILayoutData = ref('')
+const AILayoutLoading = ref(false)
+let editor2 = null
+function ShowAILayout() {
+    AILayoutData.value = editor.getHTML()
+    isShowAILayout.value = true
+    if (!editor2) {
+        editor2 = CreateEditor(false, false)
+    }
+    editor2.commands.setContent(AILayoutData.value)
+}
+function HideAILayout() {
+    isShowAILayout.value = false
+    editor2.destroy()
+    editor2 = null
+}
+function UseAILayout() {
+    AILayoutData.value = editor2.getHTML()
+    editor.commands.setContent(AILayoutData.value)
+    isShowAILayout.value = false
+}
+
 </script>
 <style>
 .search-result {
@@ -2098,6 +2204,7 @@ onBeforeUnmount(() => {
 
 p {
     margin: 0;
+    line-height: 1.5;
 }
 
 /* 消除小三角 */
@@ -2344,6 +2451,43 @@ ul[data-type="taskList"] li p {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.collaboration-cursor__caret {
+    border-left: 1px solid #0d0d0d;
+    border-right: 1px solid #0d0d0d;
+    margin-left: -1px;
+    margin-right: -1px;
+    pointer-events: none;
+    position: relative;
+    word-break: normal;
+}
+
+/* Render the username above the caret */
+.collaboration-cursor__label {
+    border-radius: 3px 3px 3px 0;
+    color: #0d0d0d;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    left: -1px;
+    line-height: normal;
+    padding: 0.1rem 0.3rem;
+    position: absolute;
+    top: -1.4em;
+    user-select: none;
+    white-space: nowrap;
+}
+
+/* 下面我们会解释这些 class 是做什么的 */
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
 }
 
 @media print {
@@ -2992,6 +3136,13 @@ ul[data-type="taskList"] li p {
     transition: all 0.3s;
 }
 
+.dialog-footer {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 10px;
+}
+
 .wrong2right:hover {
     background-image: linear-gradient(90deg, #e3ecff, #cee7ff);
     /* background-image: linear-gradient(90deg, #f6f9ff, #e5f2ff); */
@@ -3066,12 +3217,15 @@ ul[data-type="taskList"] li p {
 .small {
     display: none;
 }
-.large-flex{
+
+.large-flex {
     display: flex !important;
 }
-.small-flex{
+
+.small-flex {
     display: none !important;
 }
+
 .tools-span {
     cursor: pointer;
     width: 30px;
@@ -3081,6 +3235,12 @@ ul[data-type="taskList"] li p {
     align-items: center;
     /* margin-left: 2px; */
     color: #3172ff;
+}
+
+.temp-edit {
+    min-height: 600px;
+    height: 80vh;
+    overflow: auto;
 }
 
 @media screen and (max-width: 768px) {
@@ -3121,12 +3281,15 @@ ul[data-type="taskList"] li p {
     .small {
         display: block;
     }
-    .large-flex{
+
+    .large-flex {
         display: none !important;
     }
-    .small-flex{
+
+    .small-flex {
         display: flex !important;
     }
+
     .main2 {
         height: calc(100% - 60px);
     }
@@ -3172,7 +3335,8 @@ ul[data-type="taskList"] li p {
         flex-wrap: nowrap;
         height: 100%
     }
-    .tools-select{
+
+    .tools-select {
         background-color: #c1efff
     }
 }
