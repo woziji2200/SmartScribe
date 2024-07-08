@@ -96,19 +96,24 @@
                             打开
                         </span>
                         <span class="top-button" @click="SavePDF">
-                            <svg t="1720252043115" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                                xmlns="http://www.w3.org/2000/svg" p-id="42371" width="200" height="200">
-                                <path
-                                    d="M149.76 0C104.96 0 66.56 35.2 66.56 80V940.8c0 48 38.4 83.2 83.2 83.2h732.8c44.8 0 80-35.2 80-80V323.2L658.56 0H149.76z"
-                                    fill="#DD5154" p-id="42372"></path>
-                                <path d="M962.56 326.4v16h-204.8s-99.2-19.2-96-105.6c0 0 3.2 89.6 96 89.6h204.8z"
-                                    fill="#6B0D12" p-id="42373">
+                            <svg t="1720435127098" class="icon" viewBox="0 0 1228 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="5436" width="200" height="200">
+                                <path d="M8.533333 0h1024v1024H8.533333z" fill="#D8D8D8" fill-opacity="0" p-id="5437">
                                 </path>
                                 <path
-                                    d="M329.91232 652.3904l2.31424 0.02048c21.02272 0.33792 36.81792 5.3504 47.29856 15.15008 10.9056 10.19904 16.29184 26.112 16.29184 47.60064 0 41.71776-21.63712 63.2832-64.01536 63.90272l-1.90976 0.01536h-36.43904v63.45216l-0.03072 1.2544c-0.19968 3.59424-1.23392 6.5536-3.15904 8.8064-2.2784 2.65216-5.85216 3.90144-10.5472 3.90144-4.92544 0-8.63232-1.37728-10.9056-4.28032-1.85344-2.37056-2.87744-5.2224-3.08736-8.4992l-0.03584-1.24928v-173.78816l0.02048-1.28512c0.15872-5.4784 1.34656-9.3696 3.83488-11.61728 2.44736-2.21696 6.91712-3.24608 13.58336-3.36896l1.46432-0.01536h45.32224z m407.21408 0l1.0752 0.02048c8.66304 0.33792 13.47584 4.8384 13.47584 12.86144 0 4.57216-1.30048 7.98208-4.08064 9.96864-2.26304 1.61792-5.40672 2.45248-9.43616 2.60096l-1.37216 0.0256H659.3536v59.38688l69.74464 0.00512 1.17248 0.0256c6.43072 0.26112 10.69056 2.75456 12.00128 7.20896 1.28 2.80576 1.152 5.9392-0.128 8.82688-1.37216 5.7088-5.60128 8.8064-12.0576 9.10336l-1.03936 0.0256H659.3536v81.23904l-0.03584 1.13664c-0.2048 3.31776-1.28 6.0672-3.24608 8.1408-2.29376 2.42688-6.00064 3.52768-11.0336 3.52768-4.88448 0-8.448-1.1264-10.55744-3.6352-1.7408-2.06336-2.67776-4.75136-2.8672-8.00256l-0.03072-1.24416v-176.37888l0.02048-1.20832c0.16896-4.77184 1.3312-8.2688 3.69664-10.3936 2.28864-2.06848 5.88288-3.07712 10.78272-3.2256l1.24928-0.01536h89.79456z m-233.00096 0l2.65728 0.03072c13.3888 0.3072 25.0624 2.90816 35.00544 7.8336 10.57792 5.23776 19.34336 12.42112 26.27584 21.5296 6.89664 9.0624 12.0064 19.73248 15.33952 31.98976 3.31264 12.17024 4.9664 25.15456 4.9664 38.94784 0 13.98272-1.65376 27.06432-4.9664 39.23456-3.328 12.24704-8.38656 22.95296-15.17568 32.1024a72.28416 72.28416 0 0 1-25.85088 21.69344c-9.79968 4.95104-21.26336 7.55712-34.37056 7.84896l-2.47808 0.0256H451.59936l-1.14176-0.01024c-5.84704-0.11776-9.53856-1.09056-11.24352-3.51232-1.38752-1.96096-2.06336-4.92544-2.176-8.97536l-0.01536-1.24416v-173.78816l0.02048-1.25952c0.11264-4.01408 0.78336-6.9632 2.17088-8.92416 1.6896-2.39616 5.32992-3.38944 11.136-3.5072l1.27488-0.01536h52.50048z m-5.76512 24.33024h-33.85856v152.576h41.02656c17.3568 0 30.73536-6.5024 40.3712-19.59936 9.76896-13.27104 14.69952-32.53248 14.69952-57.83552 0-24.51456-5.06368-43.18208-15.08864-56.05888-9.56928-12.288-24.51968-18.6624-45.07648-19.06176l-2.0736-0.02048z m-168.46848 0.86016h-36.43904v76.88192h36.43904c14.08 0 23.92576-3.13344 29.67552-9.23136 5.79584-6.144 8.76544-16.04096 8.76544-29.78304 0-13.6704-3.29728-23.296-9.7536-29.056-6.22592-5.5552-15.13472-8.50944-26.81856-8.79104l-1.8688-0.02048zM658.56 0L962.56 326.4h-208c-80 0-96-64-96-92.8V0z"
-                                    fill="#FFFFFF" p-id="42374"></path>
+                                    d="M285.866667 85.333333H648.533333a149.333333 149.333333 0 0 1 149.333334 149.333334V341.333333a42.666667 42.666667 0 0 1-42.666667 42.666667h-469.333333a42.666667 42.666667 0 0 1-42.666667-42.666667V128a42.666667 42.666667 0 0 1 42.666667-42.666667z"
+                                    fill="#4A90E2" fill-opacity=".6" p-id="5438"></path>
+                                <path
+                                    d="M243.2 640m42.666667 0l469.333333 0q42.666667 0 42.666667 42.666667l0 213.333333q0 42.666667-42.666667 42.666667l-469.333333 0q-42.666667 0-42.666667-42.666667l0-213.333333q0-42.666667 42.666667-42.666667Z"
+                                    fill="#4A90E2" p-id="5439"></path>
+                                <path
+                                    d="M833.408 768v-170.666667H207.658667v170.666667H93.866667a42.666667 42.666667 0 0 1-42.666667-42.666667V298.666667a42.666667 42.666667 0 0 1 42.666667-42.666667h113.792v170.666667h625.749333V256H947.2a42.666667 42.666667 0 0 1 42.666667 42.666667v426.666666a42.666667 42.666667 0 0 1-42.666667 42.666667h-113.792z"
+                                    fill="#4A90E2" p-id="5440"></path>
+                                <path
+                                    d="M123.733333 328.533333m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z"
+                                    fill="#E02020" p-id="5441"></path>
                             </svg>
-                            导出PDF
+                            打印
                         </span>
                     </el-tab-pane>
                     <el-tab-pane class="top-item">
@@ -619,6 +624,19 @@
                             </svg>
                             智能排版
                         </span>
+                        <span class="top-button" @click="AISelect = 7; isAIOpen = true">
+                            <input type="file" @change="InsertPic" id="uploadImg" style="display: none;" />
+                            <svg t="1720252852899" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="111649" width="200" height="200">
+                                <path
+                                    d="M758.848 487.36L1024 713.28v196.928C1024 972.8 972.8 1024 910.208 1024H113.792C51.2 1024 0 972.8 0 910.208v-50.944l218.944-218.88 155.072 147.968c11.52 10.24 34.496 10.24 45.952 0l338.88-300.992zM910.208 0C972.8 0 1024 51.2 1024 113.792v529.408l-247.936-211.904c-15.104-8.96-30.144-10.048-41.408-3.392l-4.544 3.392-338.816 300.928L230.4 584.32c-11.52-15.36-34.432-10.24-45.952 0L0 779.456V113.792C0 51.2 51.2 0 113.792 0h796.416z"
+                                    fill="#5BA4EB" p-id="111650"></path>
+                                <path
+                                    d="M358.976 370.048c40.832 0 76.48-35.712 76.48-76.48 0-40.832-35.648-76.544-76.48-76.544s-76.544 35.712-76.544 76.544c0 40.768 35.712 76.48 76.544 76.48z m0 51.008a126.272 126.272 0 0 1-127.552-127.488c0-71.424 56.128-127.552 127.552-127.552S486.4 222.144 486.4 293.568A126.272 126.272 0 0 1 359.04 421.056z"
+                                    fill="#FFFFFF" p-id="111651"></path>
+                            </svg>
+                            AI识图
+                        </span>
 
                     </el-tab-pane>
                 </el-tabs>
@@ -698,6 +716,7 @@
                             <el-option label="文章续写" :value="4" />
                             <el-option label="修改病句" :value="5" />
                             <el-option label="智能排版" :value="6" />
+                            <el-option label="AI识图" :value="7" />
                         </el-select>
                         <div v-if='AISelect == 1'>
                             <span class="ai-title-2">源语言</span>
@@ -741,8 +760,8 @@
                                         size="small">替换本句</el-button>
                                 </div>
                             </div>
-
                         </div>
+
                         <div v-if="AISelect == 6">
                             <el-tabs class="demo-tabs" v-model="LayoutTabs">
                                 <el-tab-pane label="快速排版" name="first">
@@ -776,12 +795,79 @@
                             </el-tabs>
                         </div>
 
-                        <div v-show="AISelect != 5 && AISelect != 6" v-loading="isAILoading"
+                        <div v-if='AISelect == 7'>
+                            <span class="ai-title-2">上传或选择图片</span>
+                            <div class="ai-img">
+                                <div class="ai-img-ghost">
+                                    <div>
+                                        <font-awesome-icon icon="cloud-upload"></font-awesome-icon>
+                                    </div>
+                                    <div v-show="AIImgUrl" @click="ImageViewer = true; ImageViewerImg = [AIImgUrl]">
+                                        <font-awesome-icon icon="search-plus"></font-awesome-icon>
+                                    </div>
+                                </div>
+                                <div class="ai-img-img" v-show="!AIImgUrl">
+                                    请右键选中图片或上传图片
+                                </div>
+                                <img class="ai-img-img" v-show="AIImgUrl" :src="AIImgUrl" alt="">
+                            </div>
+
+                            <el-tabs class="demo-tabs" v-model="LayoutTabs">
+                                <el-tab-pane label="文字识别" name="first">
+                                    <el-collapse accordion>
+                                        <el-collapse-item title="OCR文字识别" name="1">
+                                            <div>
+                                                自动识别图片中的文字。
+                                            </div>
+                                            <el-input :readonly='true' placeholder='AI输出❤...' type='textarea'
+                                                v-model="AIData" style="padding: 0;width: 100%;"></el-input>
+                                            <el-button @click="QuickLayout(1)" size="small">开始识别</el-button>
+                                        </el-collapse-item>
+                                        <el-collapse-item title="表格识别" name="2">
+                                            <div>
+                                                自动识别图片中的表格。
+                                            </div>
+                                            <el-button @click="QuickLayout(2)" size="small">开始生成</el-button>
+                                        </el-collapse-item>
+                                        <el-collapse-item title="图表生成" name="3">
+                                            <div>
+                                                自动收集图片中的数据生成图表。
+                                            </div>
+                                            <el-button @click="QuickLayout(2)" size="small">开始生成</el-button>
+                                        </el-collapse-item>
+                                    </el-collapse>
+
+                                </el-tab-pane>
+                                <el-tab-pane label="创意生成" name="second">
+                                    <el-collapse accordion>
+                                        <el-collapse-item title="AI识图" name="1">
+                                            <div>
+                                                自动识别大写数字、小写数字作为标题，自动识别正文部分。适合长篇文章。
+                                            </div>
+                                            <el-button @click="QuickLayout(1)" size="small">点击应用</el-button>
+                                        </el-collapse-item>
+                                        <el-collapse-item title="表格识别" name="2">
+                                            <div>
+                                                自动识别标题、称呼语、正文部分、日期。适用于信件。
+                                            </div>
+                                            <el-button @click="QuickLayout(2)" size="small">点击应用</el-button>
+                                        </el-collapse-item>
+                                    </el-collapse>
+                                </el-tab-pane>
+
+                            </el-tabs>
+
+                            <div v-loading="isAILoading">
+
+                            </div>
+                        </div>
+
+                        <div v-show="AISelect != 5 && AISelect != 6 && AISelect != 7" v-loading="isAILoading"
                             element-loading-text="生成中..." element-loading-background="rgba(255, 255, 255, 0.1)">
                             <el-input :readonly='true' placeholder='AI输出❤...' class="ai-textarea" rows="8"
                                 type='textarea' id="scroll_text" v-model="AIData"></el-input>
                         </div>
-                        <div class="bubble-menu2-button" v-show="AISelect != 6">
+                        <div class="bubble-menu2-button" v-show="AISelect != 6 && AISelect != 7">
                             <el-button @click="AIAgain" v-if="AIData == '' && !isAILoading" size="small">{{ '开始生成'
                                 }}</el-button>
                             <el-button @click="AIAgain" v-if="AIData != '' || isAILoading" size="small">{{ isAILoading ?
@@ -794,6 +880,7 @@
                 </div>
             </div>
         </div>
+        <el-image-viewer v-if="ImageViewer" @close="CloseImageViewer" :url-list="ImageViewerImg" />
 
         <el-dialog v-model="isShowAILayout" title="预览" height="80vh" style="position: relative;" align-center>
             <div class="temp-edit">
@@ -1734,7 +1821,9 @@ const contextMenuStyle = ref({
 function EditorContext(event) {
     let isImage = editor.isActive('image') ? [{
         label: 'AI识图', onClick: () => {
-            console.log(editor.commands.getSrc())
+            isAIOpen.value = true
+            AIImgUrl.value = editor.getAttributes('image').src
+            AISelect.value = 7
         }
     }] : []
     let isText = (!editor.isActive('image') && !editor.isActive('paper') && !editor.isActive('EchartsBar') && !editor.isActive('EchartsPie') && !editor.isActive('mermaid'))
@@ -1837,7 +1926,7 @@ const AIData = ref('')
 const AISelect = ref(null)
 const isAILoading = ref(false)
 const AItransitionFrom = ref('自动识别')
-const AItransitionTo = ref('中文')
+const AItransitionTo = ref('中文（简体）')
 let ctrl = new AbortController()
 function AIInsert() {
     editor.chain().focus().insertContent(AIData.value).run()
@@ -2179,6 +2268,20 @@ function UseAILayout() {
     AILayoutData.value = editor2.getHTML()
     editor.commands.setContent(AILayoutData.value)
     isShowAILayout.value = false
+}
+
+const AIImgUrl = ref('')
+const AIImgLoading = ref(false)
+function AIImg() {
+
+}
+
+
+const ImageViewer = ref(false)
+const ImageViewerImg = ref([])
+function CloseImageViewer() {
+    ImageViewer.value = false
+    ImageViewerImg.value = []
 }
 
 </script>
@@ -3242,6 +3345,52 @@ ul[data-type="taskList"] li p {
     height: 80vh;
     overflow: auto;
 }
+
+.ai-img {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    border-radius: 5px;
+    border: dashed 1px #313131;
+    overflow: hidden;
+    background-color: #00000010
+}
+
+.ai-img-img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #505050;
+}
+
+.ai-img-ghost {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    color: #ffffff;
+}
+
+.ai-img-ghost div {
+    display: none;
+    cursor: pointer;
+}
+
+.ai-img-ghost:hover div {
+    display: block;
+}
+
+.ai-img-ghost:hover {
+    background-color: #00000023;
+}
+
 
 @media screen and (max-width: 768px) {
     .top-item-class::after {

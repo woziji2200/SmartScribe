@@ -143,34 +143,6 @@
                         <span>没有文件</span>
                     </div>
                 </div>
-                <!-- <div class="home-main-right-file home-main-right-file-mobile">
-                    <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
-                        <div>文件名</div>
-                        <div>操作</div>
-                    </div>
-                    <div v-for="(i, index) in filesShow.files" class="home-main-right-file-1">
-                        <div>{{ i.name }}</div>
-                        <div>
-                            <button @click="openFile(i.id)">打开</button>
-                            <button
-                                @click="renameDialogVisible = true; renameId = i.id; renameName = i.name">重命名</button>
-                            <el-popover style="overflow-y: hidden" trigger="click" :visible="i.visible" placement="top">
-                                <p style="margin-bottom: 10px;">确认删除吗</p>
-                                <div style="text-align: right; margin: 0">
-                                    <el-button size="small" @click="i.visible = false">取消</el-button>
-                                    <el-button size="small" type="primary" @click="deleteFile(i.id); i.visible = false">
-                                        删除
-                                    </el-button>
-                                </div>
-                                <template #reference>
-                                    <button @click="i.visible = true">删除</button>
-                                </template>
-                            </el-popover>
-                        </div>
-                    </div>
-
-                </div> -->
-
                 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
                     <el-pagination layout="prev, pager, next" :total="files.files.length" :page-size="filesPageSize"
                         v-model:current-page="filesPage" />
@@ -183,6 +155,46 @@
             <div class="profile">
                 <div class="nologin" v-if="!store.UserInfo.name">
                     <span @click="store.isLogin = true">请登录后查看</span>
+                </div>
+
+                <div class="profile-1" v-if="store.UserInfo.name">
+                    <div v-show="!isChangeProfile" class="profile-1-1">
+                        <font-awesome-icon :icon="'user'" v-if="!store.UserInfo.avatar" />
+                        <img v-else :src="baseUrl + store.UserInfo.avatar" alt="" class="avatar">
+                    </div>
+                    <div v-show="isChangeProfile" class="profile-1-1">
+                        <font-awesome-icon :icon="'user'" v-if="!NewAvatar" />
+                        <img v-else :src="NewAvatar" alt="" class="avatar">
+                    </div>
+                    <div class="profile-1-2">
+                        <span v-show="!isChangeProfile" class="profile-1-2-name">{{ store.UserInfo.name === '' ? '匿名用户'
+                            :
+                            (store.UserInfo.name || '登录') }}</span>
+                        <!-- <span class="profile-1-2-name">{{ store.UserInfo.name === '' ? '匿名用户' : (store.UserInfo.name || '登录') }}</span> -->
+                        <el-input style="min-width: 200px; width: 50%;" v-model="NewName" v-show="isChangeProfile" placeholder="请输入昵称"></el-input>
+                        <div v-show="isChangeProfile" style="color: #666; font-size: 12px">*昵称不是登录的用户名哦，修改后只会影响协同编辑时显示的名称，不会影响登录所需的用户名哦</div>
+                        <el-button v-show="!isChangeProfile" @click="ChangeProfile">修改个人信息</el-button>
+
+                        <div style="margin-top: 10px;">
+                            <input type="file" id="file1" @change="ChangeAvatar" style="display: none">
+                            <el-button v-show="isChangeProfile" @click="UploadAvatar">上传头像</el-button>
+                            <el-button v-show="isChangeProfile" @click="Cancle">取消</el-button>
+                            <el-button v-show="isChangeProfile" @click="Save">保存</el-button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="home-main-right-title2">关于我们</div>
+            <div class="about">
+                <div style="margin-top: 20px;">
+                    智慧笔匠SmartScribe是一个在线AI编辑平台，支持多人同时编辑文档、流程图等文件。
+                </div>
+                <div style="margin-top: 5px;">
+                    前端 <a href="https://github.com/woziji2200">@woziji2200</a>，
+                    后端 <a href="https://github.com/dx2331lxz">@dx2331lxz</a>
                 </div>
             </div>
 
@@ -205,9 +217,10 @@
 import { getCurrentInstance, onActivated, onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { request } from "@/axios";
+import { request, baseUrl, getUserInfo } from "@/axios";
 import { useStore } from "@/store";
 import { ElMessage } from "element-plus";
+
 
 const store = useStore();
 
@@ -331,7 +344,7 @@ function getFiles() {
 }
 
 onMounted(() => {
-    if(store.UserInfo.name) {
+    if (store.UserInfo.name) {
         isLoadingFiles.value = true
         getFiles()
     }
@@ -378,6 +391,83 @@ function deleteFile(id) {
 
 function openFile(id) {
     router.push(`/editor?template=blank&id=${id}`)
+}
+
+const isChangeProfile = ref(false)
+const NewName = ref('')
+const NewAvatar = ref('')
+function ChangeProfile() {
+    isChangeProfile.value = true
+    NewName.value = store.UserInfo.name
+    NewAvatar.value = baseUrl + store.UserInfo.avatar
+}
+function Cancle() {
+    isChangeProfile.value = false
+}
+function Save() {
+
+    Promise.allSettled([
+
+        new Promise((resolve, reject) => {
+            if (NewName.value === store.UserInfo.name) {
+                console.log(1111);
+                resolve()
+            } else {
+                request({
+                    url: '/api/user/name/',
+                    method: 'post',
+                    body: {
+                        name: NewName.value,
+                    }
+                }).then(res => {
+                    resolve()
+                }).catch(err => {
+                    reject(err)
+                })
+            }
+        }),
+        new Promise((res, rej) => {
+            if (NewAvatar.value === baseUrl + store.UserInfo.avatar) {
+                res()
+            } else {
+                let formdata = new FormData()
+                formdata.append('avatar', file)
+                request({
+                    url: '/api/user/avatar/',
+                    method: 'post',
+                    body: formdata
+                }).then(res => {
+                    res()
+                }).catch(err => {
+                    rej(err)
+                })
+            }
+        })
+    ]).then(res => {
+        console.log(res);
+        ElMessage.success('修改成功')
+        getUserInfo()
+        isChangeProfile.value = false
+    }).catch(err => {
+        console.log(err);
+        ElMessage.error('修改失败')
+    })
+}
+let file = null
+function ChangeAvatar() {
+    //先建立blob，让用户预览，点击保存以后统一修改
+    file = document.getElementById('file1').files[0]
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = function (e) {
+        NewAvatar.value = e.target.result
+        // 创建临时url
+
+    }
+
+}
+function UploadAvatar() {
+    document.getElementById('file1').click()
 }
 
 
@@ -554,7 +644,7 @@ function openFile(id) {
 
 }
 
-.file{
+.file {
     position: relative;
 }
 
@@ -571,6 +661,7 @@ function openFile(id) {
     background-color: #ffffff7e;
     backdrop-filter: blur(5px);
 }
+
 .nologin span {
     /* font-size: 20px; */
     color: #3172ff;
@@ -580,12 +671,62 @@ function openFile(id) {
     cursor: pointer;
     transition: all 0.3s;
 }
+
 .nologin span:hover {
     background-color: #3172ff;
     color: white;
 }
+
 .profile {
     position: relative;
+    margin-bottom: 30px;
+}
+
+.profile-1 {
+    margin-top: 30px;
+    display: flex;
+    /* 左侧大小不变，右侧元素占满剩余空间 */
+    
+    
+
+}
+
+.profile-1-1 {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.profile-1-1 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-1-2 {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    justify-content: center;
+}
+
+.profile-1-2-name {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+.about{
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+.about a{
+    color: #3172ff;
 }
 
 @media screen and (max-width: 768px) {
@@ -654,6 +795,7 @@ function openFile(id) {
     .home-main-right-file-1 div {
         margin-right: 0 !important;
     }
+
     .home-main-right-file-1 {
         grid-template-columns: 2fr 1fr 140px !important;
     }
