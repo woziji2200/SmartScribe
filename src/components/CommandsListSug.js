@@ -29,6 +29,37 @@ export default {
                 },
             },
             {
+                title: '三级标题',
+                command: ({ editor, range }) => {
+                    editor
+                        .chain()
+                        .focus()
+                        .deleteRange(range)
+                        .setNode('heading', { level: 3 })
+                        .run()
+                },
+            },{
+                title: '无序列表',
+                command: ({ editor, range }) => {
+                    editor
+                        .chain()
+                        .focus()
+                        .deleteRange(range)
+                        .toggleBulletList()
+                        .run()
+                }
+            },{
+                title: '有序列表',
+                command: ({ editor, range }) => {
+                    editor
+                        .chain()
+                        .focus()
+                        .deleteRange(range)
+                        .toggleOrderedList()
+                        .run()
+                }
+            },
+            {
                 title: 'AI续写',
                 command: ({ editor, range }) => {
                     const store = useStore()

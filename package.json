@@ -6,9 +6,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
-  "main": "background.js",
+  "main": "./src/background.js",
   "dependencies": {
     "@babel/plugin-transform-private-methods": "^7.24.1",
+    "@babel/preset-env": "^7.24.7",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
@@ -22,6 +23,7 @@
     "@sereneinserenade/tiptap-search-and-replace": "^0.1.1",
     "@syfxlin/tiptap-starter-kit": "^1.0.2",
     "@tiptap-pro/extension-unique-id": "^2.8.7",
+    "@tiptap/extension-blockquote": "^2.4.0",
     "@tiptap/extension-bubble-menu": "^2.4.0",
     "@tiptap/extension-character-count": "^2.4.0",
     "@tiptap/extension-code-block": "^2.4.0",
@@ -29,6 +31,7 @@
     "@tiptap/extension-collaboration": "^2.4.0",
     "@tiptap/extension-collaboration-cursor": "^2.4.0",
     "@tiptap/extension-color": "^2.4.0",
+    "@tiptap/extension-dropcursor": "^2.4.0",
     "@tiptap/extension-focus": "^2.4.0",
     "@tiptap/extension-gapcursor": "^2.4.0",
     "@tiptap/extension-heading": "^2.4.0",
@@ -81,6 +84,7 @@
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "electron": "^31.1.0",
     "unplugin-auto-import": "^0.16.7",
     "unplugin-vue-components": "^0.25.2"
   },

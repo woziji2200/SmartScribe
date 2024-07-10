@@ -9,7 +9,6 @@
             </transition>
 
 
-
             <div class="top">
                 <el-tabs type="border-card">
                     <el-tab-pane class="top-item">
@@ -152,6 +151,9 @@
                             <span @click="SetSuperscript()"
                                 :class="!isSuperscript ? '' : 'tools-select'"><font-awesome-icon
                                     icon='superscript'></font-awesome-icon></span>
+                            <span @click="editor.commands.toggleBlockquote()" class="tools-span"
+                                :class="!editor.isActive('blockquote') ? '' : 'tools-select'"><font-awesome-icon
+                                    icon='quote-left'></font-awesome-icon></span>
                         </div>
 
                         <div class="top-item-class tools-2-1 large-flex" style="max-width: 230px;">
@@ -198,6 +200,15 @@
                                         p-id="1771"></path>
                                 </svg>
                             </span>
+                            <span @click="editor.commands.setHorizontalRule()">
+                                <svg t="1720442589110" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg" p-id="6077" width="200" height="200">
+                                    <path
+                                        d="M213.333333 554.666667a42.666667 42.666667 0 0 1 0-85.333334h597.333334a42.666667 42.666667 0 0 1 0 85.333334H213.333333z"
+                                        p-id="6078"></path>
+                                </svg>
+                            </span>
+
                             <span @click="SetListul" :class="!isListul ? '' : 'tools-select'"><font-awesome-icon
                                     icon='list-ul'></font-awesome-icon></span>
                             <span @click="SetListol" :class="!isListol ? '' : 'tools-select'"><font-awesome-icon
@@ -336,6 +347,17 @@
                                         <span @click="SetCode" class="tools-span"
                                             :class="!isCode ? '' : 'tools-select'"><font-awesome-icon
                                                 icon='code'></font-awesome-icon></span>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
+                                        <span @click="editor.commands.setHorizontalRule();" class="tools-span">
+                                            <svg t="1720442589110" class="tools-svg" viewBox="0 0 1024 1024"
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6077" width="200"
+                                                height="200">
+                                                <path
+                                                    d="M213.333333 554.666667a42.666667 42.666667 0 0 1 0-85.333334h597.333334a42.666667 42.666667 0 0 1 0 85.333334H213.333333z"
+                                                    p-id="6078"></path>
+                                            </svg>
+                                        </span>
                                     </el-dropdown-item>
 
                                 </template>
@@ -499,6 +521,19 @@
                             </svg>
                             图片
                         </span>
+                        <span class="top-button" @click="InsertAudio2()">
+                            <input type="file" @change="InsertAudio" id="uploadAudio" style="display: none;" />
+                            <svg t="1720252852899" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="111649" width="200" height="200">
+                                <path
+                                    d="M758.848 487.36L1024 713.28v196.928C1024 972.8 972.8 1024 910.208 1024H113.792C51.2 1024 0 972.8 0 910.208v-50.944l218.944-218.88 155.072 147.968c11.52 10.24 34.496 10.24 45.952 0l338.88-300.992zM910.208 0C972.8 0 1024 51.2 1024 113.792v529.408l-247.936-211.904c-15.104-8.96-30.144-10.048-41.408-3.392l-4.544 3.392-338.816 300.928L230.4 584.32c-11.52-15.36-34.432-10.24-45.952 0L0 779.456V113.792C0 51.2 51.2 0 113.792 0h796.416z"
+                                    fill="#5BA4EB" p-id="111650"></path>
+                                <path
+                                    d="M358.976 370.048c40.832 0 76.48-35.712 76.48-76.48 0-40.832-35.648-76.544-76.48-76.544s-76.544 35.712-76.544 76.544c0 40.768 35.712 76.48 76.544 76.48z m0 51.008a126.272 126.272 0 0 1-127.552-127.488c0-71.424 56.128-127.552 127.552-127.552S486.4 222.144 486.4 293.568A126.272 126.272 0 0 1 359.04 421.056z"
+                                    fill="#FFFFFF" p-id="111651"></path>
+                            </svg>
+                            音频
+                        </span>
                         <span class="top-button" @click="InsertDraw">
                             <svg t="1720252335695" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                 xmlns="http://www.w3.org/2000/svg" p-id="73702" width="200" height="200">
@@ -607,7 +642,7 @@
                             <span @click="AIabstract()">全文摘要</span>
                             <span @click="AIcontiune()">文章续写</span>
                             <span @click="AIwrong2right2()">修改病句</span>
-                            <span @click="AISelect = 6">文章润色</span>
+                            <span @click="AISelect = 8">文章润色</span>
                         </div>
                         <span class="top-button" @click="isAIOpen = true; AISelect = 6">
                             <svg t="1720252611570" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -648,7 +683,7 @@
             <div class="main-left print large" v-if='ShowTree'>
                 <span @click='ShowTree = false' class='main-left-close'><font-awesome-icon icon="times" /></span>
                 <li class="main-left-title"
-                    style="color: #333;margin-bottom: 14px;margin-top: 14px;margin-left: 15px;font-size: 16px;cursor:auto;">
+                    style="color: rgb(39, 64, 247);margin-bottom: 14px;margin-top: 14px;margin-left: 15px;font-size: 16px;cursor:auto;">
                     文档索引
                 </li>
                 <li v-for="i in TitleList" :key="i" class="main-left-title"
@@ -701,12 +736,13 @@
                     <div style="height: 60px;" class="print main-height"></div>
                 </div>
             </div>
-            <div class="main-right-ai print" v-if='isAIOpen'>
+            <div class="main-right-ai print" v-if='isAIOpen' :style="{ width: AIwidth + 'px' }">
+                <div class="resize" id='resizeRight'></div>
                 <span @click='isAIOpen = false' class='main-right-close'><font-awesome-icon icon="times" /></span>
                 <div style="transform:rotateY(180deg);">
                     <div class="main-left-title"
-                        style="color: #333;margin-bottom: 14px;margin-top: 14px;margin-left: 15px;font-size: 16px;cursor:auto;">
-                        AI助手
+                        style="color: #ab15d8;margin-bottom: 14px;margin-top: 14px;margin-left: 15px;font-size: 16px;cursor:auto;">
+                        ✨AI助手
                     </div>
                     <div class="bubble-menu2">
                         <el-select v-model="AISelect" placeholder="选择AI小助手" style="margin-bottom: 10px;">
@@ -714,11 +750,13 @@
                             <el-option label="全文总结" :value="2" />
                             <el-option label="全文摘要" :value="3" />
                             <el-option label="文章续写" :value="4" />
+                            <el-option label="文章润色" :value="8" />
                             <el-option label="修改病句" :value="5" />
                             <el-option label="智能排版" :value="6" />
                             <el-option label="AI识图" :value="7" />
                         </el-select>
                         <div v-if='AISelect == 1'>
+                            <div style="font-size: 12px;margin: 8px 0;color: #555">选中一段文字将进行AI翻译</div>
                             <span class="ai-title-2">源语言</span>
                             <el-select v-model="AItransitionFrom" placeholder="源语言" style="margin-bottom: 10px;">
                                 <el-option v-for="i in ['自动识别']" :label="i" :value='i' />
@@ -729,12 +767,29 @@
                                     :value='i' />
                             </el-select>
                         </div>
+                        <div v-if='AISelect == 2'>
+                            <div style="font-size: 12px;margin: 8px 0;color: #555">自动识别全文内容生成文章总结</div>
+                        </div>
+                        <div v-if='AISelect == 3'>
+                            <div style="font-size: 12px;margin: 8px 0;color: #555">自动识别全文内容编写摘要</div>
+                        </div>
                         <div v-if='AISelect == 4'>
+                            <div style="font-size: 12px;margin: 8px 0;color: #555">自动识别全文内容进行续写，可自定义续写方向</div>
+                            
                             <span class="ai-title-2">续写目标</span>
                             <el-input v-model="AIcontiunegoal" placeholder="正常续写"
                                 style="margin-bottom: 10px;"></el-input>
                         </div>
+                        <div v-if='AISelect == 8'>
+                            <div style="font-size: 12px;margin: 8px 0;color: #555">选中一段文字进行润色修改</div>
+                            <span class="ai-title-2">润色方向</span>
+                            <el-select v-model="AIpolishGoal" placeholder="源语言" style="margin-bottom: 10px;">
+                                <el-option v-for="i in ['更专业', '更通俗', '更商业化', '更简略', '更学术', '更热情']" :label="i"
+                                    :value='i' />
+                            </el-select>
+                        </div>
                         <div v-if='AISelect == 5'>
+                            <div style="font-size: 12px;margin: 8px 0;color: #555">选中一段文字，修改其中的病句</div>
                             <span class="ai-title-2">修改结果</span>
                             <div v-loading="isAILoading">
                                 <div class="wrong2right"
@@ -799,7 +854,8 @@
                             <span class="ai-title-2">上传或选择图片</span>
                             <div class="ai-img">
                                 <div class="ai-img-ghost">
-                                    <div>
+                                    <div @click="uploadImage2">
+                                        <input type="file" @change="InsertPic3" id="uploadImg2" style="display: none;" />
                                         <font-awesome-icon icon="cloud-upload"></font-awesome-icon>
                                     </div>
                                     <div v-show="AIImgUrl" @click="ImageViewer = true; ImageViewerImg = [AIImgUrl]">
@@ -813,26 +869,49 @@
                             </div>
 
                             <el-tabs class="demo-tabs" v-model="LayoutTabs">
-                                <el-tab-pane label="文字识别" name="first">
+                                <el-tab-pane label="内容识别" name="first">
                                     <el-collapse accordion>
                                         <el-collapse-item title="OCR文字识别" name="1">
                                             <div>
                                                 自动识别图片中的文字。
                                             </div>
-                                            <el-input :readonly='true' placeholder='AI输出❤...' type='textarea'
-                                                v-model="AIData" style="padding: 0;width: 100%;"></el-input>
-                                            <el-button @click="QuickLayout(1)" size="small">开始识别</el-button>
+                                            <el-input v-loading="OCRLoading" :readonly='true' placeholder='识别结果...'
+                                                type='textarea' :value="OCRResultToPretext(OCRResultData)"
+                                                style="padding: 0;width: 100%;"></el-input>
+                                            <el-button v-if="OCRResultUrl && !OCRLoading" @click="showOCRResult = true"
+                                                size="small">查看详细结果</el-button>
+                                            <el-button @click="OCRStart()" size="small">{{ OCRLoading ?
+                                                '停止识别':'开始识别'}}</el-button>
                                         </el-collapse-item>
-                                        <el-collapse-item title="表格识别" name="2">
+                                        <el-collapse-item title="目标检测" name="2">
                                             <div>
-                                                自动识别图片中的表格。
+                                                检测图片中的物品。
                                             </div>
                                             <el-button @click="QuickLayout(2)" size="small">开始生成</el-button>
                                         </el-collapse-item>
-                                        <el-collapse-item title="图表生成" name="3">
+                                        <el-collapse-item title="表格识别" name="3">
+                                            <div>
+                                                自动识别图片中的表格。
+                                            </div>
+                                            <div v-html="AItableResult" v-loading="AItableLoading"
+                                                style="min-height: 100px">
+                                            </div>
+                                            <el-button @click="AItableResult && AItableLoading"
+                                                size="small">确定使用</el-button>
+                                            <el-button @click="AItable()"
+                                                size="small">{{ AItableLoading ? '停止生成' : '开始生成' }}</el-button>
+                                        </el-collapse-item>
+                                        <el-collapse-item title="图表生成" name="4">
                                             <div>
                                                 自动收集图片中的数据生成图表。
                                             </div>
+                                            <el-select v-model="AIgraphType" placeholder="图表类型"
+                                                style="margin-bottom: 10px;">
+                                                <el-option v-for="i in ['柱状图', '饼图']" :label="i" :value='i' />
+                                            </el-select>
+                                            <el-input v-loading="AIgraphGoal" type='textarea'
+                                                placeholder="图表需求：例如整理图片中销量和月份的关系图" style="margin-bottom: 10px;"
+                                                rows="6"></el-input>
                                             <el-button @click="QuickLayout(2)" size="small">开始生成</el-button>
                                         </el-collapse-item>
                                     </el-collapse>
@@ -930,7 +1009,7 @@
                             :colors="['#000000', '#ff4500', '#ffd700', '#00ced1', '#1e90ff', '#c71585',]" />
                     </span>
                     <el-dropdown>
-                        <span style="margin-left: 5px;padding: 0px 5px;">
+                        <span style="margin-left: 0px;padding: 0px 5px;">
                             <font-awesome-icon
                                 :icon='TextAlign2 == "center" ? "align-center" : TextAlign2 == "left" ? "align-left" : TextAlign2 == "right" ? "align-right" : "align-justify"'></font-awesome-icon>
                             <font-awesome-icon style="margin-left: 3px;" icon='caret-down'></font-awesome-icon>
@@ -962,14 +1041,16 @@
                     </el-dropdown>
 
                     <el-dropdown>
-                        <span style="margin-left: 5px;padding: 0px 5px;">
-                            <svg t="1719580485285" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                        <span
+                            style="margin-left: 0px;padding: 0px 5px;width: 80px;color: blueviolet;text-shadow: #FF76FA 0px 0px 3px;">
+                            <!-- <svg t="1719580485285" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                 xmlns="http://www.w3.org/2000/svg" p-id="25402">
                                 <path
                                     d="M512 85.333333c235.648 0 426.666667 191.018667 426.666667 426.666667s-191.018667 426.666667-426.666667 426.666667S85.333333 747.648 85.333333 512 276.352 85.333333 512 85.333333z m0 85.333334a341.333333 341.333333 0 1 0 0 682.666666 341.333333 341.333333 0 0 0 0-682.666666z m-40.405333 156.586666l121.856 369.706667h-83.968l-27.050667-89.685333H361.898667l-27.648 89.685333H256L378.453333 327.253333h93.141334z m256.213333 0v369.706667h-78.549333V327.253333h78.506666z m-303.36 75.562667H420.693333l-43.306666 144.64h89.898666L424.448 402.773333z"
                                     p-id="25403"></path>
-                            </svg>
-                            <font-awesome-icon style="margin-left: 3px;" icon='caret-down'></font-awesome-icon>
+                            </svg> -->
+                            AI Tools✨
+                            <!-- <font-awesome-icon style="margin-left: 3px;" icon='caret-down'></font-awesome-icon> -->
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
@@ -984,6 +1065,9 @@
                                 </el-dropdown-item>
                                 <el-dropdown-item @click="AIcontiune()">
                                     <span style="font-size: 12px">文章续写</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="AISelect = 8">
+                                    <span style="font-size: 12px">文章润色</span>
                                 </el-dropdown-item>
                                 <el-dropdown-item @click="AIwrong2right2()">
                                     <span style="font-size: 12px">修改病句</span>
@@ -1003,6 +1087,20 @@
             </div>
         </bubble-menu>
         <!--  -->
+
+        <div class="ocr-ghost" v-if="showOCRResult">
+
+            <OCRResult :key="OCRResultUrl" :src="OCRResultUrl" :ocrInfo="OCRResultDataToOcrInfo(OCRResultData)"
+                class="ocr-result"></OCRResult>
+            <div class="ocr-close" @click="showOCRResult = false">
+                <font-awesome-icon icon="times" />
+            </div>
+            <div class="ocr-pre">
+                <div style="height: 80px;"></div>
+                <!-- <div class="ocr-copy" @click="copy">复制全部</div> -->
+                <textarea :value="OCRResultToPretext(OCRResultData)" name="" id=""></textarea>
+            </div>
+        </div>
 
 
         <el-dialog align-center v-model="showCoopCode" title="加入协同编辑" width="500">
@@ -1077,6 +1175,11 @@ import { HocuspocusProvider } from '@hocuspocus/provider'
 import * as layout from '@/layout.js'
 import { Indent } from "@/components/Indent.js";
 import { Node, mergeAttributes, nodeInputRule } from '@tiptap/core';
+import Dropcursor from '@tiptap/extension-dropcursor'
+import Blockquote from "@tiptap/extension-blockquote";
+import hortzontalRule from "@tiptap/extension-horizontal-rule";
+import OCRResult from '@/components/OCRResult.vue'
+import AudioNode from "@/components/AudioNode.js";
 const lowlight = createLowlight(common)
 // lowlight./
 // import mermaid from 'mermaid'
@@ -1114,9 +1217,13 @@ function CreateEditor(isCoop = false, useDoc = true) {
     return new Editor({
         // content: "",
         extensions: [
+            hortzontalRule, Blockquote,
             ...ccdoc,
-
-            Underline, FontSize, StarterKit, TextStyle, CharacterCount, Superscript, Subscript,
+            // Dropcursor,
+            Underline, FontSize, StarterKit.configure({
+                dropcursor: false,
+                gapcursor: false,
+            }), TextStyle, CharacterCount, Superscript, Subscript,
             Color.configure({ types: ["textStyle"], }),
             TextAlign.configure({ types: ['heading', 'paragraph'], }),
             Focus.configure({ className: 'focus', }),
@@ -1132,7 +1239,7 @@ function CreateEditor(isCoop = false, useDoc = true) {
             ImagePlaceholder.configure({
                 inline: false
             }),
-            mermaid, Paper, Gapcursor, Commands.configure({ suggestion }),
+            mermaid, Paper, Commands.configure({ suggestion }),
             Placeholder.configure({ placeholder: 'Write something …', }),
             CodeBlockLowlight.extend({
                 addKeyboardShortcuts() {
@@ -1150,7 +1257,7 @@ function CreateEditor(isCoop = false, useDoc = true) {
                 searchResultClass: "search-result"
             }),
             ...cc,
-            Indent
+            Indent, Gapcursor,AudioNode
         ],
         autofocus: true,
         editable: true,
@@ -1258,6 +1365,7 @@ function startCoop() {
     editor.destroy()
     editor = CreateEditor(true)
     editor.commands.setContent(temp)
+    // GetDocTitle(temp)
     // editor
     // editor.registerPlugin(CollaborationCursor.configure({
     //     provider: provider,
@@ -1399,6 +1507,29 @@ function uploadImage(file) {
         }
     }).then((response) => {
         return baseUrl + response.data.photo_path
+    }).catch((error) => {
+        return false
+    })
+}
+
+function uploadImage2(){
+    document.getElementById('uploadImg2').click()
+}
+
+function InsertPic3({ target }) {
+    const file = target.files[0]
+    target.value = ''
+    var formData = new FormData();
+    formData.append("photo", file);
+    request({
+        url: '/api/file/photo/',
+        body: formData,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/form-data'
+        }
+    }).then((response) => {
+        AIImgUrl.value = baseUrl + response.data.photo_path
     }).catch((error) => {
         return false
     })
@@ -1665,6 +1796,7 @@ function SetSubscript() {
 
     // isSubscript.value = !isSubscript.value
 }
+
 const isSuperscript = ref(false)
 function SetSuperscript() {
     editor.chain().focus().toggleSuperscript().run()
@@ -1839,6 +1971,9 @@ function EditorContext(event) {
         }, {
             label: 'AI文章续写',
             onClick: () => { AIcontiune() }
+        }, {
+            label: 'AI文章润色',
+            onClick: () => { AISelect.value = 8 }
         }, {
             label: 'AI修改病句',
             onClick: () => { AIwrong2right2() }
@@ -2050,6 +2185,56 @@ function AIabstract() {
 }
 
 
+const AIpolishGoal = ref('更专业')
+function AIpolish() {
+    ctrl = new AbortController()
+    AISelect.value = 8
+    isAIOpen.value = true
+    AIData.value = ''
+    const view = editor.view
+    const state2 = editor.state
+    const { from, to } = view.state.selection
+    const text = state2.doc.textBetween(from, to, '')
+    if (text == '') {
+        ElNotification({
+            title: '错误',
+            message: '请先选中一段文本',
+            type: 'error',
+        })
+        return
+    }
+    console.log(text);
+    isAILoading.value = true
+    request({
+        url: '/api/ai/polish/',
+        method: 'POST',
+        isEventSource: true,
+        signal: ctrl.signal, // AbortSignal
+        body: {
+            content: text,
+            goal: AIpolishGoal.value
+        },
+        headers: {
+            'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
+            'content-type': 'application/json',
+        },
+        onmessage: (ev) => {
+            if (ev.data != '[DONE]') {
+                AIData.value += ev.data
+                console.log(ev.data, 111);
+            }
+        },
+        onerror: (ev) => {
+            ctrl.abort()
+            isAILoading.value = false
+            throw ev
+        },
+        onclose: () => {
+            isAILoading.value = false
+        }
+    })
+}
+
 const AIcontiunegoal = ref('')
 function AIcontiune() {
     ctrl = new AbortController()
@@ -2151,7 +2336,8 @@ function AIAgain() {
         AIcontiune()
     } else if (AISelect.value == 5) {
         AIwrong2right2()
-
+    } else if (AISelect.value == 8) {
+        AIpolish()
     }
 }
 
@@ -2284,8 +2470,126 @@ function CloseImageViewer() {
     ImageViewerImg.value = []
 }
 
+const AIwidth = ref(200)
+nextTick(() => {
+    let resizeRight = document.getElementById('resizeRight')
+    console.log(resizeRight);
+    resizeRight.addEventListener('mousedown', (e) => {
+        let startX = e.clientX
+        let startWidth = AIwidth.value
+        document.onmousemove = (e) => {
+            //最小150px
+            AIwidth.value = Math.max(150, startWidth - e.clientX + startX)
+            // AIwidth.value = startWidth - e.clientX + startX
+        }
+        document.onmouseup = () => {
+            document.onmousemove = null
+            document.onmouseup = null
+        }
+    })
+})
+const showOCRResult = ref(false)
+const OCRResultUrl = ref('')
+const OCRResultData = ref()
+const OCRLoading = ref(false)
+function OCRResultDataToOcrInfo(data) {
+    // return [["11111", 1, [[ 144, 249 ], [ 324,254 ], [ 324,290  ], [144,  284 ]] ]]
+    if (!data) return []
+    return data.texts.map(item => {
+        return [item.text, item.score, item.bbox]
+    })
+}
+function OCRResultToPretext(data) {
+    return data?.texts.map(item => {
+        return item.text
+    }).join('\n')
+}
+async function OCRStart() {
+    if (OCRLoading.value) {
+        ctrl.abort()
+        OCRLoading.value = false
+        return
+    }
+    if (!AIImgUrl.value) {
+        ElNotification({
+            title: '错误',
+            message: '请先选择或上传一张图片',
+            type: 'error',
+        })
+        return
+    }
+    try {
+        OCRLoading.value = true
+        // 需要上传二进制文件而不是url，所以要把url转换为二进制文件
+        ctrl = new AbortController()
+        let formData = new FormData()
+        const response = await fetch(AIImgUrl.value);
+        const blob = await response.blob();
+        formData.append('image', blob);
+        let res = await request({
+            url: '/api/ai/ocr/',
+            method: 'POST',
+            body: formData,
+            signal: ctrl.signal,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        if (res.data.msg == '图片识别失败') {
+            ElNotification({
+                title: '错误',
+                message: 'OCR识别失败',
+                type: 'error',
+            })
+            OCRLoading.value = false
+            return
+        }
+        OCRResultData.value = res.data
+        OCRResultUrl.value = AIImgUrl.value
+        showOCRResult.value = true
+        OCRLoading.value = false
+    } catch (error) {
+        OCRLoading.value = false
+        ElNotification({
+            title: '错误',
+            message: 'OCR识别失败',
+            type: 'error',
+        })
+    }
+}
+
+function InsertAudio2(){
+    // editor.commands.setContent('<audio src="https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav"></audio>')
+    document.getElementById('uploadAudio').click()
+}
+function InsertAudio(e){
+    if (!e.target.files.length) return
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = function (e) {
+        // console.log(e.target.result);
+        editor.chain().focus().insertContent(`<audio src="https://paddlespeech.bj.bcebos.com/PaddleAudio/zh.wav"></audio>`).run()
+    }
+    reader.readAsDataURL(file);
+}
+
 </script>
 <style>
+.resize {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background-color: #ffffff00;
+    border-left: 1px dashed #aaaaaa;
+    cursor: ew-resize;
+}
+
+.resize:hover {
+    border-left: 1px solid #5188ff;
+}
+
 .search-result {
     background-color: rgba(172, 229, 255, 0.5);
 
@@ -2305,9 +2609,19 @@ function CloseImageViewer() {
     outline: 0px solid transparent;
 }
 
+.ProseMirror-selectednode {
+    outline: 3px solid purple;
+}
+
 p {
     margin: 0;
     line-height: 1.5;
+}
+
+.tiptap blockquote {
+    border-left: 3px solid #adb5bd;
+    margin: 1.5rem 0;
+    padding-left: 1rem;
 }
 
 /* 消除小三角 */
@@ -2339,6 +2653,24 @@ ul[data-type="taskList"] {
     padding: 0;
 }
 
+.focus {
+    /* background-color: #e6e6e62d;
+    border-radius: 5px; */
+    position: relative;
+}
+
+/* .focus::before {
+    content: ' ';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: #e8efff83;
+    pointer-events: none;
+    z-index: -1;
+} */
+
 ul[data-type="taskList"] li {
     list-style: none;
     padding: 0;
@@ -2366,6 +2698,10 @@ ul[data-type="taskList"] li p {
 .tiptap *::selection {
     background: #79b8ebad;
     color: #FFF;
+    /* color: #ab15d8; */
+}
+.tiptap ::selection img{
+    opacity: 0.5;
 }
 
 .tiptap code {
@@ -2828,7 +3164,7 @@ ul[data-type="taskList"] li p {
 .main-left {
     /* margin-top: 40px; */
     /* position: fixed; */
-    background-color: #fff;
+    background-color: #f5f5f5;
     /* top: 155px;
     left: 0;
     bottom: 30px; */
@@ -2859,7 +3195,7 @@ ul[data-type="taskList"] li p {
     overflow-y: auto;
     width: 200px;
     padding: 10px;
-    resize: horizontal;
+    /* resize: horizontal; */
     transform: rotateY(180deg);
 }
 
@@ -3152,7 +3488,9 @@ ul[data-type="taskList"] li p {
 .bubble-menu {
     background-color: #fff;
     border: 1px solid #ddd;
-    padding: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    width: 370px;
 }
 
 .bubble-menu-1 {
@@ -3160,16 +3498,18 @@ ul[data-type="taskList"] li p {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #3374ff;
+    color: #535353;
+    gap: 5px;
 }
 
 .bubble-menu-1 span {
     cursor: pointer;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 5px;
 }
 
 .bubble-menu-1 span:hover {
@@ -3391,6 +3731,78 @@ ul[data-type="taskList"] li p {
     background-color: #00000023;
 }
 
+.ocr-result {
+    z-index: 150;
+    /* position: fixed; */
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    /* background-color: #00000098; */
+}
+
+.ocr-ghost {
+    z-index: 149;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: #0000005d;
+    display: flex;
+}
+
+.ocr-pre {
+    width: 30%;
+    height: 100%;
+    position: relative;
+    background-color: #00000094;
+}
+
+.ocr-pre textarea {
+    width: 90%;
+    height: calc(100% - 110px);
+    overflow: auto;
+    border: none;
+    background-color: #00000000;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px;
+    resize: none;
+    /* padding-top: 100px; */
+    font-family: 'JetBrainsMono', monospace;
+}
+
+.ocr-copy {
+    border: solid 1px #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: inline-block;
+    margin: 10px;
+    color: #fff;
+    transition: all 0.2s
+}
+
+.ocr-copy:hover {
+    background-color: #ffffff63;
+}
+
+.ocr-close {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    color: #fff;
+    z-index: 150;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0000005d;
+}
 
 @media screen and (max-width: 768px) {
     .top-item-class::after {

@@ -110,6 +110,7 @@
                 <div class="nologin" v-if="!store.UserInfo.name">
                     <span @click="store.isLogin = true">请登录后查看</span>
                 </div>
+
                 <div class="home-main-right-file">
 
                     <div class="home-main-right-file-1" style="margin-top: 20px; color: #666">
@@ -156,6 +157,8 @@
                 <div class="nologin" v-if="!store.UserInfo.name">
                     <span @click="store.isLogin = true">请登录后查看</span>
                 </div>
+                <div style="height: 150px;" v-if="!store.UserInfo.name"></div>
+
 
                 <div class="profile-1" v-if="store.UserInfo.name">
                     <div v-show="!isChangeProfile" class="profile-1-1">
@@ -701,6 +704,7 @@ function UploadAvatar() {
     align-items: center;
     margin-right: 20px;
     flex-shrink: 0;
+    border: solid 1px #636363;
 }
 
 .profile-1-1 img {

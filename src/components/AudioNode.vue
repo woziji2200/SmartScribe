@@ -79,10 +79,6 @@ export default {
     max-height: 500px;
 }
 
-.main-mer:focus{
-    /* background-color: #409eff */
-}
-
 .edit {
     width: calc(100% - 80px);
     height: 100%;

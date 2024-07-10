@@ -140,6 +140,9 @@ onMounted(async () => {
 })
 </script>
 <style>
+*{
+    outline: none !important;
+}
 @media print {
     .print {
         display: none;

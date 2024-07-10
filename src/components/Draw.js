@@ -3,33 +3,36 @@ import { mergeAttributes, Node, VueNodeViewRenderer } from '@tiptap/vue-3'
 import Component from './Draw.vue'
 
 export default Node.create({
-  name: 'paper',
+    name: 'paper',
 
-  group: 'block',
+    //   group: 'block',
 
-  atom: true,
+    //   atom: true,
+    inline: true,
+    atom: true,
+    group: "inline",
+    draggable: true,
+    addAttributes() {
+        return {
+            lines: {
+                default: [],
+            },
+        }
+    },
 
-  addAttributes() {
-    return {
-      lines: {
-        default: [],
-      },
-    }
-  },
+    parseHTML() {
+        return [
+            {
+                tag: 'div[data-type="paper"]',
+            },
+        ]
+    },
 
-  parseHTML() {
-    return [
-      {
-        tag: 'div[data-type="paper"]',
-      },
-    ]
-  },
+    renderHTML({ HTMLAttributes }) {
+        return ['div', mergeAttributes(HTMLAttributes, { 'data-type': 'paper' })]
+    },
 
-  renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(HTMLAttributes, { 'data-type': 'paper' })]
-  },
-
-  addNodeView() {
-    return VueNodeViewRenderer(Component)
-  },
+    addNodeView() {
+        return VueNodeViewRenderer(Component)
+    },
 })

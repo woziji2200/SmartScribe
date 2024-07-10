@@ -1,11 +1,17 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
-import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
-import { ipcMain } from 'electron'
-import path from 'path'
-import { type } from 'os'
+// import { app, protocol, BrowserWindow } from 'electron'
+// import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+// import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+// import { ipcMain } from 'electron'
+// import path from 'path'
+// import { type } from 'os'
+const { app, protocol, BrowserWindow } = require('electron')
+const { createProtocol } = require('vue-cli-plugin-electron-builder/lib')
+// const installExtension = require('electron-devtools-installer').default
+const { ipcMain } = require('electron')
+const path = require('path')
+const { type } = require('os')
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
