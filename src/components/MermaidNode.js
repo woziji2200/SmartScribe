@@ -2,11 +2,11 @@ import { mergeAttributes, Node, VueNodeViewRenderer } from '@tiptap/vue-3'
 import Component from './MermaidNode.vue'
 export default Node.create({
     name: 'mermaid',
-    // group: 'block',
+    group: 'block',
     // atom: true,
-    inline: true,
+    // inline: true,
     atom: true,
-    group: "inline",
+    // group: "inline",
     draggable: true,
     addAttributes() {
         return {
@@ -23,7 +23,7 @@ export default Node.create({
         ]
     },
     renderHTML({ node, HTMLAttributes }) {
-        console.log(node.attrs.data);
+        // console.log(node.attrs.data);
         return ['vue-mermaid', mergeAttributes(HTMLAttributes)]
     },
     addNodeView() {

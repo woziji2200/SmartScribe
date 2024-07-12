@@ -5,12 +5,12 @@ import Component from './Draw.vue'
 export default Node.create({
     name: 'paper',
 
-    //   group: 'block',
+      group: 'block',
 
     //   atom: true,
-    inline: true,
+    // inline: true,
     atom: true,
-    group: "inline",
+    // group: "inline",
     draggable: true,
     addAttributes() {
         return {

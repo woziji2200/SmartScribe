@@ -2,11 +2,11 @@ import { mergeAttributes, Node, VueNodeViewRenderer } from '@tiptap/vue-3'
 import Component from './EchartsPie.vue'
 export default Node.create({
     name: 'EchartsPie',
-    // group: 'block',
+    group: 'block',
     // atom: true,
-    inline: true,
+    // inline: true,
     atom: true,
-    group: "inline",
+    // group: "inline",
     draggable: true,
     addAttributes() {
         return {

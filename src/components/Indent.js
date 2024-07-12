@@ -150,9 +150,37 @@ export const Indent = Extension.create({
     },
     addKeyboardShortcuts() {
         return {
-          Tab: () => { if (!(this.editor.isActive('bulletList') || this.editor.isActive('orderedList')) ) return this.editor.commands.indent() },
-          'Shift-Tab': () => { if (!(this.editor.isActive('bulletList') || this.editor.isActive('orderedList'))) return this.editor.commands.outdent() },
-        //   Backspace: () => { if (!(this.editor.isActive('bulletList') || this.editor.isActive('orderedList'))) return this.editor.commands.outdent() },
+            Tab: () => {
+                if (!(this.editor.isActive('bulletList') || this.editor.isActive('orderedList'))) {
+                    const { state } = this.editor;
+                    const { from, to } = state.selection;
+                    const startPos = state.doc.resolve(from).start();
+                    // console.log('Cursor start position:', startPos, to);
+                    if (startPos == to)
+                        return this.editor.commands.indent()
+                }
+            },
+            'Shift-Tab': () => {
+                if (!(this.editor.isActive('bulletList') || this.editor.isActive('orderedList'))) {
+                    const { state } = this.editor;
+                    const { from, to } = state.selection;
+                    const startPos = state.doc.resolve(from).start();
+                    // console.log('Cursor start position:', startPos, to);
+                    if (startPos == to)
+                        return this.editor.commands.outdent()
+                }
+            },
+            Backspace: () => {
+                if (!(this.editor.isActive('bulletList') || this.editor.isActive('orderedList'))) {
+                    const { state } = this.editor;
+                    const { from, to } = state.selection;
+                    const startPos = state.doc.resolve(from).start();
+                    // console.log('Cursor start position:', startPos, to);
+                    if (startPos == to)
+                        return this.editor.commands.outdent()
+                }
+            },
+            //   Backspace: () => { if (!(this.editor.isActive('bulletList') || this.editor.isActive('orderedList'))) return this.editor.commands.outdent() },
         }
-      },
+    },
 })

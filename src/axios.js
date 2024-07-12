@@ -11,6 +11,7 @@ export const baseUrl2 = 'https://funny233.xyz/ws'
 // console.log(this.store);
 const instance = axios.create({
     baseURL: baseUrl,
+    timeout: 600000,
 })
 
 export function isInExp(accessOrRefresh) {

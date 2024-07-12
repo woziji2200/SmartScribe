@@ -1,25 +1,25 @@
 import { mergeAttributes, Node, VueNodeViewRenderer } from '@tiptap/vue-3'
-// import Component from './MermaidNode.vue'
+import Component from './AudioNode.vue'
 export default Node.create({
     name: 'audio',
     // group: 'block',
     // atom: true,
-    inline: true,
-    atom: true,
-    group: "inline",
-    draggable: true,
+    // inline: true,
+    // atom: true,
+    group: "block",
+    // draggable: true,
     addAttributes() {
         return {
             src: {
                 default: null,
-                parseHTML: element => element.querySelector('source').getAttribute('src'),
+                parseHTML: element => element.getAttribute('src'),
             }
         }
     },
     parseHTML() {
         return [
             {
-                tag: 'audio',
+                tag: 'vue-audio',
             },
         ]
     },
@@ -29,10 +29,9 @@ export default Node.create({
     // },
     renderHTML({ HTMLAttributes }) {
         // console.log(this.options.HTMLAttributes, HTMLAttributes);
-        return [
-            "audio",
-            { controls: true },
-            ["source", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)]
-        ];
+        return ['vue-audio', mergeAttributes(HTMLAttributes)];
+    },
+    addNodeView() {
+        return VueNodeViewRenderer(Component)
     }
 })

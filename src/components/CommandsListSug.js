@@ -3,6 +3,7 @@ import tippy from 'tippy.js'
 import { request } from '@/axios'
 import CommandsList from './CommandsList.vue'
 import { useStore } from '@/store'
+import { Base64 } from 'js-base64'
 export default {
     items: ({ query }) => {
         return [
@@ -67,7 +68,11 @@ export default {
                     editor.chain().focus().deleteRange(range).run()
                     store.ctrl = new AbortController()
                     store.isAI = true
-                    const text = editor.getText()
+                    const { state } = editor;
+                    const { from, to } = state.selection;
+                    const startPos = state.doc.resolve(from).start();
+
+                    const text = state.doc.textBetween(startPos, to, '\n')
                     console.log(qwq);
                     request({
                         url: '/api/ai/continue/',
@@ -81,7 +86,7 @@ export default {
                         },
                         onmessage: (ev) => {
                             if (ev.data != '[DONE]') {
-                                editor.chain().focus().insertContent(ev.data).run()
+                                editor.chain().focus().insertContent(Base64.decode(ev.data)).run()
                             }
                         },
                         onerror: (ev) => {
@@ -117,7 +122,7 @@ export default {
                         },
                         onmessage: (ev) => {
                             if (ev.data != '[DONE]') {
-                                editor.chain().focus().insertContent(ev.data).run()
+                                editor.chain().focus().insertContent(Base64.decode(ev.data)).run()
                             }
                         },
                         onerror: (ev) => {
@@ -131,6 +136,15 @@ export default {
                     })
                 },
             },
+            // {
+            //     title: 'test',
+            //     command: ({ editor, range }) => {
+            //         const { state } = editor;
+            //         const { from, to } = state.selection;
+            //         const startPos = state.doc.resolve(from).start();
+            //         console.log('Cursor start position:', startPos, to);
+            //     },
+            // }
         ].filter(item => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10)
     },
 

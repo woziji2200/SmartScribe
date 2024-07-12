@@ -2,7 +2,7 @@
     <node-view-wrapper class="main-mer" @contextmenu.stop>
         <button class="button print" @click="edit" v-show="!isEdit">编辑</button>
         <button class="button print" @click="save" v-show="isEdit">保存</button>
-        <div v-show="!isEdit" :id="id" v-html="svg"></div>
+        <div v-show="!isEdit" :id="id" v-html="svg" class="mermaid"></div>
         <textarea v-model="data2" v-show="isEdit" class="edit" name="" id="" cols="30" rows="10"></textarea>
         <!-- <button @click="test">1</button> -->
     </node-view-wrapper>
@@ -77,9 +77,11 @@ export default {
     position: relative;
     border: #ccc 1px solid;
     max-height: 500px;
+    overflow: auto;
+    transform: translateX(0px);
 }
 
-.main-mer:focus{
+.main-mer:focus {
     /* background-color: #409eff */
 }
 
@@ -99,7 +101,7 @@ export default {
 }
 
 .button {
-    position: absolute;
+    position: fixed;
     right: 10px;
     top: 10px;
     padding: 5px 10px;
@@ -108,5 +110,23 @@ export default {
     border: none;
     cursor: pointer;
     border-radius: 5px;
+}
+
+:deep(svg) {
+    /* min-width: 900px; */
+    /* max-height: 500px; */
+    /* min-width: 900px; */
+    font-size: 16px; /* 调整字体大小 */
+}
+
+.mermaid {
+    /* width: 900px; */
+    /* margin: 500px; */
+    height: 100%;
+    max-width: 100%;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    /* overflow: scroll; */
 }
 </style>
