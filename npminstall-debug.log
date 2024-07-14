@@ -3,7 +3,7 @@
   registry: 'https://registry.npmmirror.com',
   pkgs: [
     {
-      name: '@tiptap-pro/extension-unique-id',
+      name: '@types/vue-puzzle-vcode',
       version: 'latest',
       type: 'tag',
       alias: undefined,
@@ -15,7 +15,7 @@
   cacheDir: 'C:\\Users\\22872\\.npminstall_tarball',
   env: {
     npm_config_registry: 'https://registry.npmmirror.com',
-    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=C:\\\\Users\\\\22872\\\\.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","--save","@tiptap-pro/extension-unique-id"],"original":["--fix-bug-versions","--china","--userconfig=C:\\\\Users\\\\22872\\\\.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","--save","@tiptap-pro/extension-unique-id"]}',
+    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=C:\\\\Users\\\\22872\\\\.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","--save-dev","@types/vue-puzzle-vcode"],"original":["--fix-bug-versions","--china","--userconfig=C:\\\\Users\\\\22872\\\\.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","--save-dev","@types/vue-puzzle-vcode"]}',
     npm_config_user_agent: 'npminstall/7.9.0 npm/? node/v20.12.0 win32 x64',
     npm_config_cache: 'C:\\Users\\22872\\.npminstall_tarball',
     NODE: 'D:\\Code\\Node.js\\node.exe',

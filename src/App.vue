@@ -2,6 +2,7 @@
     <div class="appview">
         <div class="title print">
             <div class="title-left">
+                <!-- <img src="./assets/logo2.png" style="width: 32px;height: 32px;" alt="" srcset=""> -->
                 <div v-if="route.path != '/'">智慧笔匠 - {{ store.DocTitle }}{{ store.isSave ? '' : '*' }}
                 </div>
                 <div v-if="route.path == '/'">智慧笔匠 - 首页</div>

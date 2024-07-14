@@ -1,12 +1,25 @@
 <template>
     <div class="home-main">
         <div class="home-main-left">
-            <span @click="LeftClick('new')">新建文档</span>
-            <span @click="LeftClick('open')">打开文件</span>
+            <span @click="LeftClick('new')">
+                <font-awesome-icon style="margin-right: 10px;" icon="plus-circle" />
+                新建文档
+            </span>
+
+            <span @click="LeftClick('open')">
+                <font-awesome-icon style="margin-right: 10px;" icon="file-import" />
+                打开文件
+            </span>
         </div>
         <div class="home-main-right">
-            <div class="home-main-right-title">你好😊，这里是笔匠⭐</div>
-            <div class="home-main-right-title-2" style="">有什么要帮助的吗🚀</div>
+            <div class="home-main-right-1">
+                <img style="" src="../assets/logo.png" alt="" srcset="">
+                <span>
+                    <div class="home-main-right-title"> 你好😊，这里是笔匠⭐</div>
+                    <div class="home-main-right-title-2" style="">有什么要帮助的吗🚀</div>
+                </span>
+            </div>
+
             <div class="line"></div>
             <span class="open" @click="LeftClick('open')">打开本地文件</span>
 
@@ -119,7 +132,7 @@
                         <div>操作</div>
                     </div>
                     <div v-for="(i, index) in filesShow.files" class="home-main-right-file-1">
-                        <div>{{ i.name }}</div>
+                        <div class="file-name" @click="openFile(i.id)">{{ i.name }}</div>
                         <div>{{ formatDate(i.time) }}</div>
                         <div>
                             <button @click="openFile(i.id)">打开</button>
@@ -174,8 +187,10 @@
                             :
                             (store.UserInfo.name || '登录') }}</span>
                         <!-- <span class="profile-1-2-name">{{ store.UserInfo.name === '' ? '匿名用户' : (store.UserInfo.name || '登录') }}</span> -->
-                        <el-input style="min-width: 200px; width: 50%;" v-model="NewName" v-show="isChangeProfile" placeholder="请输入昵称"></el-input>
-                        <div v-show="isChangeProfile" style="color: #666; font-size: 12px">*昵称不是登录的用户名哦，修改后只会影响协同编辑时显示的名称，不会影响登录所需的用户名哦</div>
+                        <el-input style="min-width: 200px; width: 50%;" v-model="NewName" v-show="isChangeProfile"
+                            placeholder="请输入昵称"></el-input>
+                        <div v-show="isChangeProfile" style="color: #666; font-size: 12px">
+                            *昵称不是登录的用户名哦，修改后只会影响协同编辑时显示的名称，不会影响登录所需的用户名哦</div>
                         <el-button v-show="!isChangeProfile" @click="ChangeProfile">修改个人信息</el-button>
 
                         <div style="margin-top: 10px;">
@@ -402,7 +417,8 @@ const NewAvatar = ref('')
 function ChangeProfile() {
     isChangeProfile.value = true
     NewName.value = store.UserInfo.name
-    NewAvatar.value = baseUrl + store.UserInfo.avatar
+    if (store.UserInfo.avatar)
+        NewAvatar.value = baseUrl + store.UserInfo.avatar
 }
 function Cancle() {
     isChangeProfile.value = false
@@ -508,6 +524,7 @@ function UploadAvatar() {
     transition: all 0.3s;
     user-select: none;
     font-size: 14px;
+    /* background-image: linear-gradient(90deg, #5188ff, #64b5ff); */
 }
 
 .home-main-left span:hover {
@@ -578,6 +595,20 @@ function UploadAvatar() {
 .home-main-right-title2 {
     font-size: 20px;
     user-select: none;
+    position: relative;
+}
+
+.home-main-right-title2::before {
+    content: '';
+    display: inline-block;
+    position: relative;
+    width: 5px;
+    height: 20px;
+
+    /* top: 50%; */
+    transform: translateY(2px);
+    background-color: #3172ff;
+    margin-right: 15px;
 }
 
 .home-main-right-file {
@@ -643,7 +674,11 @@ function UploadAvatar() {
     height: 20px;
     text-align: center;
     line-height: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.open:hover{
+    background-image: linear-gradient(90deg, #6797ff, #74bcff);
 
 }
 
@@ -689,9 +724,18 @@ function UploadAvatar() {
     margin-top: 30px;
     display: flex;
     /* 左侧大小不变，右侧元素占满剩余空间 */
-    
-    
 
+
+
+}
+
+
+.file-name {
+    cursor: pointer;
+}
+
+.file-name:hover {
+    text-decoration: underline;
 }
 
 .profile-1-1 {
@@ -724,13 +768,26 @@ function UploadAvatar() {
     font-size: 26px;
     margin-bottom: 10px;
 }
-.about{
+
+.about {
     color: #666;
     font-size: 14px;
     margin-bottom: 30px;
 }
-.about a{
+
+.about a {
     color: #3172ff;
+}
+
+.home-main-right-1 {
+    display: flex;
+    align-items: center
+}
+
+.home-main-right-1 img {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
 }
 
 @media screen and (max-width: 768px) {
@@ -804,5 +861,16 @@ function UploadAvatar() {
         grid-template-columns: 2fr 1fr 140px !important;
     }
 
+    .home-main-right-1 {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .home-main-right-1 img {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+    }
 }
 </style>

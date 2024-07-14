@@ -144,7 +144,17 @@ export default {
     },
 
     mounted() {
-        this.data = JSON.parse(this.node.attrs.data)
+        try {
+            console.log(this.node.attrs.data);
+            this.data = JSON.parse(this.node.attrs.data)
+        } catch (error) {
+            this.data = {
+                title: '图表示例',
+                legend: ['销量'],
+                xAxis: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+                series: [{ name: '销量', data: [5, 20, 36, 10, 10, 20] }]
+            }
+        }
         // 判断是否有数据
         if (!this.data.xAxis) {
             this.data = {

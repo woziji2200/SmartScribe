@@ -56,9 +56,12 @@ export default {
         // const graphDefinition = 'graph TB\n使用mermaid-->创建您的图表';
         const graphDefinition = this.node.attrs.data;
         this.data2 = graphDefinition;
-        mermaid.render(this.id + '2', graphDefinition).then(({ svg }) => {
-            this.svg = svg;
-        });
+        setTimeout(() => {
+            mermaid.render(this.id + '2', graphDefinition).then(({ svg }) => {
+                this.svg = svg;
+            });
+        }, 1000);
+
         // this.$forceUpdate();
 
         // this.$nextTick(() => {
@@ -116,7 +119,8 @@ export default {
     /* min-width: 900px; */
     /* max-height: 500px; */
     /* min-width: 900px; */
-    font-size: 16px; /* 调整字体大小 */
+    font-size: 16px;
+    /* 调整字体大小 */
 }
 
 .mermaid {
