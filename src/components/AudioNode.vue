@@ -229,7 +229,7 @@ computed(() => {
 }
 
 .audio-right {
-    width: 400px;
+    width: 100%;
     height: 49px;
     line-height: 49px;
     background: #f6f6f6;

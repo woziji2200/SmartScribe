@@ -101,8 +101,18 @@ if (isElectron) {
 const isLogin = ref(false)
 
 function logout() {
-    localStorage.removeItem('login')
-    store.UserInfo = {}
+    // 弹出确认框
+    ElMessageBox.confirm('确定要退出登录吗', '警告', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }).then(() => {
+            localStorage.removeItem('login')
+            store.UserInfo = {}
+        }).catch(() => {
+            console.log('取消');
+        });
+
 }
 function login() {
     if (store.UserInfo.name === undefined) {
@@ -181,6 +191,11 @@ onMounted(async () => {
 .title-left {
     display: flex;
     align-items: center;
+}
+.title-left{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .title-middle {

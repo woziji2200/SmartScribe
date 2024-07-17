@@ -25,7 +25,7 @@
 
             <div class="home-main-right-title2">新建文档</div>
             <div class="home-main-right-content-2">
-                <router-link class="link" to="/editor?template=blank">
+                <a class="link" @click="openMode('?template=blank')">
                     <div class="link-image">
                         <svg t="1716992970392" class="icon" viewBox="0 0 1024 1024" version="1.1"
                             xmlns="http://www.w3.org/2000/svg" p-id="12401">
@@ -41,8 +41,8 @@
                         </svg>
                     </div>
                     <div class="link-title">空白文档</div>
-                </router-link>
-                <router-link class="link" to="/editor?template=doc">
+                </a>
+                <a class="link" @click="openMode('?template=doc')">
                     <div class="link-image">
                         <svg t="1716992993022" class="icon" viewBox="0 0 1024 1024" version="1.1"
                             xmlns="http://www.w3.org/2000/svg" p-id="13569">
@@ -77,8 +77,8 @@
                         </svg>
                     </div>
                     <div class="link-title">示例-文档</div>
-                </router-link>
-                <router-link class="link" to="/editor?template=graph">
+                </a>
+                <a class="link"  @click="openMode('?template=graph')">
                     <div class="link-image">
                         <svg t="1716992936124" class="icon" viewBox="0 0 1024 1024" version="1.1"
                             xmlns="http://www.w3.org/2000/svg" p-id="10308">
@@ -115,7 +115,7 @@
                         </svg>
                     </div>
                     <div class="link-title">示例-流程图</div>
-                </router-link>
+                </a>
             </div>
             <div class="line"></div>
             <div class="home-main-right-title2">我的文件</div>
@@ -191,7 +191,13 @@
                             placeholder="请输入昵称"></el-input>
                         <div v-show="isChangeProfile" style="color: #666; font-size: 12px">
                             *昵称不是登录的用户名哦，修改后只会影响协同编辑时显示的名称，不会影响登录所需的用户名哦</div>
-                        <el-button v-show="!isChangeProfile" @click="ChangeProfile">修改个人信息</el-button>
+                        <div>
+                            <el-button v-show="!isChangeProfile" @click="clearMode">清空模式偏好</el-button>
+                            <el-button v-show="!isChangeProfile" @click="ChangeProfile">修改个人信息</el-button>
+                            <span></span>
+                            <el-button class="button-pwd" v-show="!isChangeProfile" @click="showChangePwd = true">修改密码</el-button>
+                        </div>
+
 
                         <div style="margin-top: 10px;">
                             <input type="file" id="file1" @change="ChangeAvatar" style="display: none">
@@ -227,6 +233,29 @@
                 </template>
             </el-dialog>
 
+            <el-dialog v-model="showEditorMode" title="选择编辑模式" width="60%" align-center>
+                <div class="mode">
+                    <div class="mode-1" @click="OpenTr()">
+                        <img src="./../assets/tr.png" alt="" srcset="">
+                        <div class="mode-name">传统模式</div>
+                        <div class="mode-des">传统编辑器形态，操作简单易上手，右侧AI助手随时待命</div>
+                    </div>
+                    <div class="mode-1" @click="OpenAi()">
+                        <img src="./../assets/ai.png" alt="" srcset="">
+                        <div class="mode-name">AI模式</div>
+                        <div class="mode-des">创新AI编辑器形态，简洁明了，AI助手嵌入编辑区即刻使用</div>
+                    </div>
+                </div>
+                <el-checkbox style="margin-left: 40px;" v-model="RemMode" label="记住我的选择" size="large" />
+            </el-dialog>
+
+
+            <transition>
+                <ChangePwd v-if="showChangePwd" @close="showChangePwd = false"></ChangePwd>
+            </transition>
+
+            
+
         </div>
         <!-- <button @click="test">test</button> -->
     </div>
@@ -238,38 +267,16 @@ import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { request, baseUrl, getUserInfo } from "@/axios";
 import { useStore } from "@/store";
 import { ElMessage } from "element-plus";
-
+import  ChangePwd from "@/components/ChangePwd.vue";
+import { Editor } from "@tiptap/vue-3";
 
 const store = useStore();
 
 const router = useRouter();
-async function test() {
-    const ctrl = new AbortController()
-    await fetchEventSource('http://django.daoxuan.cc/api/ai/translate/', {
-        // method: 'POST',
-        signal: ctrl.signal, // AbortSignal
-        // body: JSON.stringify({
-        //     name: 'test'
-        // }),
-        headers: {
-            'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
-        },
-        onmessage(ev) {
-            console.log(ev.data);
-        },
-        onerror(ev) {
-            // console.log(ev);
-            ctrl.abort()
-            throw ev
-
-        },
-        onclose(ev) {
-            // console.log(ev);
-            // ctrl.abort()
-        }
-    });
-    console.log(111);
-}
+const showChangePwd = ref(false)
+const showEditorMode = ref(false)
+const pathWillTo = ref('')
+const RemMode = ref(false)
 
 let renameDialogVisible = ref(false)
 let renameId = ref(0)
@@ -323,9 +330,11 @@ function formatDate(date) {
 
 function LeftClick(type) {
     if (type === 'new') {
-        router.push('/editor?template=blank');
+        openMode('?template=blank')
+        // router.push('/editor?template=blank');
     } else if (type === 'open') {
-        router.push('/editor?template=open');
+        // router.push('/editor?template=open');
+        openMode('?template=open')
     }
 }
 
@@ -408,7 +417,8 @@ function deleteFile(id) {
 }
 
 function openFile(id) {
-    router.push(`/editor?template=blank&id=${id}`)
+    // router.push(`/editor?template=blank&id=${id}`)
+    openMode(`?template=blank&id=${id}`)
 }
 
 const isChangeProfile = ref(false)
@@ -489,6 +499,37 @@ function UploadAvatar() {
     document.getElementById('file1').click()
 }
 
+function openMode(path){
+    pathWillTo.value = path
+    let mode = localStorage.getItem('mode')
+    if(mode == 'tr'){
+        OpenTr()
+    }else if(mode == 'ai'){
+        OpenAi()
+    }else{
+        showEditorMode.value = true
+    }
+}
+
+function OpenTr(){
+    if(RemMode.value){
+        localStorage.setItem('mode','tr')
+    }
+    showEditorMode.value = false
+    router.push('/editor'+pathWillTo.value)
+}
+
+function OpenAi(){
+    if(RemMode.value){
+        localStorage.setItem('mode','ai')
+    }
+    showEditorMode.value = false
+    router.push('/editorai'+pathWillTo.value)
+}
+function clearMode(){
+    localStorage.removeItem('mode')
+    ElMessage.success('清空成功')
+}
 
 </script>
 <style scoped>
@@ -789,6 +830,60 @@ function UploadAvatar() {
     height: 100px;
     margin-right: 20px;
 }
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
+.button-pwd {
+    margin-left: 10px;
+}
+
+.mode{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 40px;
+    gap: 20px;
+}
+.mode-1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 20px;
+    border: #3172ff solid 1px;
+    border-radius: 10px;
+    height: 100%;
+}
+.mode-1:hover{
+    background-color: #ebf0ff;
+    transform: scale(1.05);
+}
+
+.mode-name{
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.mode-1 img{
+    margin-bottom: 10px;
+    width: 80%;
+}
+
+.mode-des{
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
 @media screen and (max-width: 768px) {
     .home-main-left {
@@ -837,6 +932,7 @@ function UploadAvatar() {
 
     .home-main-right-file {
         /* display: none; */
+        font-size: 14px;
     }
 
     .home-main-right-file-mobile {
@@ -871,6 +967,19 @@ function UploadAvatar() {
         width: 150px;
         height: 150px;
         margin-bottom: 20px;
+    }
+    .button-pwd{
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .mode{
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 10px;
+    }
+    .mode-1{
+        width: 90%;
     }
 }
 </style>

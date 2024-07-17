@@ -144,7 +144,7 @@ export default {
             .on('touchend', this.onEndDrawing)
             .on('touchleave', this.onEndDrawing)
         try {
-            console.log(this.node.attrs.lines);
+            // console.log(this.node.attrs.lines);
             this.lines = JSON.parse(this.node.attrs.lines)
         } catch (error) {
             this.lines = []

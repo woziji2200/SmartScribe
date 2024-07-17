@@ -72,7 +72,7 @@ export default {
                     const { from, to } = state.selection;
                     const startPos = state.doc.resolve(from).start();
 
-                    const text = state.doc.textBetween(startPos, to, '\n')
+                    const text = state.doc.textBetween(0, to, '\n')
                     console.log(qwq);
                     request({
                         url: '/api/ai/continue/',

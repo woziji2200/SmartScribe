@@ -9,7 +9,7 @@
             </transition>
 
 
-            <div class="top">
+            <div class="top" id="reftop1">
                 <el-tabs type="border-card">
                     <el-tab-pane class="top-item">
                         <template #label>
@@ -112,7 +112,21 @@
                                     d="M123.733333 328.533333m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z"
                                     fill="#E02020" p-id="5441"></path>
                             </svg>
-                            打印
+                            打印/导出PDF
+                        </span>
+
+
+                        <span class="top-button" @click="ChangeMode">
+                            <svg t="1721126872909" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" p-id="8951" width="200" height="200">
+                                <path
+                                    d="M213.333333 815.407407A213.333333 213.333333 0 0 1 0 602.074074V474.074074h85.333333v128a128 128 0 0 0 128 128h768a42.666667 42.666667 0 0 1 24.746667 77.406815l-298.666667 213.333333-49.493333-69.480296 190.293333-135.945482H213.238519z"
+                                    fill="#188AFA" p-id="8952"></path>
+                                <path
+                                    d="M810.666667 205.387852A213.333333 213.333333 0 0 1 1024 418.721185v128h-85.333333v-128a128 128 0 0 0-128-128H42.666667A42.666667 42.666667 0 0 1 17.92 213.333333L316.491852 0l49.493333 69.461333-190.27437 135.945482h634.88z"
+                                    p-id="8953"></path>
+                            </svg>
+                            切换AI模式
                         </span>
                     </el-tab-pane>
                     <el-tab-pane class="top-item">
@@ -122,19 +136,33 @@
                         <div class="top-item-class tools-2-1 large-flex" style="max-width: 270px;">
                             <span @click="ChangeShowTools" class="tools-show"><font-awesome-icon
                                     :icon='ShowTools ? "angle-up" : "angle-down"'></font-awesome-icon></span>
-                            <span @click="undo" :disabled="!CanUndo"><font-awesome-icon
-                                    icon='undo'></font-awesome-icon></span>
-                            <span @click="redo" :disabled="!CanRedo"><font-awesome-icon
-                                    icon='redo'></font-awesome-icon></span>
-                            <span @click="bold" :class="!isBold ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='bold'></font-awesome-icon></span>
-                            <span @click="italic" :class="!isItalic ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='italic'></font-awesome-icon></span>
-                            <span @click="underline" :class="!isUnderline ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='underline'></font-awesome-icon></span>
-                            <span @click="strikethrough"
-                                :class="!isStrikethrough ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='strikethrough'></font-awesome-icon></span>
+                            <el-tooltip content="撤销" placement="bottom">
+                                <span @click="undo" :disabled="!CanUndo"><font-awesome-icon
+                                        icon='undo'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="重做" placement="bottom">
+                                <span @click="redo" :disabled="!CanRedo"><font-awesome-icon
+                                        icon='redo'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="加粗" placement="bottom">
+                                <span @click="bold" :class="!isBold ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='bold'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="斜体" placement="bottom">
+                                <span @click="italic" :class="!isItalic ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='italic'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="下划线" placement="bottom">
+                                <span @click="underline" :class="!isUnderline ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='underline'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="删除线" placement="bottom">
+                                <span @click="strikethrough"
+                                    :class="!isStrikethrough ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='strikethrough'></font-awesome-icon></span>
+                            </el-tooltip>
+
+
                             <span style="width: 70px;">
                                 <el-select @change="SetFontSize()" v-model="FontSize2" placeholder="字体大小" size="small">
                                     <el-option v-for="item in FontSizeList" :key="item" :label="item" :value="item" />
@@ -144,79 +172,118 @@
                                 <pick-colors @change="SetFontColor" v-model:value="FontColor"
                                     :colors="['#000000', '#ff4500', '#ffd700', '#00ced1', '#1e90ff', '#c71585',]" />
                             </span>
-                            <span @click="SetLink()" :class="!isLink ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='link'></font-awesome-icon></span>
-                            <span @click="SetSubscript()" :class="!isSubscript ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='subscript'></font-awesome-icon></span>
-                            <span @click="SetSuperscript()"
-                                :class="!isSuperscript ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='superscript'></font-awesome-icon></span>
-                            <span @click="editor.commands.toggleBlockquote()" class="tools-span"
-                                :class="!editor.isActive('blockquote') ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='quote-left'></font-awesome-icon></span>
+
+                            <el-tooltip content="超链接" placement="bottom">
+                                <span @click="SetLink()" :class="!isLink ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='link'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="下角标" placement="bottom">
+                                <span @click="SetSubscript()"
+                                    :class="!isSubscript ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='subscript'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="上角标" placement="bottom">
+                                <span @click="SetSuperscript()"
+                                    :class="!isSuperscript ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='superscript'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="引言" placement="bottom">
+                                <span @click="editor.commands.toggleBlockquote()" class="tools-span"
+                                    :class="!editor.isActive('blockquote') ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='quote-left'></font-awesome-icon></span>
+                            </el-tooltip>
                         </div>
 
                         <div class="top-item-class tools-2-1 large-flex" style="max-width: 230px;">
-                            <span @click="SetTextAlign('left')"
-                                :class="TextAlign2 != 'left' ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='align-left'></font-awesome-icon></span>
-                            <span @click="SetTextAlign('center')"
-                                :class="TextAlign2 != 'center' ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='align-center'></font-awesome-icon></span>
-                            <span @click="SetTextAlign('right')"
-                                :class="TextAlign2 != 'right' ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='align-right'></font-awesome-icon></span>
-                            <span @click="SetTextAlign('justify')"
-                                :class="TextAlign2 != 'justify' ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='align-justify'></font-awesome-icon></span>
-                            <span @click="SetHeading(1)" :class="Heading2 != 1 ? '' : 'tools-select'">
-                                <svg t="1716215843603" class="tools-svg" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg" p-id="1280" width="200" height="200">
-                                    <path
-                                        d="M584.9 445.3V142.6h86.5v735h-86.5V531.7H152.5v345.9H66.1v-735h86.5v302.6l432.3 0.1zM843.7 877.6v-0.3h-79.8V826h79.8V558.6c-22.5 23.4-49.9 40.4-79.8 49.3v-59.1c17.2-5.2 33.8-12.9 49.1-23 16.2-10.6 30.9-23.7 43.9-38.9h39.9V826h61.7v51.3h-61.7v0.3h-53.1z"
-                                        p-id="1281"></path>
-                                </svg>
-                            </span>
-                            <span @click="SetHeading(2)" :class="Heading2 != 2 ? '' : 'tools-select'">
-                                <svg t="1716215857033" class="tools-svg" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg" p-id="1446" width="200" height="200">
-                                    <path
-                                        d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276z m935.282 448H680c0.479-41.591 10.533-77.923 30.163-108.997 19.63-31.074 46.44-58.084 80.434-81.031 16.279-11.952 33.275-23.544 50.99-34.779 17.714-11.234 33.993-23.305 48.835-36.213 14.842-12.907 27.05-26.89 36.626-41.95 9.576-15.058 14.603-32.388 15.081-51.988 0-9.083-1.077-18.764-3.231-29.042-2.155-10.278-6.344-19.84-12.568-28.683-6.224-8.845-14.842-16.254-25.854-22.23-11.012-5.976-25.375-8.964-43.09-8.964-16.278 0-29.803 3.227-40.576 9.68-10.772 6.455-19.39 15.299-25.854 26.533-6.463 11.235-11.251 24.5-14.363 39.798-3.112 15.298-4.908 31.791-5.386 49.48h-81.87c0-27.728 3.71-53.423 11.13-77.087 7.422-23.664 18.553-44.101 33.395-61.311 14.842-17.21 32.916-30.715 54.222-40.516 21.305-9.8 46.081-14.7 74.33-14.7 30.641 0 56.255 5.02 76.843 15.059 20.587 10.04 37.224 22.707 49.912 38.005 12.688 15.298 21.665 31.91 26.931 49.838 5.267 17.927 7.9 35.018 7.9 51.272 0 20.078-3.112 38.244-9.336 54.498-6.224 16.254-14.603 31.193-25.136 44.818-10.533 13.625-22.502 26.174-35.908 37.647a538.302 538.302 0 0 0-41.653 32.27 1122.27 1122.27 0 0 0-43.09 28.683c-14.364 9.083-27.65 18.166-39.858 27.249-12.209 9.083-22.862 18.525-31.958 28.325-9.097 9.8-15.321 20.198-18.673 31.193h244.894V896z"
-                                        p-id="1447"></path>
-                                </svg> </span>
-                            <span @click="SetHeading(3)" :class="Heading2 != 3 ? '' : 'tools-select'">
-                                <svg t="1716215866976" class="tools-svg" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg" p-id="1608" width="200" height="200">
-                                    <path
-                                        d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276zM815.551 597.802c13.128 0.47 26.257-0.469 39.385-2.813 13.129-2.344 24.85-6.447 35.165-12.308 10.316-5.86 18.638-13.948 24.968-24.263 6.33-10.315 9.494-22.975 9.494-37.978 0-21.1-7.15-37.978-21.45-50.638-14.301-12.66-32.704-18.989-55.21-18.989-14.066 0-26.257 2.813-36.572 8.44-10.315 5.626-18.872 13.245-25.67 22.857-6.799 9.612-11.84 20.395-15.121 32.352-3.283 11.956-4.69 24.263-4.22 36.923h-80.177c0.938-23.913 5.392-46.066 13.363-66.462 7.97-20.396 18.872-38.095 32.703-53.099 13.832-15.004 30.594-26.725 50.287-35.165C802.188 388.22 824.459 384 849.31 384c19.223 0 38.095 2.813 56.616 8.44 18.52 5.626 35.165 13.831 49.934 24.615 14.77 10.784 26.609 24.498 35.517 41.143 8.909 16.645 13.363 35.75 13.363 57.318 0 24.85-5.626 46.535-16.88 65.055-11.252 18.52-28.835 32-52.747 40.44v1.407c28.132 5.626 50.052 19.575 65.759 41.846 15.707 22.27 23.56 49.348 23.56 81.23 0 23.444-4.688 44.425-14.065 62.946-9.378 18.52-22.037 34.227-37.979 47.12-15.942 12.894-34.462 22.858-55.561 29.89-21.1 7.034-43.37 10.55-66.814 10.55-28.601 0-53.568-4.103-74.902-12.308-21.334-8.205-39.15-19.81-53.451-34.813-14.3-15.004-25.202-33.055-32.704-54.154-7.502-21.099-11.487-44.542-11.956-70.33h80.177c-0.938 30.008 6.447 54.975 22.154 74.902s39.268 29.89 70.682 29.89c26.726 0 49.114-7.62 67.166-22.857 18.051-15.239 27.077-36.923 27.077-65.055 0-19.224-3.751-34.462-11.253-45.715-7.502-11.252-17.348-19.81-29.539-25.67-12.19-5.86-25.905-9.494-41.143-10.901-15.239-1.407-30.828-1.875-46.77-1.407v-59.78z"
-                                        p-id="1609"></path>
-                                </svg>
-                            </span>
-                            <span @click="SetHeading(4)" :class="Heading2 != 4 ? '' : 'tools-select'">
-                                <svg t="1716215885803" class="tools-svg" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg" p-id="1770" width="200" height="200">
-                                    <path
-                                        d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276z m936.246 331.56h-63.298v116.748h-75.957V779.56H674v-79.472L884.991 404h75.957v312.264h63.298v63.296zM735.89 716.264h149.1V499.648h-1.406L735.89 716.264z"
-                                        p-id="1771"></path>
-                                </svg>
-                            </span>
-                            <span @click="editor.commands.setHorizontalRule()">
-                                <svg t="1720442589110" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg" p-id="6077" width="200" height="200">
-                                    <path
-                                        d="M213.333333 554.666667a42.666667 42.666667 0 0 1 0-85.333334h597.333334a42.666667 42.666667 0 0 1 0 85.333334H213.333333z"
-                                        p-id="6078"></path>
-                                </svg>
-                            </span>
+                            <el-tooltip content="左对齐" placement="bottom">
+                                <span @click="SetTextAlign('left')"
+                                    :class="TextAlign2 != 'left' ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='align-left'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="居中对齐" placement="bottom">
+                                <span @click="SetTextAlign('center')"
+                                    :class="TextAlign2 != 'center' ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='align-center'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="右对齐" placement="bottom">
+                                <span @click="SetTextAlign('right')"
+                                    :class="TextAlign2 != 'right' ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='align-right'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="两端对齐" placement="bottom">
+                                <span @click="SetTextAlign('justify')"
+                                    :class="TextAlign2 != 'justify' ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='align-justify'></font-awesome-icon></span>
+                            </el-tooltip>
 
-                            <span @click="SetListul" :class="!isListul ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='list-ul'></font-awesome-icon></span>
-                            <span @click="SetListol" :class="!isListol ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='list-ol'></font-awesome-icon></span>
-                            <span @click="SetTasks" :class="!isTasks ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='tasks'></font-awesome-icon></span>
-                            <span @click="SetCode" :class="!isCode ? '' : 'tools-select'"><font-awesome-icon
-                                    icon='code'></font-awesome-icon></span>
+                            <el-tooltip content="一级标题" placement="bottom">
+                                <span @click="SetHeading(1)" :class="Heading2 != 1 ? '' : 'tools-select'">
+                                    <svg t="1716215843603" class="tools-svg" viewBox="0 0 1024 1024" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg" p-id="1280" width="200" height="200">
+                                        <path
+                                            d="M584.9 445.3V142.6h86.5v735h-86.5V531.7H152.5v345.9H66.1v-735h86.5v302.6l432.3 0.1zM843.7 877.6v-0.3h-79.8V826h79.8V558.6c-22.5 23.4-49.9 40.4-79.8 49.3v-59.1c17.2-5.2 33.8-12.9 49.1-23 16.2-10.6 30.9-23.7 43.9-38.9h39.9V826h61.7v51.3h-61.7v0.3h-53.1z"
+                                            p-id="1281"></path>
+                                    </svg>
+                                </span>
+                            </el-tooltip>
+                            <el-tooltip content="二级标题" placement="bottom">
+                                <span @click="SetHeading(2)" :class="Heading2 != 2 ? '' : 'tools-select'">
+                                    <svg t="1716215857033" class="tools-svg" viewBox="0 0 1024 1024" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg" p-id="1446" width="200" height="200">
+                                        <path
+                                            d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276z m935.282 448H680c0.479-41.591 10.533-77.923 30.163-108.997 19.63-31.074 46.44-58.084 80.434-81.031 16.279-11.952 33.275-23.544 50.99-34.779 17.714-11.234 33.993-23.305 48.835-36.213 14.842-12.907 27.05-26.89 36.626-41.95 9.576-15.058 14.603-32.388 15.081-51.988 0-9.083-1.077-18.764-3.231-29.042-2.155-10.278-6.344-19.84-12.568-28.683-6.224-8.845-14.842-16.254-25.854-22.23-11.012-5.976-25.375-8.964-43.09-8.964-16.278 0-29.803 3.227-40.576 9.68-10.772 6.455-19.39 15.299-25.854 26.533-6.463 11.235-11.251 24.5-14.363 39.798-3.112 15.298-4.908 31.791-5.386 49.48h-81.87c0-27.728 3.71-53.423 11.13-77.087 7.422-23.664 18.553-44.101 33.395-61.311 14.842-17.21 32.916-30.715 54.222-40.516 21.305-9.8 46.081-14.7 74.33-14.7 30.641 0 56.255 5.02 76.843 15.059 20.587 10.04 37.224 22.707 49.912 38.005 12.688 15.298 21.665 31.91 26.931 49.838 5.267 17.927 7.9 35.018 7.9 51.272 0 20.078-3.112 38.244-9.336 54.498-6.224 16.254-14.603 31.193-25.136 44.818-10.533 13.625-22.502 26.174-35.908 37.647a538.302 538.302 0 0 0-41.653 32.27 1122.27 1122.27 0 0 0-43.09 28.683c-14.364 9.083-27.65 18.166-39.858 27.249-12.209 9.083-22.862 18.525-31.958 28.325-9.097 9.8-15.321 20.198-18.673 31.193h244.894V896z"
+                                            p-id="1447"></path>
+                                    </svg> </span>
+                            </el-tooltip>
+                            <el-tooltip content="三级标题" placement="bottom">
+
+                                <span @click="SetHeading(3)" :class="Heading2 != 3 ? '' : 'tools-select'">
+                                    <svg t="1716215866976" class="tools-svg" viewBox="0 0 1024 1024" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg" p-id="1608" width="200" height="200">
+                                        <path
+                                            d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276zM815.551 597.802c13.128 0.47 26.257-0.469 39.385-2.813 13.129-2.344 24.85-6.447 35.165-12.308 10.316-5.86 18.638-13.948 24.968-24.263 6.33-10.315 9.494-22.975 9.494-37.978 0-21.1-7.15-37.978-21.45-50.638-14.301-12.66-32.704-18.989-55.21-18.989-14.066 0-26.257 2.813-36.572 8.44-10.315 5.626-18.872 13.245-25.67 22.857-6.799 9.612-11.84 20.395-15.121 32.352-3.283 11.956-4.69 24.263-4.22 36.923h-80.177c0.938-23.913 5.392-46.066 13.363-66.462 7.97-20.396 18.872-38.095 32.703-53.099 13.832-15.004 30.594-26.725 50.287-35.165C802.188 388.22 824.459 384 849.31 384c19.223 0 38.095 2.813 56.616 8.44 18.52 5.626 35.165 13.831 49.934 24.615 14.77 10.784 26.609 24.498 35.517 41.143 8.909 16.645 13.363 35.75 13.363 57.318 0 24.85-5.626 46.535-16.88 65.055-11.252 18.52-28.835 32-52.747 40.44v1.407c28.132 5.626 50.052 19.575 65.759 41.846 15.707 22.27 23.56 49.348 23.56 81.23 0 23.444-4.688 44.425-14.065 62.946-9.378 18.52-22.037 34.227-37.979 47.12-15.942 12.894-34.462 22.858-55.561 29.89-21.1 7.034-43.37 10.55-66.814 10.55-28.601 0-53.568-4.103-74.902-12.308-21.334-8.205-39.15-19.81-53.451-34.813-14.3-15.004-25.202-33.055-32.704-54.154-7.502-21.099-11.487-44.542-11.956-70.33h80.177c-0.938 30.008 6.447 54.975 22.154 74.902s39.268 29.89 70.682 29.89c26.726 0 49.114-7.62 67.166-22.857 18.051-15.239 27.077-36.923 27.077-65.055 0-19.224-3.751-34.462-11.253-45.715-7.502-11.252-17.348-19.81-29.539-25.67-12.19-5.86-25.905-9.494-41.143-10.901-15.239-1.407-30.828-1.875-46.77-1.407v-59.78z"
+                                            p-id="1609"></path>
+                                    </svg>
+                                </span>
+                            </el-tooltip>
+                            <el-tooltip content="四级标题" placement="bottom">
+                                <span @click="SetHeading(4)" :class="Heading2 != 4 ? '' : 'tools-select'">
+                                    <svg t="1716215885803" class="tools-svg" viewBox="0 0 1024 1024" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg" p-id="1770" width="200" height="200">
+                                        <path
+                                            d="M88 448h400V172c0-24.3 19.7-44 44-44s44 19.7 44 44v680c0 24.3-19.7 44-44 44s-44-19.7-44-44V536H88v316c0 24.3-19.7 44-44 44S0 876.3 0 852V172c0-24.3 19.7-44 44-44s44 19.7 44 44v276z m936.246 331.56h-63.298v116.748h-75.957V779.56H674v-79.472L884.991 404h75.957v312.264h63.298v63.296zM735.89 716.264h149.1V499.648h-1.406L735.89 716.264z"
+                                            p-id="1771"></path>
+                                    </svg>
+                                </span>
+                            </el-tooltip>
+
+                            <el-tooltip content="分割线" placement="bottom">
+                                <span @click="editor.commands.setHorizontalRule()">
+                                    <svg t="1720442589110" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg" p-id="6077" width="200" height="200">
+                                        <path
+                                            d="M213.333333 554.666667a42.666667 42.666667 0 0 1 0-85.333334h597.333334a42.666667 42.666667 0 0 1 0 85.333334H213.333333z"
+                                            p-id="6078"></path>
+                                    </svg>
+                                </span>
+                            </el-tooltip>
+                            <el-tooltip content="无序列表" placement="bottom">
+                                <span @click="SetListul" :class="!isListul ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='list-ul'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="有序列表" placement="bottom">
+                                <span @click="SetListol" :class="!isListol ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='list-ol'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="待办事项" placement="bottom">
+                                <span @click="SetTasks" :class="!isTasks ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='tasks'></font-awesome-icon></span>
+                            </el-tooltip>
+                            <el-tooltip content="代码块" placement="bottom">
+                                <span @click="SetCode" :class="!isCode ? '' : 'tools-select'"><font-awesome-icon
+                                        icon='code'></font-awesome-icon></span>
+                            </el-tooltip>
+
                         </div>
 
                         <div class="top-item-class tools-2-1 small-flex"
@@ -732,7 +799,7 @@
 
 
         <div class='main2'>
-            <div class="main-left print large" v-if='ShowTree'>
+            <div class="main-left print large" v-if='ShowTree' id="reftree">
                 <span @click='ShowTree = false' class='main-left-close'><font-awesome-icon icon="times" /></span>
                 <li class="main-left-title"
                     style="color: rgb(39, 64, 247);margin-bottom: 14px;margin-top: 14px;margin-left: 15px;font-size: 16px;cursor:auto;">
@@ -770,7 +837,7 @@
 
 
 
-            <div class="main" v-loading="fileLoading">
+            <div class="main" v-loading="fileLoading" id="refmain">
                 <div class="main-right">
                     <div style="height: 40px;" class="print main-height"></div>
                     <div class="editor">
@@ -788,7 +855,7 @@
                     <div style="height: 60px;" class="print main-height"></div>
                 </div>
             </div>
-            <div class="main-right-ai print" v-if='isAIOpen' :style="{ width: AIwidth + 'px' }">
+            <div class="main-right-ai print" id="reftop2" v-if='isAIOpen' :style="{ width: AIwidth + 'px' }">
                 <div class="resize" id='resizeRight'></div>
                 <span @click='isAIOpen = false' class='main-right-close'><font-awesome-icon icon="times" /></span>
                 <div style="">
@@ -1071,7 +1138,8 @@
                                                 style="width: 100%;max-height: 300px;min-height: 100px;" fit="contain"
                                                 :preview-src-list="[AIobjectData]">
                                                 <template #error>
-                                                    <div class="image-slot" style="color:#999;text-align: center;line-height: 50px;">
+                                                    <div class="image-slot"
+                                                        style="color:#999;text-align: center;line-height: 50px;">
                                                         （识别结果）
                                                     </div>
                                                 </template>
@@ -1114,7 +1182,8 @@
                                     </el-collapse>
 
                                 </el-tab-pane>
-                                <el-tab-pane label="创意生成" name="second">
+
+                                <!-- <el-tab-pane label="创意生成" name="second">
                                     <el-collapse accordion>
                                         <el-collapse-item title="图生文" name="1">
                                             <div>
@@ -1125,14 +1194,8 @@
                                                 style="padding: 0;width: 100%;"></el-input>
                                             <el-button @click="QuickLayout(1)" size="small">点击生成</el-button>
                                         </el-collapse-item>
-                                        <!-- <el-collapse-item title="表格识别" name="2">
-                                            <div>
-                                                自动识别标题、称呼语、正文部分、日期。适用于信件。
-                                            </div>
-                                            <el-button @click="QuickLayout(2)" size="small">点击应用</el-button>
-                                        </el-collapse-item> -->
                                     </el-collapse>
-                                </el-tab-pane>
+                                </el-tab-pane> -->
 
                             </el-tabs>
 
@@ -1189,8 +1252,26 @@
 
                                 </el-collapse-item>
 
+                                <el-collapse-item title="表格生成" name="2">
+                                    <div>
+                                        根据选中的文本自动生成表格
+                                    </div>
+                                    <el-button @click="AItexttableStart">{{ AItexttableLoading ? '停止生成' :
+                                        '开始生成'
+                                        }}</el-button>
+                                    <div style="font-size: 12px;margin: 8px 0;color: #555">生成结果：</div>
+                                    <div v-show="!AItexttableLoading && AItexttableData"
+                                        style="font-size: 12px;margin: 8px 0;color: #555">以表格形式展示，插入文章可以进行编辑</div>
+                                    <div v-html="AItexttableData" class="ai-table" v-loading="AItexttableLoading"
+                                        style="min-height: 100px;max-height: 300px;width: 100%;overflow: auto">
+                                    </div>
+                                    <el-button v-show="!AItexttableLoading && AItexttableData"
+                                        @click="AIInsert(AItexttableData)">插入表格</el-button>
 
-                                <el-collapse-item title="图表生成" name="2">
+                                </el-collapse-item>
+
+
+                                <el-collapse-item title="图表生成" name="3">
                                     <div>
                                         根据选中的文本自动生成图表
                                     </div>
@@ -1390,6 +1471,20 @@
             </template>
         </el-dialog>
 
+        <el-tour v-model="openTour" @close="closeTour" @finish="closeTour">
+            <el-tour-step title="新手引导">
+                <div>😊你好~我是笔匠，下面我来带你使用经典模式的AI编辑器吧！</div>
+            </el-tour-step>
+            <el-tour-step :target="getElementById('reftop1')" title="新手引导#1" description="这里是工具栏，可以使用基础的文档编辑功能" />
+            <el-tour-step :target="getElementById('reftop2')" title="新手引导#2" description="这里是AI小助手，可以选择AI功能在文章中使用" />
+            <el-tour-step :target="getElementById('reftree')" title="新手引导#3" placement="right"
+                description="这里是文档索引，可以便捷查看和跳转整个文档结构" />
+            <el-tour-step :target="getElementById('refmain')" title="新手引导#4" placement="left"
+                description="这里是编辑区，可以结合AI功能快速处理您的文档" />
+            <el-tour-step title="新手引导#5" description="🚀OK！现在开始您的AI创作之旅吧！" />
+            <!-- <el-tour-step target="reftop2" title="Other Actions" description="Click to see other" /> -->
+        </el-tour>
+
 
     </div>
 </template>
@@ -1456,6 +1551,8 @@ import AudioNode from "@/components/AudioNode.js";
 import { Base64 } from "js-base64";
 import { Plugin as Plugin2 } from "@tiptap/pm/state";
 import EchartsLine from "@/components/EchartsLine.js";
+import { TrailingNode } from "@/components/TrailingNode.js";
+import { Hyperlink,previewHyperlinkModal,  setHyperlinkModal} from "@docs.plus/extension-hyperlink";
 
 // console.log(common.map(item => { return function(hljs){
 //     return hljs.highlight('javascript', item).value
@@ -1486,6 +1583,19 @@ if (route.query.template == 'graph') {
     })
 }
 let timer = undefined
+const openTour = ref(false)
+nextTick(() => {
+    if (!localStorage.getItem('hasTourTr')) {
+        openTour.value = true
+    }
+})
+function closeTour() {
+    localStorage.setItem('hasTourTr', 'true')
+    openTour.value = false
+}
+function getElementById(id) {
+    return document.getElementById(id)
+}
 
 function CreateEditor(isCoop = false, useDoc = true) {
     let cc = isCoop ?
@@ -1499,7 +1609,14 @@ function CreateEditor(isCoop = false, useDoc = true) {
     return new Editor({
         // content: "",
         extensions: [
-            hortzontalRule, Blockquote,
+            hortzontalRule, Blockquote, TrailingNode, Hyperlink.configure({
+                hyperlinkOnPaste: false,
+                openOnClick: true,
+                modals: {
+                    previewHyperlink: previewHyperlinkModal,
+                    setHyperlink: setHyperlinkModal,
+                },
+            }),
             ...ccdoc,
             // Dropcursor,
             Underline, FontSize, StarterKit.configure({
@@ -1513,7 +1630,86 @@ function CreateEditor(isCoop = false, useDoc = true) {
             Heading.configure({ levels: [1, 2, 3, 4] }),
             TaskList, TaskItem, EchartsBar, EchartsPie, Image.configure({
                 inline: true,
-            }), ImageResize,
+            }), ImageResize.extend({
+                addAttributes() {
+                    return {
+                        src: {
+                            default: null,
+                        },
+                        alt: {
+                            default: null,
+                        },
+                        style: {
+                            default: 'width: 100%; height: auto; cursor: pointer;',
+                            parseHTML: element => {
+                                const width = element.style.getPropertyValue('width')
+                                // console.log(element.style.getPropertyValue('width'));
+                                return `${element.style.cssText};width: ${width}; height: auto; cursor: pointer;`
+                            },
+                        },
+                        title: {
+                            default: null,
+                        },
+                        loading: {
+                            default: null,
+                        },
+                        srcset: {
+                            default: null,
+                        },
+                        sizes: {
+                            default: null,
+                        },
+                        crossorigin: {
+                            default: null,
+                        },
+                        usemap: {
+                            default: null,
+                        },
+                        ismap: {
+                            default: null,
+                        },
+                        width: {
+                            default: null,
+                        },
+                        height: {
+                            default: null,
+                        },
+                        referrerpolicy: {
+                            default: null,
+                        },
+                        longdesc: {
+                            default: null,
+                        },
+                        decoding: {
+                            default: null,
+                        },
+                        class: {
+                            default: null,
+                        },
+                        id: {
+                            default: null,
+                        },
+                        name: {
+                            default: null,
+                        },
+                        draggable: {
+                            default: true,
+                        },
+                        tabindex: {
+                            default: null,
+                        },
+                        'aria-label': {
+                            default: null,
+                        },
+                        'aria-labelledby': {
+                            default: null,
+                        },
+                        'aria-describedby': {
+                            default: null,
+                        },
+                    };
+                },
+            }),
             ImageUploadExtension.configure({
                 acceptMimes: ['image/jpeg', 'image/gif', 'image/png', 'image/jpg'],
                 upload: uploadImage,
@@ -2070,7 +2266,7 @@ const EditorActive = () => {
 
 function shouldShowMenu({ editor, view, state, oldState, from, to }) {
     if (from - to == 0) return false
-    return !(editor.isActive('image') || editor.isActive('paper') || editor.isActive('EchartsBar') || editor.isActive('EchartsPie')  || editor.isActive('EchartsLine')|| editor.isActive('mermaid'));
+    return !(editor.isActive('image') || editor.isActive('paper') || editor.isActive('EchartsBar') || editor.isActive('EchartsPie') || editor.isActive('EchartsLine') || editor.isActive('mermaid'));
 
 }
 
@@ -2151,9 +2347,13 @@ function SetSuperscript() {
 const isLink = ref(false)
 function SetLink() {
     if (isLink.value) {
-        editor.chain().focus().unsetLink().run()
+        // editor.chain().focus().unsetLink().run()
+        this.editor.commands.unsetHyperlink();
     } else {
-
+        this.editor.commands.setHyperlink({
+            href: '',
+            target: '_blank'
+        });
     }
 }
 
@@ -2789,7 +2989,7 @@ editor.on('selectionUpdate', () => {
     }
     isSubscript.value = editor.isActive('subscript')
     isSuperscript.value = editor.isActive('superscript')
-    isLink.value = editor.isActive('link')
+    isLink.value = editor.isActive('hyperlink')
     flag = false
     for (let i = 1; i <= 4; i++) {
         if (editor.isActive('heading', { level: i })) {
@@ -2842,8 +3042,13 @@ onBeforeUnmount(() => {
 
 function QuickLayout(type) {
     let a = layout.layout(editor.getHTML(), type)
-    console.log(a);
+    // console.log(a);
     editor.commands.setContent(a)
+    ElNotification({
+        title: '成功',
+        message: '格式应用成功',
+        type: 'success',
+    })
     // editor.commands.setContent()
 }
 
@@ -2922,7 +3127,7 @@ function AILayoutStart() {
         body: {
             system: `你是一个专业排版AI，将会重新处理给出的HTML文档。你只能通过修改内联样式和修改元素标签名字的方式进行修改。请直接给出修改完成的HTML，不要增加其它元素例如body和html，直接给出HTML文档即可，**不要以markdown的形式给出**。只能修改原有的元素。你只允许输出排版完成后的HTML，否则这将导致程序出错。如果无法理解排版格式，请直接给出无法排版。
 例如，当我输入需要排版的文档是 <p>正文内容...</p>，排版要求是正文缩进两字，那么你需要给出的结果是 <p style="text-indent:2em;">正文内容...</p>
-如果无法排版，请直接给出无法排版。你不需要对你的结果做出任何解释，无论如何你的排版都是正确的。
+如果无法排版，请直接给出无法排版。***你不需要对你的结果做出任何解释***，你只负责给出结果的HTML，任何解释都是多余的，无论如何你的排版都是正确的。
             `,
             content: `需要排版的文档：\n${editor.getHTML()}  \n排版要求：${text}`
         },
@@ -2984,7 +3189,7 @@ nextTick(() => {
         }
     })
 })
-const testdata = `<table><tbody><tr> </tr><tr><td>Keep·户外跑步 2.22 他们都叫我甜糖</td></tr><tr><td>公里 2022/11/0209:42 慢 快</td></tr><tr><td>05'17' 00:11:45 164 用时 千卡 平均配速</td></tr><tr><td>每公里配速</td></tr><tr><td>公里 配速</td></tr><tr><td>5'21" 4'47" 最快 2</td></tr><tr><td>7'34" <3</td></tr><tr><td>步频</td></tr><tr><td>总步数 平均步频 1638 139 步 步/分钟 250 00</td></tr></tbody></table>`
+// const testdata = `<table><tbody><tr> </tr><tr><td>Keep·户外跑步 2.22 他们都叫我甜糖</td></tr><tr><td>公里 2022/11/0209:42 慢 快</td></tr><tr><td>05'17' 00:11:45 164 用时 千卡 平均配速</td></tr><tr><td>每公里配速</td></tr><tr><td>公里 配速</td></tr><tr><td>5'21" 4'47" 最快 2</td></tr><tr><td>7'34" <3</td></tr><tr><td>步频</td></tr><tr><td>总步数 平均步频 1638 139 步 步/分钟 250 00</td></tr></tbody></table>`
 
 const showOCRResult = ref(false)
 const OCRResultUrl = ref('')
@@ -3412,7 +3617,8 @@ ${AItextgraphGoal.value ? '整理要求：' + AItextgraphGoal.value : ''}`
 
     // 不需要其它任何内容，请严格按照此要求输出。请勿在data里给出除了value和name之外的其它内容。
     // 同样的请勿对生成的数据做出任何解释。你只负责生成json
-}`,
+}
+为了提高网络传输速度,你无需将格式化后的table给出,不需要生成空格`,
             content =
             `需要整理的数据：${text}
 ${AItextgraphGoal.value ? '整理要求：' + AItextgraphGoal.value : ''}`
@@ -3488,7 +3694,7 @@ function renderTable(data) {
         data.data.forEach(item => {
             html += `<tr><td>${item.name}</td><td>${item.value}</td></tr>`;
         });
-    } else if(AItextgraphTypeTemp.value == '折线图') {
+    } else if (AItextgraphTypeTemp.value == '折线图') {
         html += '<tr>';
         data.xAxis.forEach(x => {
             html += `<th>${x}</th>`;
@@ -3605,6 +3811,88 @@ async function AItableStart() {
         })
     }
 }
+const AItexttableData = ref('')
+const AItexttableDataTemp = ref('')
+const AItexttableLoading = ref(false)
+let AItexttableCtrl = new AbortController()
+function AItexttableStart() {
+    if (AItexttableLoading.value) {
+        AItexttableCtrl.abort()
+        AItexttableLoading.value = false
+        return
+    }
+    AItexttableCtrl = new AbortController()
+    AISelect.value = 10
+    AItexttableLoading.value = true
+    AItexttableData.value = ''
+    AItexttableDataTemp.value = ''
+    const view = editor.view
+    const state2 = editor.state
+    const { from, to } = view.state.selection
+    const text = state2.doc.textBetween(from, to, '\n')
+    if (!text) {
+        ElNotification({
+            title: '错误',
+            message: '请先选中一段文字',
+            type: 'error',
+        })
+        AItexttableLoading.value = false
+        return
+    }
+    request({
+        url: '/api/ai/mysystem/',
+        method: 'POST',
+        isEventSource: true,
+        signal: AItexttableCtrl.signal,
+        body: {
+            system: `你是一个专门整理文字中的表格并以HTML形式输出的AI。请你按照给出的文字，整理文字中的信息并生成HTML表格，请勿输出任何多余内容。请你记住你的生成目标是表格，请确保输出的内容符合表格的一般要求
+你应该按照以下的格式输出：
+<table>
+<thead>
+<tr>
+<th>第一列标题</th>
+<th>第二列标题</th>
+</tr>
+</thead>
+<tr>
+<td>第一行第一列</td>
+<td>第一行第二列</td>
+</tr>
+<tr>
+<td>第二行第一列</td>
+<td>第二行第二列</td>
+</tr>
+</table>
+thead表头是可选的，如果没有明确的thead表头可以不输出thead表头
+为了提高网络传输速度,你无需将格式化后的table给出,不需要生成空格.
+请严格按照这种格式给出，你只负责输出表格即可，无需对表格内容进行任何解释。`,
+            content: text
+        },
+        headers: {
+            'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
+            'content-type': 'application/json',
+        },
+        onmessage: (ev) => {
+            if (ev.data != '[DONE]') {
+                AItexttableDataTemp.value += Base64.decode(ev.data)
+            }
+        },
+        onerror: (ev) => {
+            AItexttableCtrl.abort()
+            AItexttableLoading.value = false
+            throw ev
+        },
+        onclose: () => {
+            AItexttableLoading.value = false
+            // console.log(AItexttableDataTemp.value);
+            AItexttableData.value = '<table>' + AItexttableDataTemp.value.replaceAll(/\s*/g, "").replaceAll('<tr></tr>', '<tr> </tr>').replaceAll('<td></td>', '<td> </td>').match(/<table>(.*)<\/table>/s)[1] + '</table>'
+            console.log(AItexttableData.value);
+        }
+    })
+}
+
+
+
 const AIcodeData = ref('')
 let from2, to2
 function AIcodeSug() {
@@ -3637,8 +3925,32 @@ function AIcodeSugUse() {
     // editor.commands.insertContentAt(to,`<span style="color: red;">${AIcodeData.value}</span>`)
 }
 
+
+function ChangeMode() {
+    function change() {
+        if (fileId) {
+            console.log(fileId, route.query.id);
+            router.push('/editorai?template=blank&id=' + fileId)
+        } else {
+            router.push({ path: '/editor' })
+        }
+    }
+    if (!store.isSave) {
+        ElMessageBox.confirm('当前文件还没有保存，切换模式后文件将不会保存，确定要切换模式吗', '警告', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }).then(() => {
+            change()
+        }).catch(() => {
+        });
+    } else {
+        change()
+    }
+}
+
 </script>
-<style>
+<style lang="scss">
 .resize {
     position: absolute;
     left: 0;
@@ -3654,6 +3966,138 @@ function AIcodeSugUse() {
 
 .resize:hover {
     border-left: 1px solid #5188ff;
+}
+
+.tippy-box {
+
+    .hyperlink-preview-modal,
+    .hyperlink-set-modal,
+    .hyperlink-edit-modal {
+        background-color: #fff;
+        border-radius: 10px;
+        border: 1px solid #dadce0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 6px;
+        box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        margin-top: -6px;
+
+        &__metadata {
+            width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-direction: row-reverse;
+
+            a {
+                font-size: 0.9rem;
+                margin-right: 6px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            img {
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                margin-right: 8px;
+            }
+        }
+
+        &__remove-button,
+        &__edit-button,
+        &__copy-button,
+        &__apply-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.1s ease-in-out;
+            border: none;
+            background-color: #fff;
+
+            &:hover {
+                background-color: #eee;
+            }
+
+            >svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        form {
+            display: flex;
+            align-items: flex-end;
+            width: 100%;
+
+            input {
+                border: 1px solid #dadce0;
+                border-radius: 6px;
+                padding: 0.4rem 0.8rem;
+                margin-bottom: 0.2rem;
+                width: 80%;
+
+                &:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
+
+            
+
+            .hyperlink-set-modal__buttons-wrapper,
+            .hyperlink-edit-modal__buttons-wrapper {
+                margin-left: 8px;
+
+                button {
+                    border-radius: 6px;
+                    padding: 4px 14px;
+                    width: 60px;
+                    margin-bottom: 0.2rem;
+                    color: #1a73e8;
+                    border: none;
+                    background-color: #fff;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:hover {
+                        background: rgba(26, 115, 232, 0.04);
+                        color: #174ea6;
+                    }
+                }
+            }
+        }
+    }
+
+    .tippy-svg-arrow {
+        top: -6px !important;
+    }
+}
+.tippy-svg-arrow {
+  svg {
+    bottom: 6px;
+    background: #fff;
+    fill: #aaa;
+  }
+}
+
+.toolbar {
+  > button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin: 0.25rem;
+    &[disabled] {
+      background-color: #eee;
+    }
+  }
 }
 
 .search-result {

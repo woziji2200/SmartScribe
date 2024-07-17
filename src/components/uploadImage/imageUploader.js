@@ -1,6 +1,6 @@
 import { Fragment, Node, Slice } from 'prosemirror-model';
 import 'prosemirror-replaceattrs'; /// register it
-import { Plugin } from 'prosemirror-state';
+import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { EditorView } from 'prosemirror-view';
 // Assuming you have a corresponding JavaScript module for this import
 // import { ImageUploaderPluginOptions } from './imageUploadExtension'
@@ -13,6 +13,7 @@ export function imageUploader(options) {
   const dummy = {};
 
   return new Plugin({
+    // key: new PluginKey('imageUploader'),
     props: {
       handleDOMEvents: {
         keydown(view) {

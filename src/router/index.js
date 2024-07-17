@@ -18,7 +18,17 @@ const routes = [
             loadingComponent: loading,
             delay: 100,
         })
+    },
+    {
+        path: '/editorai',
+        name: 'editorai',
+        component: defineAsyncComponent({
+            loader: () => import('../views/EditorViewAI.vue'),
+            loadingComponent: loading,
+            delay: 100,
+        })
     }
+    
 ]
 
 const router = createRouter({

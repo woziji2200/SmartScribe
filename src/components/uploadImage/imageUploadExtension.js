@@ -1,4 +1,6 @@
-const { Extension } = require('@tiptap/core');
+import { Extension } from '@tiptap/core';
+import { Plugin, PluginKey } from '@tiptap/pm/state';
+// import { imageUploader, getFileCache } from './imageUploader.js';
 const { imageUploader, getFileCache } = require('./imageUploader');
 
 // const { imageUploader } = require('prosemirror-image-uploader');
@@ -38,4 +40,5 @@ const ImageUploadExtension = Extension.create({
     },
 });
 
-module.exports = ImageUploadExtension;
+// module.exports = ImageUploadExtension;
+export default ImageUploadExtension;
