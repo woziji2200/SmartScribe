@@ -1,11 +1,11 @@
 <template>
     <div class="appview">
-        <div class="title print">
+        <div class="title print" :class="route.path == '/'?'title-index':''">
             <div class="title-left">
                 <!-- <img src="./assets/logo2.png" style="width: 32px;height: 32px;" alt="" srcset=""> -->
                 <div v-if="route.path != '/'">智慧笔匠 - {{ store.DocTitle }}{{ store.isSave ? '' : '*' }}
                 </div>
-                <div v-if="route.path == '/'">智慧笔匠 - 首页</div>
+                <!-- <div v-if="route.path == '/'">智慧笔匠 - 首页</div> -->
                 <!-- <test v-model:msg="a"></test> -->
             </div>
             <div class="title-middle">
@@ -16,7 +16,7 @@
                     <span>{{ store.UserInfo.name === '' ? '匿名用户' : (store.UserInfo.name || '登录') }}</span>
                 </button> -->
                 <el-dropdown size="large" :hide-timeout="300">
-                    <button class="title-right-login" @click="login">
+                    <button class="title-right-login" @click="login" :style="{color: route.path == '/'?'rgb(96,96,98)':'white'}">
                         <font-awesome-icon :icon="'user'" v-if="!store.UserInfo.avatar" />
                         <img v-else :src="baseUrl + store.UserInfo.avatar" alt=""
                             style="width: 20px;height: 20px;border-radius: 6px;">
@@ -251,5 +251,10 @@ onMounted(async () => {
 .v-enter-from,
 .v-leave-to {
     opacity: 0;
+}
+.title-index{ 
+    background-color: rgb(250,251,253);
+    background-image: none;
+    color: rgb(96,96,98);
 }
 </style>

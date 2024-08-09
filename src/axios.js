@@ -2,8 +2,8 @@ import axios from 'axios'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { ElMessage } from 'element-plus'
 import { useStore } from '@/store/index.js'
-// export const baseUrl = 'http://81.70.143.162:8000'
-export const baseUrl = 'https://editor.daoxuan.cc'
+export const baseUrl = 'http://81.70.143.162:8808/'
+// export const baseUrl = 'https://editor.daoxuan.cc'
 // export const baseUrl = 'https://funny233.xyz/api2'
 export const baseUrl2 = 'https://funny233.xyz/ws'
 // export const baseUrl2 = 'https://127.0.0.1:1234'
@@ -94,6 +94,7 @@ export async function request(obj) {
     if(obj.isEventSource){
         // console.log(obj.onmessage, obj.onerror, obj.onclose);
         fetchEventSource(baseUrl + obj.url, {
+            openWhenHidden: true,
             method: obj.method,
             signal: obj.signal, // AbortSignal
             body: JSON.stringify(obj.body),

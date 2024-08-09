@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPen,faParagraph,faHeading,faVolumeHigh,faPause,faPlay,faQuoteLeft,faSearchPlus,faFont, faPlusCircle, faEdit, faFolderTree, faRobot, faColumns, faChartBar, faProjectDiagram, faFilePdf, faFileImport, faFileDownload, faCloudUpload, faFileCirclePlus, faUserEdit, faFileAlt, faUser, faLanguage, faAngleUp, faAngleDown, faHome, faUndo, faRedo, faBold, faItalic, faUnderline, faStrikethrough, faLink, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faSubscript, faSuperscript, faListUl, faListOl, faTasks, faCode, faChartPie, faPencilRuler, faTable, faArrowLeft, faArrowRight,faAngleLeft,faAngleRight, faArrowUp, faArrowDown, faMinus, faSquare, faWindowRestore, faTimes, faCaretDown } from '@fortawesome/free-solid-svg-icons'
+import { faTrashAlt,faPlus, faPen,faParagraph,faHeading,faVolumeHigh,faPause,faPlay,faQuoteLeft,faSearchPlus,faFont, faPlusCircle, faEdit, faFolderTree, faRobot, faColumns, faChartBar, faProjectDiagram, faFilePdf, faFileImport, faFileDownload, faCloudUpload, faFileCirclePlus, faUserEdit, faFileAlt, faUser, faLanguage, faAngleUp, faAngleDown, faHome, faUndo, faRedo, faBold, faItalic, faUnderline, faStrikethrough, faLink, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faSubscript, faSuperscript, faListUl, faListOl, faTasks, faCode, faChartPie, faPencilRuler, faTable, faArrowLeft, faArrowRight,faAngleLeft,faAngleRight, faArrowUp, faArrowDown, faMinus, faSquare, faWindowRestore, faTimes, faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { } from '@fortawesome/free-brands-svg-icons'
 import { } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -14,7 +14,7 @@ import { createPinia } from 'pinia'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 const pinia = createPinia()
 // app.use(pinia)
-library.add(faAngleLeft,faAngleRight, faPen,faParagraph, faHeading, faVolumeHigh,faPause,faPlay,faQuoteLeft,faSearchPlus, faFont, faPlusCircle, faEdit, faEdit, faFolderTree, faRobot, 
+library.add(faTrashAlt, faPlus,faAngleLeft,faAngleRight, faPen,faParagraph, faHeading, faVolumeHigh,faPause,faPlay,faQuoteLeft,faSearchPlus, faFont, faPlusCircle, faEdit, faEdit, faFolderTree, faRobot, 
     faColumns, faChartBar, faProjectDiagram, faFilePdf, faFileImport, faFileDownload, 
     faCloudUpload, faFileCirclePlus, faUser, faUserEdit, faLanguage, faAngleUp, faAngleDown,
      faHome, faFileAlt, faUndo, faRedo, faBold, faItalic,

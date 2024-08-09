@@ -2,7 +2,7 @@
     <node-view-wrapper class="main-mer" @contextmenu.stop>
         <button class="button print" @click="edit" v-show="!isEdit">编辑</button>
         <button class="button print" @click="save" v-show="isEdit">保存</button>
-        <div v-show="!isEdit" :id="id" v-html="svg" class="mermaid"></div>
+        <div v-loading="loading" v-show="!isEdit" :id="id" v-html="svg" class="mermaid"></div>
         <textarea v-model="data2" v-show="isEdit" class="edit" name="" id="" cols="30" rows="10"></textarea>
         <!-- <button @click="test">1</button> -->
     </node-view-wrapper>
@@ -10,7 +10,7 @@
 
 <script>
 import { nodeViewProps, NodeViewWrapper, NodeViewContent } from '@tiptap/vue-3'
-import { v1 as uuid } from 'uuid'
+import { v4 as uuid } from 'uuid'
 import mermaid from 'mermaid'
 export default {
     name: 'mermaid',
@@ -18,10 +18,11 @@ export default {
     props: nodeViewProps,
     data() {
         return {
-            id: 'm-' + uuid().substring(0, 5),
+            id: 'm-' + uuid(),
             isEdit: false,
             data2: '',
             svg: null,
+            loading: false
         }
     },
 
@@ -39,10 +40,13 @@ export default {
                 data: this.data2
             })
             this.isEdit = false;
+            this.loading = true;
             try {
                 this.svg = (await mermaid.render(this.id + '2', this.data2)).svg;
+                this.loading = false;
             } catch (error) {
                 document.getElementById(this.id).innerHTML = `<div style="height: 80px; color: #aaa; display: flex; justify-content: center; align-items: center;">渲染失败</div>`;
+                this.loading = false;
             }
             // const { svg } = await mermaid.render('graphDiv', this.data2);
             // document.getElementById(`m-${this.id}`).innerHTML = svg;
@@ -56,10 +60,15 @@ export default {
         // const graphDefinition = 'graph TB\n使用mermaid-->创建您的图表';
         const graphDefinition = this.node.attrs.data;
         this.data2 = graphDefinition;
+        this.loading = true;
         setTimeout(() => {
             mermaid.render(this.id + '2', graphDefinition).then(({ svg }) => {
                 this.svg = svg;
-            });
+                this.loading = false;
+            }).catch(() => {
+                document.getElementById(this.id).innerHTML = `<div style="height: 80px; color: #aaa; display: flex; justify-content: center; align-items: center;">渲染失败</div>`;
+                this.loading = false;
+            })
         }, 1000);
 
         // this.$forceUpdate();
@@ -127,6 +136,7 @@ export default {
     /* width: 900px; */
     /* margin: 500px; */
     height: 100%;
+    min-height: 150px;
     max-width: 100%;
     margin-top: 40px;
     display: flex;

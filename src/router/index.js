@@ -27,6 +27,15 @@ const routes = [
             loadingComponent: loading,
             delay: 100,
         })
+    },
+    {
+        path: '/timeline',
+        name: 'timeline',
+        component: defineAsyncComponent({
+            loader: () => import('../views/TimelineView.vue'),
+            loadingComponent: loading,
+            delay: 100,
+        })
     }
     
 ]

@@ -1,4 +1,5 @@
 export function layout(data, type) {
+    data=data.replace(/<ai2><\/ai2>/g, '');
     let html = new DOMParser().parseFromString(data, "text/html");
     html = html.body;
 
@@ -85,11 +86,11 @@ export function layout(data, type) {
             if (/.+[:：]$/.test(pElements[i].textContent)) {
                 continue;
             }
-            if((i == pElements.length - 1 || i == pElements.length - 2) && /\d+[年.-/\\]\d+[月.-/\\]\d+[日.-/\\]|\d+[月.-/\\]\d+[日.-/\\]|\d+[年.-/\\]\d+[月.-/\\]/.test(pElements[i].textContent)) {
+            if((i == pElements.length - 3 || i == pElements.length - 1 || i == pElements.length - 2) && /\d+[年.-/\\]\d+[月.-/\\]\d+[日.-/\\]|\d+[月.-/\\]\d+[日.-/\\]|\d+[年.-/\\]\d+[月.-/\\]/.test(pElements[i].textContent)) {
                 pElements[i].style.setProperty("text-align", "right");
                 continue;
             }
-            if((i == pElements.length - 1 || i == pElements.length - 2) && pElements[i].textContent.length < 16) {
+            if((i == pElements.length - 3 || i == pElements.length - 1 || i == pElements.length - 2) && pElements[i].textContent.length < 20) {
                 pElements[i].style.setProperty("text-align", "right");
                 continue;
             }

@@ -10,6 +10,9 @@ module.exports = defineConfig({
         //     preload: 'src/preload.js',
         // }
     },
+    devServer:{
+        port: 8080,
+    },
 
     configureWebpack: {
         plugins: [

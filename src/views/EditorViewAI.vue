@@ -7,9 +7,9 @@
                     <el-button @click="store.ctrl.abort(); store.isAI = false">停止输出</el-button>
                 </div>
             </transition>
+            <input type="file" id="OpenLocal2" style="display: none" accept=".smd" @change="OpenLocal2">
 
-
-            <div class="top" >
+            <div class="top">
                 <div class="top-new" id="reftop1">
                     <el-tooltip content="首页" placement="bottom">
                         <span class="top-button" @click="GotoHome()">
@@ -554,6 +554,7 @@
                         </template>
                     </el-dropdown>
 
+
                     <el-tooltip content="文档索引" placement="bottom">
                         <span class="top-button-2" @click="ShowTree = !ShowTree">
                             <svg t="1720252147624" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -567,6 +568,7 @@
                             </svg>
                         </span>
                     </el-tooltip>
+
 
 
                     <el-dropdown size="large" :hide-timeout="300">
@@ -1016,8 +1018,10 @@
             </el-tour-step>
             <el-tour-step :target="getElementById('reftop1')" title="新手引导#1" description="这里是工具栏，可以使用基础的文档编辑功能" />
             <el-tour-step :target="getElementById('reftop2')" title="新手引导#2" description="这里是AI工具，可以选择AI功能在文章中使用" />
-            <el-tour-step :target="getElementById('reftree')" title="新手引导#3" placement="right" description="这里是文档索引，可以便捷查看和跳转整个文档结构" />
-            <el-tour-step :target="getElementById('refmain')" title="新手引导#4" placement="left" description="这里是编辑区，可以结合AI功能快速处理您的文档" />
+            <el-tour-step :target="getElementById('reftree')" title="新手引导#3" placement="right"
+                description="这里是文档索引，可以便捷查看和跳转整个文档结构" />
+            <el-tour-step :target="getElementById('refmain')" title="新手引导#4" placement="left"
+                description="这里是编辑区，可以结合AI功能快速处理您的文档" />
             <el-tour-step title="新手引导#5" description="🚀OK！现在开始您的AI创作之旅吧！" />
             <!-- <el-tour-step target="reftop2" title="Other Actions" description="Click to see other" /> -->
         </el-tour>
@@ -1091,8 +1095,9 @@ import EchartsLine from "@/components/EchartsLine.js";
 import AINode from "@/components/AINode.js";
 import GlobalDragHandle from 'tiptap-extension-global-drag-handle'
 import { TrailingNode } from "@/components/TrailingNode.js";
-import { Hyperlink,previewHyperlinkModal,  setHyperlinkModal} from "@docs.plus/extension-hyperlink";
-
+import { Hyperlink, previewHyperlinkModal, setHyperlinkModal } from "@docs.plus/extension-hyperlink";
+import { getEditor, setEditor } from "./editor.js";
+// import TimelineNode from "@/components/TimelineNode.js";
 // console.log(common.map(item => { return function(hljs){
 //     return hljs.highlight('javascript', item).value
 // } }));
@@ -1108,11 +1113,13 @@ let Template = ''
 store.DocTitle = '文档'
 // route.query.id
 if (route.query.template == 'graph') {
-    Template = '<vue-mermaid data="graph TB\n使用mermaid-->创建您的图表"></vue-mermaid>'
+    Template =
+        "<h1 style=\"text-indent: 0em !important;\" id=\"h-a66ebc5c\">创建图表</h1><h2 style=\"text-indent: 0em !important;\" id=\"h-fd84d82e\">手动创建</h2><p style=\"text-indent: 0em !important;\">您可以在编辑器中插入图表</p><p style=\"text-indent: 0em !important;\">点击编辑您可以自由修改您的图表</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\"></p><vue-echarts-bar data=\"{&quot;title&quot;:&quot;图表示例&quot;,&quot;legend&quot;:[&quot;1月销量&quot;,&quot;2月销量&quot;],&quot;xAxis&quot;:[&quot;衬衫&quot;,&quot;羊毛衫&quot;,&quot;雪纺衫&quot;,&quot;裤子&quot;,&quot;高跟鞋&quot;,&quot;袜子&quot;],&quot;series&quot;:[{&quot;name&quot;:&quot;1月销量&quot;,&quot;data&quot;:[5,20,36,10,10,20,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{&quot;name&quot;:&quot;2月销量&quot;,&quot;data&quot;:[&quot;12&quot;,&quot;14&quot;,&quot;25&quot;,&quot;13&quot;,&quot;31&quot;,&quot;13&quot;,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]}]}\"></vue-echarts-bar><vue-echarts-pie data=\"{&quot;title&quot;:&quot;销售量占比统计&quot;,&quot;data&quot;:[{&quot;name&quot;:&quot;第一季度&quot;,&quot;value&quot;:100},{&quot;name&quot;:&quot;第二季度&quot;,&quot;value&quot;:50},{&quot;name&quot;:&quot;第三季度&quot;,&quot;value&quot;:120},{&quot;name&quot;:&quot;第四季度&quot;,&quot;value&quot;:60},{&quot;name&quot;:&quot;&quot;,&quot;value&quot;:null},{&quot;name&quot;:null,&quot;value&quot;:null}]}\"></vue-echarts-pie><vue-echarts-line data=\"{&quot;title&quot;:&quot;温度变化折线图&quot;,&quot;xAxis&quot;:[&quot;一月&quot;,&quot;二月&quot;,&quot;三月&quot;,&quot;四月&quot;,&quot;五月&quot;],&quot;series&quot;:[[&quot;7&quot;,&quot;12&quot;,&quot;18&quot;,&quot;25&quot;,&quot;29&quot;,null,null],[&quot;-1&quot;,&quot;4&quot;,&quot;10&quot;,&quot;17&quot;,&quot;20&quot;,null,null]]}\"></vue-echarts-line><h2 style=\"text-indent: 0em !important;\" id=\"h-761e8d85\">AI制图</h2><p style=\"text-indent: 0em !important;\">您还可以选择一段文字自动生成图表，例如：</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">一月 12</p><p style=\"text-indent: 0em !important;\">二月 14</p><p style=\"text-indent: 0em !important;\">三月 19</p><p style=\"text-indent: 0em !important;\">四月 18</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">生成图表后点击插入，将自动转换成您想要的图表</p><p style=\"text-indent: 0em !important;\"></p>"
 } else if (route.query.template == 'blank') {
     Template = ''
 } else if (route.query.template == 'doc') {
-    Template = `<h1 style="text-align: center" id="h-dc42ebe3">标题111</h1><p><strong>加粗文<span style="font-size: 18pt">字</span><em><span style="font-size: 18pt">斜体文</span>字</em></strong><u><strong><em>下划线<s>删除线</s></em></strong></u></p><p></p><p style="text-align: right"><u><strong><em><s><span style="color: #FF0000">炫</span><span style="color: #0C11C7">彩文</span><span style="color: #00FF40">字哦</span></s></em></strong></u></p><p></p><h2 id="h-3d6be47f"><strong><em><span style="color: #FF0000">二级标题</span></em></strong></h2><ul><li><p>无序列表</p></li><li><p>2222</p></li><li><p>3333</p></li><li><p>4444</p></li></ul><ul data-type="taskList"><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>待办事项1</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>完成了哦</p></div></li><li data-checked="true" data-type="taskItem"><label><input type="checkbox" checked="checked"><span></span></label><div><p>撒大苏打</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>撒大苏打</p></div></li></ul><p>a<sup>2</sup>+b<sup>2</sup>=c<sup>2</sup></p>`
+    Template =
+        "<h1 style=\"text-indent: 0em !important;\" id=\"h-e43fab94\">智慧笔匠在线文档</h1><h2 style=\"text-indent: 0em !important;\" id=\"h-dfeb91ba\">快速使用</h2><p style=\"text-indent: 0em !important;\">你好，我是笔匠！点击上方菜单栏开始使用吧！</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">Tips：支持Markdown语法！您可以通过Markdown语法快速开始编辑！</p><p style=\"text-indent: 0em !important;\"></p><h2 style=\"text-indent: 0em !important;\" id=\"h-3d79b4f4\">我可以做...</h2><p style=\"text-indent: 0em !important;\">我可以做这些：</p><ul><li><p style=\"text-indent: 0em !important;\">妙笔生花：文字编辑辅助</p></li><li><p style=\"text-indent: 0em !important;\">图片识别：智能识别图片信息</p></li><li><p style=\"text-indent: 0em !important;\">智能排版：按照您的要求自动进行排版</p></li><li><p style=\"text-indent: 0em !important;\">自动图表：根据文字自动生成各种图表</p></li><li><p style=\"text-indent: 0em !important;\">……</p></li></ul><h2 style=\"text-indent: 0em !important;\" id=\"h-e4a4d03a\">体验AI功能</h2><p style=\"text-indent: 0em !important;\">您可以选择一段文字或者右键选择一张图片/音频，在AI助手或者上方AI工具栏中选择您希望使用的AI小工具。让AI帮助您完成您的任务！</p><h2 style=\"text-indent: 0em !important;\" id=\"h-093af14a\">开始创作吧！</h2><p style=\"text-indent: 0em !important;\">现在请开始您的创作之旅吧！</p><p style=\"text-indent: 0em !important;\"></p>"
 } else if (route.query.template == 'open') {
     Template = ''
     store.isSave = true
@@ -1120,15 +1127,17 @@ if (route.query.template == 'graph') {
     nextTick(() => {
         OpenLocal()
     })
+} else if (route.query.template == 'mermaid') {
+    Template = "<h1 style=\"text-indent: 0em !important;\" id=\"h-a01f7420\">流程图示例</h1><h2 style=\"text-indent: 0em !important;\" id=\"h-f77345bf\">手动绘制流程图</h2><p style=\"text-indent: 0em !important;\">借助强大的mermaid语法，您可以创建各种各样的流程图</p><vue-mermaid data=\"graph LR\n    A --单连接声明--> B\n    B --多连接声明--> C --多连接声明--> D\n    D --多节点聚合--> E &amp; F --多节点聚合--> A\"></vue-mermaid><p style=\"text-indent: 0em !important;\"></p><vue-mermaid data=\"mindmap\n  root((mindmap))\n    Origins\n      Long history\n      ::icon(fa fa-book)\n      Popularisation\n        British popular psychology author Tony Buzan\n    Research\n      On effectiveness<br/>and features\n      On Automatic creation\n        Uses\n    Tools\n      Pen and paper\n      Mermaid\n\n\"></vue-mermaid><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">凡是Mermaid所支持的图表类型，都可以进行绘制</p><p style=\"text-indent: 0em !important;\"></p><h2 style=\"text-indent: 0em !important;\" id=\"h-dfefb382\">AI生成流程图</h2><p style=\"text-indent: 0em !important;\">您可以选中一段文字，例如：</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">明天早上我先起床，再去吃饭，再去上班</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">然后点击AI助手的智能生成或者AI工具栏的文字转流程图，就可以由AI自动绘制流程图！生成的流程图以mermaid语法表示，插入文章后将会自动转换成流程图。</p><p style=\"text-indent: 0em !important;\"></p>"
 }
 let timer = undefined
 const openTour = ref(false)
-nextTick(()=>{
-    if(!localStorage.getItem('hasTourAi')){
+nextTick(() => {
+    if (!localStorage.getItem('hasTourAi')) {
         openTour.value = true
     }
 })
-function closeTour(){
+function closeTour() {
     localStorage.setItem('hasTourAi', 'true')
     openTour.value = false
 }
@@ -1150,7 +1159,7 @@ function CreateEditor(isCoop = false, useDoc = true) {
         // content: "",
         extensions: [
             hortzontalRule, Blockquote, GlobalDragHandle.configure({ dragHandleSelector: ".drag-handle" }),
-            ...ccdoc,TrailingNode, Hyperlink.configure({
+            ...ccdoc, TrailingNode, Hyperlink.configure({
                 hyperlinkOnPaste: false,
                 openOnClick: true,
                 modals: {
@@ -1323,7 +1332,7 @@ function CreateEditor(isCoop = false, useDoc = true) {
             SearchAndReplace.configure({
                 searchResultClass: "search-result"
             }),
-            ...cc,
+            // ...cc,
             Indent,
             //  Gapcursor, 
             AudioNode, EchartsLine, AINode
@@ -1415,6 +1424,8 @@ function startCoop() {
     }
     coopCode.value = randomCode().toUpperCase()
     isCoop.value = true
+    let temp = editor.getHTML()
+
     provider = new HocuspocusProvider({
         url: baseUrl2,
         name: coopCode.value.toUpperCase(),
@@ -1429,13 +1440,18 @@ function startCoop() {
                 message: '已开启协同编辑，您的协同码是' + coopCode.value.toUpperCase(),
                 type: 'success',
             })
+            // editor.destroy()
+            console.log(editor);
+            editor = CreateEditor(true)
+            console.log(editor);
+            editor.commands.setContent(temp)
+            store.editor = editor
+            console.log(editor);
         },
     })
-    let temp = editor.getHTML()
-    editor.destroy()
-    editor = CreateEditor(true)
-    editor.commands.setContent(temp)
-    store.editor = editor
+
+    // }, 200);
+
     // GetDocTitle(temp)
     // editor
     // editor.registerPlugin(CollaborationCursor.configure({
@@ -1471,8 +1487,9 @@ function stopCoop() {
         type: 'success',
     })
     let temp = editor.getHTML()
-    editor.destroy()
+    // editor.destroy()
     editor = CreateEditor(false)
+
     editor.commands.setContent(temp)
     store.editor = editor
     // editor.unregisterPlugin('collaborationCursor')
@@ -1529,7 +1546,7 @@ function joinCoop() {
                         isCoop.value = true
                     },
                 })
-                editor.destroy()
+                // editor.destroy()
                 editor = CreateEditor(true)
                 store.editor = editor
             } else {
@@ -1791,8 +1808,11 @@ const EditorActive = () => {
 
 function shouldShowMenu({ editor, view, state, oldState, from, to }) {
     if (from - to == 0) return false
-    return !(editor.isActive('ai') || editor.isActive('image') || editor.isActive('paper') || editor.isActive('EchartsBar') || editor.isActive('EchartsPie') || editor.isActive('EchartsLine') || editor.isActive('mermaid'));
-
+    const activeStates = [
+        'timeline', 'ai', 'image', 'paper',
+        'EchartsBar', 'EchartsPie', 'EchartsLine', 'mermaid'
+    ]
+    return !activeStates.some(stateName => editor.isActive(stateName))
 }
 
 function undo() {
@@ -2300,21 +2320,28 @@ function AIcodeSug() {
             const { state } = editor;
             const { from, to } = state.selection;
             const startPos = state.doc.resolve(from).start();
+            let code = state.doc.textBetween(startPos, to, '\n')
             AIcodeSugCount++
             request({
                 url: '/api/ai/codecompletion1/',
                 method: 'POST',
                 body: {
-                    s: state.doc.textBetween(startPos, to, '\n'),
+                    s: code,
                     eol: ' '
                 },
                 signal: AIcodeSugCtrl.signal
             }).then((res) => {
                 if (!editor.isActive('codeBlock')) return
-                if (AIcodeSugCount2 != AIcodeSugCount) return
+                console.log(res.data.s);
+                console.log(code);
+                const { state } = editor;
+                const { from, to } = state.selection;
+                const startPos = state.doc.resolve(from).start();
+                if (res.data.s != state.doc.textBetween(startPos, to, '\n')) return
+                console.log(111);
                 AIcodeData.value = res.data.generated_code
                 editor.commands.setSearchTerm(`\u200D${AIcodeData.value}\u200D`)
-                const { from, to } = editor.view.state.selection
+                // const { from, to } = editor.view.state.selection
                 from2 = from
                 to2 = to + AIcodeData.value.length + 2
                 editor.commands.insertContentAt(to, `\u200D${AIcodeData.value}\u200D`)
@@ -2326,7 +2353,7 @@ function AIcodeSug() {
     let req = closure(AIcodeSugCount)
     req()
 }
-const AIcodeSugDebouce = debounce(AIcodeSug, 1000)
+const AIcodeSugDebouce = debounce(AIcodeSug, 10)
 
 function AIcodeSugClear() {
     clearTimeout(timer)
@@ -2350,7 +2377,7 @@ function ChangeMode() {
             console.log(fileId, route.query.id);
             router.push('/editor?template=blank&id=' + fileId)
         } else {
-            router.push({ path: '/editor' })
+            router.push({ path: '/editor?template=doc' })
         }
     }
     if (!store.isSave) {
@@ -2403,115 +2430,115 @@ code .search-result {
 
 .tippy-box {
 
-.hyperlink-preview-modal,
-.hyperlink-set-modal,
-.hyperlink-edit-modal {
-    background-color: #fff;
-    border-radius: 10px;
-    border: 1px solid #dadce0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 6px;
-    box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
-    margin-top: -6px;
-
-    &__metadata {
-        width: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        flex-direction: row-reverse;
-
-        a {
-            font-size: 0.9rem;
-            margin-right: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        img {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-    }
-
-    &__remove-button,
-    &__edit-button,
-    &__copy-button,
-    &__apply-button {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        margin: 0 0.25rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.1s ease-in-out;
-        border: none;
+    .hyperlink-preview-modal,
+    .hyperlink-set-modal,
+    .hyperlink-edit-modal {
         background-color: #fff;
-
-        &:hover {
-            background-color: #eee;
-        }
-
-        >svg {
-            width: 16px;
-            height: 16px;
-        }
-    }
-
-    form {
+        border-radius: 10px;
+        border: 1px solid #dadce0;
         display: flex;
-        align-items: flex-end;
-        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 6px;
+        box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        margin-top: -6px;
 
-        input {
-            border: 1px solid #dadce0;
-            border-radius: 6px;
-            padding: 0.4rem 0.8rem;
-            margin-bottom: 0.2rem;
-            width: 80%;
+        &__metadata {
+            width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-direction: row-reverse;
 
-            &:last-of-type {
-                margin-bottom: 0;
+            a {
+                font-size: 0.9rem;
+                margin-right: 6px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            img {
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                margin-right: 8px;
             }
         }
 
-        
+        &__remove-button,
+        &__edit-button,
+        &__copy-button,
+        &__apply-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.1s ease-in-out;
+            border: none;
+            background-color: #fff;
 
-        .hyperlink-set-modal__buttons-wrapper,
-        .hyperlink-edit-modal__buttons-wrapper {
-            margin-left: 8px;
+            &:hover {
+                background-color: #eee;
+            }
 
-            button {
+            >svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        form {
+            display: flex;
+            align-items: flex-end;
+            width: 100%;
+
+            input {
+                border: 1px solid #dadce0;
                 border-radius: 6px;
-                padding: 4px 14px;
-                width: 60px;
+                padding: 0.4rem 0.8rem;
                 margin-bottom: 0.2rem;
-                color: #1a73e8;
-                border: none;
-                background-color: #fff;
-                text-align: center;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                width: 80%;
 
-                &:hover {
-                    background: rgba(26, 115, 232, 0.04);
-                    color: #174ea6;
+                &:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
+
+
+
+            .hyperlink-set-modal__buttons-wrapper,
+            .hyperlink-edit-modal__buttons-wrapper {
+                margin-left: 8px;
+
+                button {
+                    border-radius: 6px;
+                    padding: 4px 14px;
+                    width: 60px;
+                    margin-bottom: 0.2rem;
+                    color: #1a73e8;
+                    border: none;
+                    background-color: #fff;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:hover {
+                        background: rgba(26, 115, 232, 0.04);
+                        color: #174ea6;
+                    }
                 }
             }
         }
     }
-}
 
-.tippy-svg-arrow {
-    top: -6px !important;
-}
+    .tippy-svg-arrow {
+        top: -6px !important;
+    }
 }
 
 /* .tiptap p.is-empty:last-child::before {
@@ -4032,6 +4059,10 @@ ul[data-type="taskList"] li p {
 
     .tools-select {
         background-color: #c1efff
+    }
+
+    .top-new {
+        justify-content: flex-start;
     }
 }
 </style>

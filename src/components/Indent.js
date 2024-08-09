@@ -1,5 +1,6 @@
 import { Extension } from '@tiptap/core'
-import { TextSelection, AllSelection } from "prosemirror-state"
+import { TextSelection, AllSelection } from '@tiptap/pm/state'
+// import { TextSelection, AllSelection } from "prosemirror-state"
 
 export const clamp = (val, min, max) => {
     if (val < min) {
@@ -120,6 +121,7 @@ export const Indent = Extension.create({
                 const { selection } = state
                 tr = tr.setSelection(selection)
                 tr = updateIndentLevel(tr, IndentProps.more)
+                console.log(111);
 
                 if (tr.docChanged) {
                     // eslint-disable-next-line no-unused-expressions
@@ -155,6 +157,7 @@ export const Indent = Extension.create({
                     const { state } = this.editor;
                     const { from, to } = state.selection;
                     const startPos = state.doc.resolve(from).start();
+                    // console.log(startPos == to);
                     // console.log('Cursor start position:', startPos, to);
                     if (startPos == to)
                         return this.editor.commands.indent()
