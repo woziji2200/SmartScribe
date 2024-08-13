@@ -345,7 +345,33 @@
                                 v-if="store.OCRResultUrl && !OCRLoading">查看详细结果</span>
                         </div>
                     </div>
+
                 </div>
+
+                <div v-if="OCRResult2">
+                    <div style="font-size: 12px;margin: 8px 0;color: #555">
+                        您可以对图片内容进行提问，AI将自动帮您查找图片中的答案
+                    </div>
+                    <div class="chat" id="ChatOCR">
+                        <div v-for="(i, index) in ChatOCRList">
+                            <div v-if="i.type == 'system'" class="chat-1 chat-system">
+                                <img src="./../assets/logo.png" alt="" srcset="">
+                                <span>{{ i.text || "查询失败，请尝试其它问题" }}</span>
+                                <div @click="AIInsert(i.text)" v-if="index != 0">插入文章</div>
+                            </div>
+                            <div v-if="i.type == 'user'" class="chat-1 chat-user">
+                                <font-awesome-icon class="chat-user-img" :icon="'user'" v-if="!store.UserInfo.avatar" />
+                                <img v-else :src="baseUrl + store.UserInfo.avatar" alt="">
+                                <span>{{ i.text }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <el-input v-model="ChatOCRText" placeholder="请输入问题" @keyup.enter="ChatOCR"></el-input>
+                        <span :disabled="ChatOCRLoading ? 'true' : 'false'" @click="ChatOCR" style="width: 60px;height: 30px;line-height: 30px;" class="button-plus">发送</span>
+                    </div>
+                </div>
+
                 <div class="logo">
                     结果由<img src="../assets/wxyy.jpg" alt="" srcset=""><img src="../assets/pd.jpg" alt="" srcset="">提供支持
                 </div>
@@ -1058,6 +1084,7 @@ function CloseImageViewer() {
 // const store.OCRResultData = ref()
 const OCRLoading = ref(false)
 let OCRCtrl = new AbortController()
+const OCRResult2 = ref('')
 
 async function OCRStart() {
     if (OCRLoading.value) {
@@ -1098,6 +1125,7 @@ async function OCRStart() {
             OCRLoading.value = false
             return
         }
+        OCRResult2.value = res.data
         store.OCRResultData = res.data
         store.OCRResultUrl = AIImgUrl.value
         store.showOCRResult = true
@@ -1112,6 +1140,60 @@ async function OCRStart() {
     }
 }
 
+const ChatOCRList = ref([
+    {type: 'system', text: '您可以向我提问图片中的信息，例如：图中的身份证号是多少？'},
+])
+
+const ChatOCRText = ref('')
+const ChatOCRLoading = ref(false)
+function ChatOCR(){
+    if(ChatOCRLoading.value){
+        return
+    }
+    if (ChatOCRText.value == '') {
+        ElNotification({
+            title: '错误',
+            message: '请先输入问题',
+            type: 'error',
+        })
+        return
+    }
+    let text = ChatOCRText.value
+    ChatOCRText.value = ''
+    ChatOCRLoading.value = true
+    ChatOCRList.value.push({type: 'user', text: text})
+    ChatOCRList.value.push({type: 'system', text: '正在查询中...'})
+
+    const textarea = document.querySelector('#ChatOCR');
+    if (textarea)
+        setTimeout(() => {textarea.scrollTop = textarea.scrollHeight;}, 100);
+
+    request({
+        url: '/api/ai/chatocr/',
+        method: 'POST',
+        body: {
+            doc: AIImgUrl.value,
+            word_boxes: OCRResult2.value,
+            prompt: text
+        }
+    }).then(res => {
+        ChatOCRList.value.pop()
+        ChatOCRList.value.push({type: 'system', text: res.data[0].result[0].value})
+        ChatOCRLoading.value = false
+        const textarea = document.querySelector('#ChatOCR');
+        if (textarea)
+            setTimeout(() => {textarea.scrollTop = textarea.scrollHeight;}, 100);
+
+    }).catch(err => {
+        ChatOCRList.value.pop()
+        ChatOCRList.value.push({type: 'system', text: '查询失败'})
+        ChatOCRLoading.value = false
+        const textarea = document.querySelector('#ChatOCR');
+        if (textarea)
+            setTimeout(() => {textarea.scrollTop = textarea.scrollHeight;}, 100);
+
+    })
+}
 
 
 const AIobjectLoading = ref(false)
@@ -1782,6 +1864,8 @@ function OCRResultToPretext(data) {
 }
 const isShowAI = ref(true)
 
+
+
 if (AISelect.value == 2) {
     AIsummary()
 } else if (AISelect.value == 3) {
@@ -2176,4 +2260,96 @@ textarea:-ms-input-placeholder {
         transform: rotate(360deg);
     }
 }
+.chat-1{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+.chat-1 img{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: solid 1px #3171e9;
+}
+.chat-1 span{
+    font-size: 12px;
+    color: #ffffff;
+    background-color: #3171e9;
+    padding: 5px 10px;
+    border-radius: 5px;
+    position: relative;
+    
+}
+.chat-system span::before{
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right: 5px solid #3171e9;
+    border-left: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-top: 5px solid transparent;
+}
+.chat-system:hover div{
+    display: block;
+}
+.chat-system div{
+    display: none;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+}
+
+.chat-user span{
+    background-color: #e6e6e6;
+    color: #303030;
+}
+.chat-user{
+    justify-content: right;
+    flex-direction: row-reverse;
+}
+.chat-user span::before{
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    right: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 5px solid #e6e6e6;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-top: 5px solid transparent;
+}
+.chat-user-img{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: solid 1px #e6e6e6;
+}
+.chat{
+    height: 200px;
+    overflow-y: auto;
+    border-bottom: dashed 1px #3171e9;
+    padding: 10px;
+}
+.chat-input{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+[disabled=true]:hover {
+    background: #ffffff;
+    cursor: not-allowed;
+    color: #b600e4;
+    border: #af15c4 solid 1px;
+}
+
 </style>

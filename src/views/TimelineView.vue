@@ -24,7 +24,7 @@
                     回到首页
                 </span>
 
-                <span class="top-button2" style="width: auto; flex-direction: row;padding: 0 6px;" @click="">
+                <span class="top-button2" style="width: auto; flex-direction: row;padding: 0 6px;" @click="SaveServer">
                     <svg t="1720251860839" class="icon" viewBox="0 0 1024 1024" version="1.1"
                         xmlns="http://www.w3.org/2000/svg" p-id="25652" width="200" height="200">
                         <path
@@ -72,7 +72,7 @@
 
             <div class="line"></div>
 
-            <div class="preview">
+            <div class="preview" id="refpreview">
                 <span class="preview-day" v-for="(i, index) in data.value.timeline" :key="i.id">
                     <div class="task" @click="ChangeToTask(i.id)" :class="'preview-' + getStatus(i.task)"
                         v-for="(j, index2) in i.task.slice(0, 1)" :key="j.id">
@@ -95,7 +95,7 @@
                     </div>
                     <VueDraggable animation="150" ref="el" v-model="i.task" @start="onDragStart" @end="onDragEnd">
                         <TransitionGroup type="transition" :name="!drag ? 'fade' : null">
-                            <div class="day-task"
+                            <div class="day-task" 
                                 :class="['task-' + j.status, j.id == nowId ? 'task-select-' + j.status : '']"
                                 v-for="(j, index2) in i.task" :key="j.id" :id="j.id" @click.stop="ChangeTask(j.id)">
                                 <div class="task-add task-add-top" v-if="index2 == 0"
@@ -112,7 +112,7 @@
                                     <span v-if="j.status === 'ongoing'">状态：进行中</span>
                                     <span v-if="j.status === 'failed'">状态：失败</span>
                                     <span v-if="j.status === 'pending'">状态：待处理</span>
-                                    <span v-if="j.status === 'prime'">状态：等待中</span>
+                                    <span v-if="j.status === 'prime'">状态：待编辑</span>
                                 </div>
                                 <div class="task-desc">{{ j.desc }}</div>
                                 <div class="task-add" @click.stop="addTask(j.id)">
@@ -140,7 +140,7 @@
 
 
         <div class="timeline-edit">
-            <div class="left">
+            <div class="left" id="refeditleft">
                 <div class="item">
                     <div class="title">日期设置</div>
                     <div>
@@ -164,10 +164,11 @@
                             <el-radio-button label="进行中" value="ongoing" />
                             <el-radio-button label="失败" value="failed" />
                             <el-radio-button label="待处理" value="pending" />
-                            <el-radio-button label="等待中" value="prime" />
+                            <el-radio-button label="待编辑" value="prime" />
                         </el-radio-group>
                     </div>
                 </div>
+
 
                 <div class="item">
                     <div class="title">任务简介</div>
@@ -178,8 +179,8 @@
                     <span class="button-plus" @click="AIDesc()">{{ AIDescLoading ? "停止生成" : "根据详情AI总结👉" }}</span>
                 </div>
             </div>
-            <div class="right">
-                <div class="top top2">
+            <div class="right" id="refedit">
+                <div class="top top2" id="refedittools">
                     <div class="top-new" id="reftop1">
                         <el-tooltip content="撤销" placement="bottom">
                             <span @click="undo" :disabled="!CanUndo" class="top-button-2">
@@ -930,6 +931,22 @@
             </div>
         </div>
 
+        <el-tour v-model="openTour" @close="closeTour" @finish="closeTour">
+            <el-tour-step title="新手引导">
+                <div>😊你好~我是笔匠，下面我来带你使用全新的任务时间轴工具吧！</div>
+            </el-tour-step>
+            <el-tour-step :target="getElementById(id)" title="新手引导#1" description="这里任务时间轴区，可以在这里安排每一天的任务，同一天也可以安排多个工作项哦" />
+            <el-tour-step :target="getElementById('refpreview')" title="新手引导#2" description="这里是快速预览区，可以快速查看每天的任务" />
+            <el-tour-step :target="getElementById('refeditleft')" title="新手引导#3" placement="right"
+                description="这里是工作项编辑区，可以编辑任务标题、状态、简介等内容" />
+            <el-tour-step :target="getElementById('refedit')" title="新手引导#4" placement="left"
+                description="这里是详情编辑区，编写工作项的具体计划和方案" />
+            <el-tour-step :target="getElementById('refedittools')" title="新手引导#5"
+            description="这里是编辑区工具栏，同样内置了许多AI工具，甚至可以帮您一键安排任务！" />
+            <el-tour-step title="新手引导#5" description="🚀OK！现在开始您的AI创作之旅吧！" />
+            <!-- <el-tour-step target="reftop2" title="Other Actions" description="Click to see other" /> -->
+        </el-tour>
+
     </div>
 </template>
 
@@ -997,7 +1014,6 @@ import { Hyperlink, previewHyperlinkModal, setHyperlinkModal } from "@docs.plus/
 import Document from '@tiptap/extension-document'
 import { VueDraggable } from 'vue-draggable-plus'
 import AIPlanNode from "@/components/AIPlanNode.js";
-import mitt from "mitt";
 import eventBus from "@/store/mitt.js";
 const lowlight = createLowlight(common)
 let Template = ''
@@ -1008,7 +1024,19 @@ let editor = ref(null);
 const nowId = ref('');
 const store = useStore()
 const fileLoading = ref(false)
-
+const openTour = ref(false)
+nextTick(() => {
+    if (!localStorage.getItem('hasTourTi')) {
+        openTour.value = true
+    }
+})
+function closeTour() {
+    localStorage.setItem('hasTourTi', 'true')
+    openTour.value = false
+}
+function getElementById(id) {
+    return document.getElementById(id)
+}
 if (!data.value) {
     data.value = {
         timeline: [
@@ -1147,6 +1175,9 @@ if (route.query.id) {
         store.DocTitle = response.data.title
         fileLoading.value = false
         InitEditor()
+        if(route.query.task){
+            ChangeTask(route.query.task)
+        }
     }).catch((error) => {
         fileLoading.value = false
         console.error(error);
@@ -1155,6 +1186,14 @@ if (route.query.id) {
             message: '打开文件失败',
             type: 'error',
         })
+    })
+}
+
+if(route.query.template == 'open'){
+    store.isSave = true
+    // fileLoading.value = true
+    nextTick(() => {
+        OpenLocal()
     })
 }
 
@@ -1254,7 +1293,7 @@ const taskDate = computed({
 });
 
 function getStatus(tasks) {
-    // 失败 > 进行中 > 待处理 > 等待中 > 已完成
+    // 失败 > 进行中 > 待处理 > 待编辑 > 已完成
     const statusPriority = {
         'failed': 1,
         'ongoing': 2,
@@ -2201,6 +2240,7 @@ function OpenLocal() {
             }, 0);
         }).catch(() => {
             console.log('取消');
+            fileLoading.value = false
         });
     } else {
         document.getElementById('OpenLocal2').click();
@@ -2208,8 +2248,12 @@ function OpenLocal() {
 }
 
 function OpenLocal2(e) {
-    if (!e.target.files.length) return
+    if (!e.target.files.length) {
+        fileLoading.value = false
+        return
+    }
     try {
+        fileLoading.value = true
         let file = e.target.files[0];
         let reader = new FileReader();
         reader.onloadend = function (e) {
@@ -2227,21 +2271,26 @@ function OpenLocal2(e) {
                     message: '打开文件成功',
                     type: 'success',
                 })
+                fileLoading.value = false
+                fileId = null
             } catch (error) {
                 ElNotification({
                     title: '错误',
                     message: '打开文件失败：可能不是所需格式',
                     type: 'error',
                 })
+                fileLoading.value = false
             }
         }
         reader.readAsText(file);
+        fileLoading.value = false
     } catch (error) {
         ElNotification({
             title: '错误',
             message: '打开文件失败：可能不是所需格式',
             type: 'error',
         })
+        fileLoading.value = false
     }
 }
 

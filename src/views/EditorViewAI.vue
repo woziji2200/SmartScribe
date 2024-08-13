@@ -550,6 +550,13 @@
                                         折线图
                                     </span>
                                 </div>
+
+                                <div class="top-button-2-menu">
+                                    <span class="top-button-2-menu-button" @click="InsertGraph(5)">
+                                        <svg t="1723384694490" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5515" width="200" height="200"><path d="M388.7104 542.8736a30.0032 30.0032 0 1 1 0-60.0064A94.976 94.976 0 0 0 483.5328 388.096V320.2048c0-40.96 15.872-79.5648 44.5952-108.7488a153.9584 153.9584 0 0 1 108.1344-46.08l3.4304-0.0512a30.0032 30.0032 0 0 1 0.8192 60.0064h-3.4304a95.232 95.232 0 0 0-93.5424 94.8736V388.096a155.0336 155.0336 0 0 1-154.8288 154.8288z" fill="#A0C2F9" p-id="5516"></path><path d="M640.1024 860.416H636.2624c-40.96-0.6144-79.36-16.9984-108.1344-46.1312a153.9584 153.9584 0 0 1-44.544-108.7488v-67.7888a94.976 94.976 0 0 0-94.8736-94.8736 30.0032 30.0032 0 1 1 0-60.0064 155.0336 155.0336 0 0 1 154.8288 154.88v67.7888a95.232 95.232 0 0 0 93.5424 94.8224l3.4304 0.0512a30.0032 30.0032 0 0 1-0.4096 60.0064z" fill="#A0C2F9" p-id="5517"></path><path d="M640.1024 542.8736h-251.392a30.0032 30.0032 0 1 1 0-60.0064h251.392a30.0032 30.0032 0 1 1 0 60.0064z" fill="#A0C2F9" p-id="5518"></path><path d="M343.9104 638.976H137.728a70.0928 70.0928 0 0 1-69.9904-70.0416v-112.128c0-38.6048 31.3856-69.9904 69.9904-69.9904h206.1312c38.6048 0 69.9904 31.3856 69.9904 69.9904v112.128c0 38.6048-31.3856 69.9904-69.9904 69.9904z m486.2464-322.048H736.256a126.208 126.208 0 0 1-126.1056-126.0544 126.208 126.208 0 0 1 126.1056-126.0544h93.952a126.208 126.208 0 0 1 126.0544 126.1056 126.208 126.208 0 0 1-126.0544 126.0544z m0 322.048H736.256a126.208 126.208 0 0 1-126.1056-126.1056 126.208 126.208 0 0 1 126.1056-126.0544h93.952a126.208 126.208 0 0 1 126.0544 126.0544 126.208 126.208 0 0 1-126.0544 126.0544z" fill="#4185F4" p-id="5519"></path><path d="M830.1568 959.1808H736.256a126.208 126.208 0 0 1-126.1056-126.1056 126.208 126.208 0 0 1 126.1056-126.0544h93.952a126.208 126.208 0 0 1 126.0544 126.0544 126.208 126.208 0 0 1-126.0544 126.1056z" fill="#A0C2F9" p-id="5520"></path></svg>
+                                        思维导图
+                                    </span>
+                                </div>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
@@ -1096,7 +1103,7 @@ import AINode from "@/components/AINode.js";
 import GlobalDragHandle from 'tiptap-extension-global-drag-handle'
 import { TrailingNode } from "@/components/TrailingNode.js";
 import { Hyperlink, previewHyperlinkModal, setHyperlinkModal } from "@docs.plus/extension-hyperlink";
-import { getEditor, setEditor } from "./editor.js";
+import MindMapNode from "@/components/MindMapNode.js";
 // import TimelineNode from "@/components/TimelineNode.js";
 // console.log(common.map(item => { return function(hljs){
 //     return hljs.highlight('javascript', item).value
@@ -1129,6 +1136,8 @@ if (route.query.template == 'graph') {
     })
 } else if (route.query.template == 'mermaid') {
     Template = "<h1 style=\"text-indent: 0em !important;\" id=\"h-a01f7420\">流程图示例</h1><h2 style=\"text-indent: 0em !important;\" id=\"h-f77345bf\">手动绘制流程图</h2><p style=\"text-indent: 0em !important;\">借助强大的mermaid语法，您可以创建各种各样的流程图</p><vue-mermaid data=\"graph LR\n    A --单连接声明--> B\n    B --多连接声明--> C --多连接声明--> D\n    D --多节点聚合--> E &amp; F --多节点聚合--> A\"></vue-mermaid><p style=\"text-indent: 0em !important;\"></p><vue-mermaid data=\"mindmap\n  root((mindmap))\n    Origins\n      Long history\n      ::icon(fa fa-book)\n      Popularisation\n        British popular psychology author Tony Buzan\n    Research\n      On effectiveness<br/>and features\n      On Automatic creation\n        Uses\n    Tools\n      Pen and paper\n      Mermaid\n\n\"></vue-mermaid><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">凡是Mermaid所支持的图表类型，都可以进行绘制</p><p style=\"text-indent: 0em !important;\"></p><h2 style=\"text-indent: 0em !important;\" id=\"h-dfefb382\">AI生成流程图</h2><p style=\"text-indent: 0em !important;\">您可以选中一段文字，例如：</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">明天早上我先起床，再去吃饭，再去上班</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">然后点击AI助手的智能生成或者AI工具栏的文字转流程图，就可以由AI自动绘制流程图！生成的流程图以mermaid语法表示，插入文章后将会自动转换成流程图。</p><p style=\"text-indent: 0em !important;\"></p>"
+} else if (route.query.template == 'ocr') {
+    Template = store.OCRDoc
 }
 let timer = undefined
 const openTour = ref(false)
@@ -1168,7 +1177,7 @@ function CreateEditor(isCoop = false, useDoc = true) {
                 },
             }),
             Dropcursor.configure({ class: 'drop-cursor' }),
-            Underline, FontSize,
+            Underline, FontSize,MindMapNode,
             StarterKit.configure({
                 dropcursor: false,
                 gapcursor: false,
@@ -1988,6 +1997,9 @@ function InsertGraph(type) {
     } else if (type == 4) {
         let to = editor.view.state.selection.to
         editor.commands.insertContentAt(to, '<vue-echarts-line></vue-echarts-line>')
+    } else if (type == 5) {
+        let to = editor.view.state.selection.to
+        editor.commands.insertContentAt(to, '<vue-mindmap></vue-mindmap>')
     }
 }
 
