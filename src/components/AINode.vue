@@ -1100,11 +1100,12 @@ function AILayoutStart() {
 <正文缩进两字>
 
 那么你需要给出的结果是：
+\`\`\`html
 <h1>标题内容</h1>
 <p style="text-indent:2em;">正文内容...</p>
-
+\`\`\`
 - **你不需要对你的结果做出任何解释**，你只负责给出结果的HTML，任何解释都是多余的，无论如何你的排版都是正确的。`,
-            content: `需要排版的文档：\n${editor.getHTML()}  \n排版要求：${text}`
+            content: `需要排版的文档：\n${editor.getHTML().replaceAll('text-indent: 0em !important;', '').replaceAll('<ai2></ai2>','')}\n  \n排版要求：<${text}>`
         },
         headers: {
             'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
