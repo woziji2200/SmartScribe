@@ -12,7 +12,8 @@ export const useStore = defineStore('store', {
         showOCRResult: false,
         OCRResultUrl: '',
         OCRResultData: null,
-        OCRDoc: ''
+        OCRDoc: '',
+        localData: [],
      }),
     getters: {
       

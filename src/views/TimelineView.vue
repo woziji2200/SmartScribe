@@ -771,6 +771,9 @@
                                     <el-dropdown-item @click="InsertAINode({ type: 10.1, needSelectText: true })">
                                         文字转流程图
                                     </el-dropdown-item>
+                                    <el-dropdown-item @click="InsertAINode({ type: 10.4, needSelectText: true })">
+                                        文字转思维导图
+                                    </el-dropdown-item>
                                     <el-dropdown-item @click="InsertAINode({ type: 10.2, needSelectText: true })">
                                         文字转表格
                                     </el-dropdown-item>
@@ -1015,6 +1018,8 @@ import Document from '@tiptap/extension-document'
 import { VueDraggable } from 'vue-draggable-plus'
 import AIPlanNode from "@/components/AIPlanNode.js";
 import eventBus from "@/store/mitt.js";
+import MindMapNode from "@/components/MindMapNode.js";
+
 const lowlight = createLowlight(common)
 let Template = ''
 const id = ref(uuid());
@@ -1037,88 +1042,7 @@ function closeTour() {
 function getElementById(id) {
     return document.getElementById(id)
 }
-if (!data.value) {
-    data.value = {
-        timeline: [
-            {
-                id: uuid(),
-                time: '1719763200000',
-                task: [
-                    {
-                        title: '第一天的任务1',
-                        status: 'done',
-                        desc: '你好！这里是任务简介，可以在这里添加任务的简单描述！',
-                        content: `<h1 style=\"text-indent: 0em !important;\" id=\"h-27250198\">智慧笔匠 - 任务时间轴</h1><p style=\"text-indent: 0em !important;\">你好！这里是智慧笔匠的任务时间轴，我可以帮助你安排并管理工作日程！</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">你可以点击上方的日程栏切换每一天的任务项，并在下方修改您的任务标题、任务状态、任务简介和任务详情。</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">你也可以使用AI助手自动规划工作内容并安排工作时间。</p>`,
-                        id: uuid(),
 
-                    }, {
-                        title: '第一天的任务2',
-                        status: 'done',
-                        desc: '第一天要做的第二件事...',
-                        content: '这里可以编写任务详情',
-                        id: uuid(),
-
-                    }
-                ]
-            }, {
-                id: uuid(),
-                time: '1719849600000',
-                task: [
-                    {
-                        id: uuid(),
-                        title: '第二天的任务',
-                        status: 'done',
-                        desc: '第二天要做的工作简介',
-                        content: '<h1>第二天的工作内容</h1><p>...</p>',
-                    }
-                ]
-            }, {
-                id: uuid(),
-                time: '1719936000000',
-                task: [
-                    {
-                        id: uuid(),
-                        title: '第三天的任务1',
-                        status: 'ongoing',
-                        desc: '第三天要做的第一件事的工作简介',
-                        content: '第三天的第一项任务的具体内容',
-                    },
-                    {
-                        id: uuid(),
-                        title: '第三天的任务2',
-                        status: 'pending',
-                        desc: '第三天要做的第二件事的工作简介',
-                        content: '第三天的第二项任务的具体内容',
-                    }
-                ]
-            }, {
-                id: uuid(),
-                time: '1720022400000',
-                task: [
-                    {
-                        id: uuid(),
-                        title: '第四天的任务',
-                        status: 'prime',
-                        desc: '这里是第四天的任务简介',
-                        content: '这里是第四天的任务内容',
-                    }
-                ]
-            }, {
-                id: uuid(),
-                time: '1720108800000',
-                task: [
-                    {
-                        id: uuid(),
-                        title: '第五天的任务',
-                        status: 'prime',
-                        desc: '这里是第五天的任务简介',
-                        content: '这里是第五天的任务内容',
-                    }
-                ]
-            }
-        ]
-    }
-}
 
 function getTaskById(id){
     for (const timelineItem of data.value.timeline) {
@@ -1195,8 +1119,94 @@ if(route.query.template == 'open'){
     nextTick(() => {
         OpenLocal()
     })
-}
+}else if(route.query.template == 'local'){
 
+    data.value = {timeline: JSON.parse(localStorage.getItem('localData')).map(i => {
+        return {
+            id: uuid(),
+            time: (new Date(i.time).setHours(0, 0, 0, 0)).toString(),
+            task: i.task.map(j => {
+                return {
+                    id: uuid(),
+                    title: j.title,
+                    status: 'prime',
+                    desc: j.desc,
+                    content: j.content,
+                }
+            })
+        }
+    })}
+}
+if (!data.value) {
+    data.value = {
+        timeline: [
+            {
+                id: uuid(),
+                time: (new Date().setHours(0, 0, 0, 0)).toString(),
+                task: [
+                    {
+                        title: '第一天的任务1',
+                        status: 'done',
+                        desc: '你好！这里是任务简介，可以在这里添加任务的简单描述！',
+                        content: `<h1 style=\"text-indent: 0em !important;\" id=\"h-27250198\">智慧笔匠 - 任务时间轴</h1><p style=\"text-indent: 0em !important;\">你好！这里是智慧笔匠的任务时间轴，我可以帮助你安排并管理工作日程！</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">你可以点击上方的日程栏切换每一天的任务项，并在下方修改您的任务标题、任务状态、任务简介和任务详情。</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">你也可以使用AI助手自动规划工作内容并安排工作时间。</p>`,
+                        id: uuid(),
+
+                    }, {
+                        title: '第一天的任务2',
+                        status: 'done',
+                        desc: '第一天要做的第二件事...',
+                        content: '这里可以编写任务详情',
+                        id: uuid(),
+
+                    }
+                ]
+            }, {
+                id: uuid(),
+                time: new Date(new Date().setHours(0, 0, 0, 0) + 86400000).setHours(0,0,0,0).toString(),
+                task: [
+                    {
+                        id: uuid(),
+                        title: '第二天的任务',
+                        status: 'done',
+                        desc: '第二天要做的工作简介',
+                        content: '<h1>第二天的工作内容</h1><p>...</p>',
+                    }
+                ]
+            }, {
+                id: uuid(),
+                time: new Date(new Date().setHours(0, 0, 0, 0) + 86400000 * 2).setHours(0,0,0,0).toString(),
+                task: [
+                    {
+                        id: uuid(),
+                        title: '第三天的任务1',
+                        status: 'ongoing',
+                        desc: '第三天要做的第一件事的工作简介',
+                        content: '第三天的第一项任务的具体内容',
+                    },
+                    {
+                        id: uuid(),
+                        title: '第三天的任务2',
+                        status: 'pending',
+                        desc: '第三天要做的第二件事的工作简介',
+                        content: '第三天的第二项任务的具体内容',
+                    }
+                ]
+            }, {
+                id: uuid(),
+                time: new Date(new Date().setHours(0, 0, 0, 0) + 86400000 * 3).setHours(0,0,0,0).toString(),
+                task: [
+                    {
+                        id: uuid(),
+                        title: '第四天的任务',
+                        status: 'prime',
+                        desc: '这里是第四天的任务简介',
+                        content: '这里是第四天的任务内容',
+                    }
+                ]
+            }
+        ]
+    }
+}
 store.isSave = true
 store.DocTitle = '新建时间轴'
 
@@ -1457,7 +1467,7 @@ function CreateEditor(isCoop = false, useDoc = true, template = '') {
             Focus.configure({ className: 'focus', mode: 'shallowest' }),
             Link.configure({ autolink: true, linkOnPaste: true, openOnClick: false }),
             Heading.configure({ levels: [1, 2, 3, 4] }),
-            TaskList, TaskItem, EchartsBar, EchartsPie,
+            TaskList, TaskItem, EchartsBar, EchartsPie,MindMapNode,
             Image.configure({
                 inline: true,
             })
@@ -2478,6 +2488,7 @@ function AIDesc() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIDescCtrl,
         signal: AIDescCtrl.signal,
         body: {
             system:

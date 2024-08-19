@@ -93,6 +93,43 @@ export async function request(obj) {
     }
     if(obj.isEventSource){
         // console.log(obj.onmessage, obj.onerror, obj.onclose);
+        let timeoutId;
+
+        function resetTimeout() {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+            timeoutId = setTimeout(() => {
+                if (obj.onclose) {
+                    console.log('close');
+                    
+                    if(obj.AbortController){
+                        console.log('abort');
+                        obj.onclose();
+                        obj.AbortController.abort()
+                        // throw new Error('timeout')
+                    }
+                }
+            }, 7500); // 6秒超时
+        }
+    
+        function onmessage(e) {
+            if (obj.onmessage) {
+                console.log(e);
+                
+                if(e.data == '[DONE]'){
+                    // console.log('done');
+                    
+                    if(timeoutId){
+                        clearTimeout(timeoutId)
+                    }
+                    obj.onmessage(e)
+                } else {
+                    obj.onmessage(e); // 调用原来的onmessage处理逻辑
+                }
+            }
+            resetTimeout(); // 每次接收到消息时重置超时计时器
+        }
         fetchEventSource(baseUrl + obj.url, {
             openWhenHidden: true,
             method: obj.method,
@@ -110,6 +147,7 @@ export async function request(obj) {
         return
     }
     let base = {baseURL: obj.baseUrl} || {}
+    let responseType = {responseType: obj.responseType} || {}
     return instance({
         url: obj.url,
         method: obj.method,
@@ -117,6 +155,7 @@ export async function request(obj) {
         params: obj.params,
         signal: obj.signal,
         ...base,
+        ...responseType,
         headers: {
             // 'content-type': 'application/json',
             ...obj.headers,

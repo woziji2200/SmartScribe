@@ -903,7 +903,7 @@
                                 <el-input :readonly='true' placeholder='翻译结果' class="ai-textarea" rows="8"
                                     type='textarea' id="scroll_text" v-model="AItransitionData"></el-input>
                             </div>
-                            <el-button @click="AIInsert(AItransitionData)"
+                            <el-button @click="AIInsert(AItransitionData, true)"
                                 v-if="AItransitionData && !AItransitionLoading" size="small">插入文章</el-button>
 
                         </div>
@@ -930,7 +930,7 @@
                                 <el-input :readonly='true' placeholder='文章总结' class="ai-textarea" rows="8"
                                     type='textarea' id="scroll_text" v-model="AIsummaryData"></el-input>
                             </div>
-                            <el-button v-show="AISelect != 5" @click="AIInsert(AIsummaryData)"
+                            <el-button v-show="AISelect != 5" @click="AIInsert(AIsummaryData, true)"
                                 v-if="AIsummaryData && !AIsummaryLoading" size="small">插入文章</el-button>
 
                         </div>
@@ -954,7 +954,7 @@
                                 <el-input :readonly='true' placeholder='文章摘要' class="ai-textarea" rows="8"
                                     type='textarea' id="scroll_text" v-model="AIabstractData"></el-input>
                             </div>
-                            <el-button v-show="AISelect != 5" @click="AIInsert(AIabstractData)"
+                            <el-button v-show="AISelect != 5" @click="AIInsert(AIabstractData, true)"
                                 v-if="AIabstractData && !AIabstractLoading" size="small">插入文章</el-button>
 
                         </div>
@@ -984,7 +984,7 @@
                             </div>
                             <div class="bubble-menu2-button">
 
-                                <el-button v-show="AISelect != 5" @click="AIInsert(AIcontiuneData)"
+                                <el-button v-show="AISelect != 5" @click="AIInsert(AIcontiuneData, true)"
                                     v-if="AIcontiuneData && !AIcontiuneLoading" size="small">插入文章</el-button>
                             </div>
                         </div>
@@ -1008,7 +1008,7 @@
                             </div>
                             <div class="bubble-menu2-button">
 
-                                <el-button v-show="AISelect != 5" @click="AIInsert(AIpolishData)"
+                                <el-button v-show="AISelect != 5" @click="AIInsert(AIpolishData, true)"
                                     v-if="AIpolishData && !AIpolishLoading" size="small">插入文章</el-button>
                             </div>
                         </div>
@@ -1553,6 +1553,8 @@ import { Plugin as Plugin2 } from "@tiptap/pm/state";
 import EchartsLine from "@/components/EchartsLine.js";
 import { TrailingNode } from "@/components/TrailingNode.js";
 import { Hyperlink,previewHyperlinkModal,  setHyperlinkModal} from "@docs.plus/extension-hyperlink";
+import MindMapNode from "@/components/MindMapNode.js";
+import { marked } from "marked";
 
 // console.log(common.map(item => { return function(hljs){
 //     return hljs.highlight('javascript', item).value
@@ -1585,6 +1587,8 @@ if (route.query.template == 'graph') {
     })
 } else if(route.query.template == 'mermaid'){
     Template = "<h1 style=\"text-indent: 0em !important;\" id=\"h-a01f7420\">流程图示例</h1><h2 style=\"text-indent: 0em !important;\" id=\"h-f77345bf\">手动绘制流程图</h2><p style=\"text-indent: 0em !important;\">借助强大的mermaid语法，您可以创建各种各样的流程图</p><vue-mermaid data=\"graph LR\n    A --单连接声明--> B\n    B --多连接声明--> C --多连接声明--> D\n    D --多节点聚合--> E &amp; F --多节点聚合--> A\"></vue-mermaid><p style=\"text-indent: 0em !important;\"></p><vue-mermaid data=\"mindmap\n  root((mindmap))\n    Origins\n      Long history\n      ::icon(fa fa-book)\n      Popularisation\n        British popular psychology author Tony Buzan\n    Research\n      On effectiveness<br/>and features\n      On Automatic creation\n        Uses\n    Tools\n      Pen and paper\n      Mermaid\n\n\"></vue-mermaid><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">凡是Mermaid所支持的图表类型，都可以进行绘制</p><p style=\"text-indent: 0em !important;\"></p><h2 style=\"text-indent: 0em !important;\" id=\"h-dfefb382\">AI生成流程图</h2><p style=\"text-indent: 0em !important;\">您可以选中一段文字，例如：</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">明天早上我先起床，再去吃饭，再去上班</p><p style=\"text-indent: 0em !important;\"></p><p style=\"text-indent: 0em !important;\">然后点击AI助手的智能生成或者AI工具栏的文字转流程图，就可以由AI自动绘制流程图！生成的流程图以mermaid语法表示，插入文章后将会自动转换成流程图。</p><p style=\"text-indent: 0em !important;\"></p>"
+} else if (route.query.template == 'ocr') {
+    Template = store.OCRDoc
 }
 let timer = undefined
 const openTour = ref(false)
@@ -1628,7 +1632,7 @@ function CreateEditor(isCoop = false, useDoc = true) {
                 dropcursor: false,
                 gapcursor: false,
             }), TextStyle, CharacterCount, Superscript, Subscript,
-            Color.configure({ types: ["textStyle"], }),
+            Color.configure({ types: ["textStyle"], }), MindMapNode,
             TextAlign.configure({ types: ['heading', 'paragraph'], }),
             Focus.configure({ className: 'focus', mode: 'shallowest'}),
             Link.configure({ autolink: true, linkOnPaste: true, openOnClick: false }),
@@ -1869,6 +1873,7 @@ if (route.query.coopcode) {
 }
 // const state = reactive({
 let editor = CreateEditor()
+store.editor = editor
 
 
 function startCoop() {
@@ -2632,11 +2637,15 @@ const AISelect = ref(1)
 // const isAILoading = ref(false)
 
 // let ctrl = new AbortController()
-function AIInsert(data) {
+function AIInsert(data, needMarked = false) {
     // console.log(data);
     let to = editor.view.state.selection.to
+    if(needMarked){
+        editor.chain().focus().insertContentAt(to, marked(data.replaceAll('\n', '\n\n'))).run()
+    }else{
     // console.log(JSON.stringify(editor.view.state.selection));
-    editor.chain().focus().insertContentAt(to, data).run()
+        editor.chain().focus().insertContentAt(to, data).run()
+    }
 }
 
 const AItransitionFrom = ref('自动识别')
@@ -2672,6 +2681,7 @@ function AItransition() {
         url: '/api/ai/translate/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AItransitionCtrl, // AbortController
         signal: AItransitionCtrl.signal, // AbortSignal
         body: {
             content: text,
@@ -2717,6 +2727,7 @@ function AIsummary() {
         url: '/api/ai/summary/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIsummaryCtrl, // AbortController
         signal: AIsummaryCtrl.signal, // AbortSignal
         body: { content: text },
         headers: {
@@ -2760,6 +2771,7 @@ function AIabstract() {
         url: '/api/ai/abstract/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIabstractCtrl, // AbortController
         signal: AIabstractCtrl.signal, // AbortSignal
         body: { content: text, goal: AIcontiunegoal.value || '' },
         headers: {
@@ -2816,6 +2828,7 @@ function AIpolish() {
         url: '/api/ai/polish/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIpolishCtrl, // AbortController
         signal: AIpolishCtrl.signal, // AbortSignal
         body: {
             content: text,
@@ -2863,6 +2876,7 @@ function AIcontiune() {
         url: '/api/ai/continue/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIcontiuneCtrl, // AbortController
         signal: AIcontiuneCtrl.signal, // AbortSignal
         body: { content: text, goal: AIcontiunegoal.value || '正常续写' },
         headers: {
@@ -3131,6 +3145,7 @@ function AILayoutStart() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AILayoutCtrl, // AbortController
         signal: AILayoutCtrl.signal, // AbortSignal
         body: {
             system: `- 你是一个专业排版AI，将会重新处理给出的HTML文档。
@@ -3463,6 +3478,7 @@ function AIaudioText2Start() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIaudioCtrl2, // AbortController
         signal: AIaudioCtrl2.signal, // AbortSignal
         body: {
             system: `- 你现在是一个专门负责整理语音识别文本的AI，你需要将语音识别的文本整理出主要内容
@@ -3534,6 +3550,7 @@ function AImermaidStart() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AImermaidCtrl,
         signal: AImermaidCtrl.signal,
         body: {
             system: `- 你现在是一个专门生成mermaid流程图的AI。请根据提供的内容，根据文本流程生成mermaid流程图。
@@ -3687,6 +3704,7 @@ ${AItextgraphGoal.value ? '整理要求：' + AItextgraphGoal.value : ''}`
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AItextgraphCtrl,
         signal: AItextgraphCtrl.signal,
         body: {
             system: system,
@@ -3903,6 +3921,7 @@ function AItexttableStart() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AItexttableCtrl,
         signal: AItexttableCtrl.signal,
         body: {
             system: `

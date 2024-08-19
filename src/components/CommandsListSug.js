@@ -73,11 +73,12 @@ export default {
                     const startPos = state.doc.resolve(from).start();
 
                     const text = state.doc.textBetween(0, to, '\n')
-                    console.log(qwq);
+                    // console.log(text);
                     request({
                         url: '/api/ai/continue/',
                         method: 'POST',
                         isEventSource: true,
+                        AbortController: store.ctrl,
                         signal: store.ctrl.signal, // AbortSignal
                         body: { content: text, goal: '正常续写' },
                         headers: {
@@ -86,7 +87,7 @@ export default {
                         },
                         onmessage: (ev) => {
                             if (ev.data != '[DONE]') {
-                                editor.chain().focus().insertContent(Base64.decode(ev.data)).run()
+                                editor.chain().focus().insertContent(Base64.decode(ev.data).replaceAll('\n', '\n\n')).run()
                             }
                         },
                         onerror: (ev) => {
@@ -114,6 +115,7 @@ export default {
                         url: '/api/ai/abstract/',
                         method: 'POST',
                         isEventSource: true,
+                        AbortController: store.ctrl,
                         signal: store.ctrl.signal, // AbortSignal
                         body: { content: text},
                         headers: {

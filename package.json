@@ -86,7 +86,7 @@
     "vue-puzzle-vcode": "^1.1.10",
     "vue-router": "^4.0.3",
     "vue3-beautiful-chat": "^3.3.1",
-    "vue3-mindmap": "^0.5.12",
+    "vue3-mindmap": "^0.5.3",
     "vue3-puzzle-vcode": "^1.1.7",
     "vuex": "^4.0.0",
     "webpack": "^5.91.0",

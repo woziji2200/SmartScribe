@@ -41,7 +41,7 @@
                     <span class="button-plus" @click="AItransition"
                         v-if="AItransitionData != '' || AItransitionLoading">{{ AItransitionLoading ? '停止生成' : '重新生成'
                         }}</span>
-                    <span class="button-plus" @click="AIInsert(AItransitionData)"
+                    <span class="button-plus" @click="AIInsert(AItransitionData, true)"
                         v-if="AItransitionData && !AItransitionLoading">插入文章</span>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                     <span class="button-plus" @click="AIsummary" v-if="AIsummaryData != '' || AIsummaryLoading">{{
                         AIsummaryLoading ? '停止生成' : '重新生成'
                         }}</span>
-                    <span class="button-plus" @click="AIInsert(AIsummaryData)"
+                    <span class="button-plus" @click="AIInsert(AIsummaryData, true)"
                         v-if="AIsummaryData && !AIsummaryLoading">插入文章</span>
                     <!-- 
                     <el-button @click="AIsummary" v-if="AIsummaryData == '' && !AIsummaryLoading" size="small">
@@ -107,7 +107,7 @@
                         v-if="AIabstractData == '' && !AIabstractLoading">开始生成</span>
                     <span class="button-plus" @click="AIabstract" v-if="AIabstractData != '' || AIabstractLoading">{{
                         AIabstractLoading ? '停止生成' : '重新生成' }}</span>
-                    <span class="button-plus" @click="AIInsert(AIabstractData)"
+                    <span class="button-plus" @click="AIInsert(AIabstractData, true)"
                         v-if="AIabstractData && !AIabstractLoading">插入文章</span>
                     <!-- <el-button @click="AIabstract" v-if="AIabstractData == '' && !AIabstractLoading" size="small">
                         {{ '开始生成' }}
@@ -148,7 +148,7 @@
                         v-if="AIcontiuneData == '' && !AIcontiuneLoading">开始生成</span>
                     <span class="button-plus" @click="AIcontiune" v-if="AIcontiuneData != '' || AIcontiuneLoading">{{
                         AIcontiuneLoading ? '停止生成' : '重新生成' }}</span>
-                    <span class="button-plus" @click="AIInsert(AIcontiuneData)"
+                    <span class="button-plus" @click="AIInsert(AIcontiuneData, true)"
                         v-if="AIcontiuneData && !AIcontiuneLoading">插入文章</span>
 
                     <!-- <el-button @click="AIcontiune" v-if="AIcontiuneData == '' && !AIcontiuneLoading" size="small">
@@ -189,7 +189,7 @@
                         v-if="AIpolishData == '' && !AIpolishLoading">开始生成</span>
                     <span class="button-plus" @click="AIpolish" v-if="AIpolishData != '' || AIpolishLoading">{{
                         AIpolishLoading ? '停止生成' : '重新生成' }}</span>
-                    <span class="button-plus" @click="AIInsert(AIpolishData)"
+                    <span class="button-plus" @click="AIInsert(AIpolishData, true)"
                         v-if="AIpolishData && !AIpolishLoading">插入文章</span>
                     <!-- <el-button @click="AIpolish" v-if="AIpolishData == '' && !AIpolishLoading" size="small">
                         {{ '开始生成' }}</el-button>
@@ -587,6 +587,58 @@
             </div>
 
 
+            <div v-if="AISelect == 10.4">
+                <div class="ai-title"><span>AI+ 文字转思维导图</span><span v-if="AIMindmapLoading && !isShowAI" class="loading"></span></div>
+                <div v-show="!isShowAI" style="height: 50px"></div>
+
+
+                <div v-loading="AIMindmapLoading" v-if="AIMindmapLoading" style="width: 100%;height: 60px;">
+
+                </div>
+                <div style="font-size: 12px;margin: 8px 0;color: #555" v-if="AIMindmapLoading">当前正在生成：{{ AIMindmapDataNow }}</div>
+                <div style="font-size: 12px;margin: 8px 0;color: #555" v-if="!AIMindmapLoading && AIMindmapData">生成成功！</div>
+                <span @click="AIMindmapStart" class="button-plus">
+                    {{ AIMindmapLoading ? '停止生成' : '重新生成' }}
+                </span>
+                <span @click="AIInsert(`<vue-mindmap data='${AIMindmapData}'></vue-mindmap>`)" class="button-plus"
+                    v-if="!AIMindmapLoading && AIMindmapData">插入思维导图</span>
+
+                <div class="logo">
+                    结果由<img src="../assets/wxyy.jpg" alt="" srcset=""><img src="../assets/pd.jpg" alt="" srcset="">提供支持
+                </div>
+            </div>
+
+
+            <div v-if="AISelect == 11">
+                <div class="ai-title"><span>AI+ AI画图</span><span v-if="AIDrawLoading && !isShowAI" class="loading"></span></div>
+                <div v-show="!isShowAI" style="height: 50px"></div>
+
+                <div class="ai-title-ib">
+                    <span style="font-size: 12px;margin: 8px 0;color: #555" class="ai-title-2">图片风格：</span>
+                    <el-select v-model="AIDrawStyle" placeholder="请选择" style="">
+                        <el-option v-for="i in ['写实风格', '二次元', '古风', '赛博朋克', '水彩画', '油画','卡通画']" :label="i" :value='i' />
+                    </el-select>
+                </div>
+                <div v-loading="AIDrawLoading">
+                    <textarea name="" id="" class="textarea-plus" rows="4" v-model="AIDrawGoal"
+                        placeholder='图片描述'>
+                    </textarea>
+                </div>
+
+                <div style="width: 100%;margin-bottom: 20px; max-height: 300px">
+                    <img :src="AIDrawData" alt="" srcset="" v-if="AIDrawData" style="width: 100%;max-height: 300px;object-fit: contain;">
+                </div>
+                <span @click="AIDrawStart" class="button-plus">
+                    {{ AIDrawLoading ? '停止生成' : '开始生成' }}
+                </span>
+
+                <span @click="AIDrawInsert" class="button-plus"  v-if="!AIDrawLoading && AIDrawData">插入图片</span>
+
+                <div class="logo">
+                    结果由<img src="../assets/wxyy.jpg" alt="" srcset=""><img src="../assets/pd.jpg" alt="" srcset="">提供支持
+                </div>
+            </div>
+
 
 
 
@@ -626,6 +678,7 @@ import { ElMessage, ElNotification } from 'element-plus'
 import { ElMessageBox } from 'element-plus'
 import { useStore } from '@/store/index.js'
 import { Editor, EditorContent, BubbleMenu } from "@tiptap/vue-3";
+import { marked } from 'marked';
 
 
 const store = useStore()
@@ -654,9 +707,13 @@ function QuickLayout(type) {
     })
 }
 
-function AIInsert(data) {
+function AIInsert(data, needMarked = false) {
     let to = editor.view.state.selection.to
-    editor.chain().focus().insertContentAt(to, data).run()
+    if(needMarked) {
+        editor.chain().focus().insertContentAt(to, marked(data.replaceAll('\n', '\n\n'))).run()
+    } else {
+        editor.chain().focus().insertContentAt(to, data).run()
+    }
 }
 
 const AItransitionTo = ref('中文（简体）')
@@ -685,6 +742,7 @@ function AItransition() {
         url: '/api/ai/translate/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AItransitionCtrl, // AbortController
         signal: AItransitionCtrl.signal, // AbortSignal
         body: {
             content: textAll.value,
@@ -733,6 +791,7 @@ function AIsummary() {
         url: '/api/ai/summary/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIsummaryCtrl, // AbortController
         signal: AIsummaryCtrl.signal, // AbortSignal
         body: { content: text },
         headers: {
@@ -779,6 +838,7 @@ function AIabstract() {
         url: '/api/ai/abstract/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIabstractCtrl, // AbortController
         signal: AIabstractCtrl.signal, // AbortSignal
         body: { content: text },
         headers: {
@@ -831,6 +891,7 @@ function AIpolish() {
         url: '/api/ai/polish/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIpolishCtrl, // AbortController
         signal: AIpolishCtrl.signal, // AbortSignal
         body: {
             content: textAll.value,
@@ -880,6 +941,7 @@ function AIcontiune() {
         url: '/api/ai/continue/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIcontiuneCtrl, // AbortController
         signal: AIcontiuneCtrl.signal, // AbortSignal
         body: { content: text, goal: AIcontiunegoal.value || '正常续写' },
         headers: {
@@ -1017,6 +1079,7 @@ function AILayoutStart() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AILayoutCtrl, // AbortController
         signal: AILayoutCtrl.signal, // AbortSignal
         body: {
             system: 
@@ -1355,6 +1418,7 @@ function AIaudioText2Start() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIaudioCtrl2, // AbortController
         signal: AIaudioCtrl2.signal, // AbortSignal
         body: {
             system: 
@@ -1422,6 +1486,7 @@ function AImermaidStart() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AImermaidCtrl, // AbortController
         signal: AImermaidCtrl.signal,
         body: {
             system: 
@@ -1575,6 +1640,7 @@ ${AItextgraphGoal.value ? '整理要求：' + AItextgraphGoal.value : ''}`
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AItextgraphCtrl, // AbortController
         signal: AItextgraphCtrl.signal,
         body: {
             system: system,
@@ -1790,6 +1856,7 @@ function AItexttableStart() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AItexttableCtrl, // AbortController
         signal: AItexttableCtrl.signal,
         body: {
             system: `
@@ -1850,6 +1917,114 @@ function AItexttableStart() {
         }
     })
 }
+
+const AIMindmapData = ref('')
+const AIMindmapDataNow = ref('')
+const AIMindmapDataTemp = ref('')
+const AIMindmapLoading = ref(false)
+let AIMindmapCtrl = new AbortController()
+const AIMindmapFinish = ref(false)
+function AIMindmapStart() {
+    if (AIMindmapLoading.value) {
+        AIMindmapCtrl.abort()
+        AIMindmapLoading.value = false
+        return
+    }
+    AIMindmapCtrl = new AbortController()
+    AIMindmapLoading.value = true
+    AIMindmapData.value = ''
+    AIMindmapDataTemp.value = ''
+
+    if (!textAll.value) {
+        ElNotification({
+            title: '错误',
+            message: '请先选中一段文字',
+            type: 'error',
+        })
+        AIMindmapLoading.value = false
+        return
+    }
+    request({
+        url: '/api/ai/mysystem/',
+        method: 'POST',
+        isEventSource: true,
+        AbortController: AIMindmapCtrl, // AbortController
+        signal: AIMindmapCtrl.signal,
+        body: {
+            system: `
+- 你是一个专门生成思维导图的AI。请你按照给出的文字，整理文字中的信息并生成指定JSON格式的思维导图
+- 请你记住你的生成目标是思维导图，请确保输出的内容符合思维导图的一般要求
+- 请勿输出任何多余内容。
+- 你应该严格按照以下的格式输出：
+\`\`\`json
+[{
+    "name": "流程图的根节点",
+    "children": [
+        {
+            "name": "第一步...",
+            "children": [
+                { "name": "1. xxxx" },
+                { "name": "2. xxxx" },
+            ]
+        },
+        {
+            "name": "第二步...",
+            "children": [
+                { "name": "1. xxxx" },
+                { "name": "2. xxxx" },
+            ]
+        }
+    ]
+}]
+\`\`\`
+- 如果无法生成思维导图，请返回数组[{"name": "无法生成"}]。
+- 一步一步来，请慢慢思考
+`,
+            content: textAll.value
+        },
+        headers: {
+            'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
+            'content-type': 'application/json',
+        },
+        onmessage: (ev) => {
+            if (ev.data != '[DONE]') {
+                AIMindmapDataTemp.value += Base64.decode(ev.data)
+                console.log(AIMindmapDataTemp.value);
+                try {
+                    // console.log(AIMindmapDataTemp.value.match(/"name":\s*"([^"]*)"/g).slice(-1));
+                    
+                    AIMindmapDataNow.value = AIMindmapDataTemp.value.match(/"name":\s*"([^"]*)"/g).slice(-1)[0].replace(/"name":\s*"/, '').replace(/"/, '')
+                } catch (error) {
+                    
+                }
+            }
+        },
+        onerror: (ev) => {
+            AIMindmapCtrl.abort()
+            console.error(ev);
+            
+            AIMindmapLoading.value = false
+            throw ev
+        },
+        onclose: () => {
+            AIMindmapLoading.value = false
+            // console.log(AIMindmapDataTemp.value);
+            AIMindmapData.value = AIMindmapDataTemp.value.match(/```json(.*)```/s)[1]
+                    .replace(/\/\/.*$/gm, '')
+                    .replace(/\/\*[\s\S]*?\*\//g, '')
+                    .replace(/'([^']*)'/g, '"$1"')
+                    .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
+                    .replace("```json", "")
+                    .replace("```", "")
+            console.log(AIMindmapData.value);
+            // if(!AIMindmapData.value) {
+            //     ElMessage.error('表格生成失败,可能是因为文本内容过长或者没有明显的表格')
+            // }
+        }
+    })
+}
+
+
 function OCRResultDataToOcrInfo(data) {
     // return [["11111", 1, [[ 144, 249 ], [ 324,254 ], [ 324,290  ], [144,  284 ]] ]]
     if (!data) return []
@@ -1864,6 +2039,80 @@ function OCRResultToPretext(data) {
 }
 const isShowAI = ref(true)
 
+const AIDrawLoading = ref(false)
+const AIDrawStyle = ref('写实风格')
+const AIDrawGoal = ref('')
+const AIDrawData = ref('')
+let AIDrawInterval = null
+let AIDrawTaskId = null
+function AIDrawStart(){
+    if(AIDrawGoal.value == ''){
+        ElNotification({ title: '错误', message: '请先输入内容', type: 'error' })
+        return
+    }
+    if(AIDrawLoading.value){
+        AIDrawLoading.value = false
+        clearInterval(AIDrawInterval)
+        return
+    }
+    AIDrawLoading.value = true
+    request({
+        url: '/api/ai/draw/',
+        method: 'POST',
+        body: {
+            "text": AIDrawGoal.value,
+            "style": AIDrawStyle.value,
+            "resolution": "1280*720",
+            "num": 1
+        }
+    }).then((res) => {
+        AIDrawTaskId = res.data.taskId.toString()
+        AIDrawInterval = setInterval(() => {
+            request({
+                url: '/api/ai/draw/',
+                method: 'GET',
+                params: {
+                    "taskId": AIDrawTaskId
+                }
+            }).then((res) => {
+                if(res.data.data.img){
+                    AIDrawData.value = res.data.data.img
+                    AIDrawLoading.value = false
+                    clearInterval(AIDrawInterval)
+                }
+            }).catch((err) => {
+                ElMessage.error(err)
+                console.log(err);
+            })
+        }, 1000);
+    }).catch((err) => {
+        ElMessage.error(err)
+        console.log(err);
+    })
+}
+function AIDrawInsert() {
+    // fetch(AIDrawData.value)
+    // .then(response => response.blob())
+    // .then(blob => new File([blob], 'ai', { type: blob.type }))
+    // .then(file => editor.commands.uploadImage({ file }))
+    // .catch(error => console.error('Error:', error));
+    request({
+        url: '/api/ai/image_agent/',
+        method: 'GET',
+        params: {
+            "url": AIDrawData.value
+        },
+        responseType: 'arraybuffer'
+    }).then((res)=>{
+        const blob = new Blob([res.data], {
+            type: res.headers['content-type']
+        })
+        let file = new File([blob], 'ai.png', { type: 'image/png' })
+        editor.commands.uploadImage({ file })
+        
+    })
+    
+}
 
 
 if (AISelect.value == 2) {
@@ -1890,6 +2139,8 @@ if (AISelect.value == 2) {
     AItexttableStart()
 } else if (AISelect.value == 10.3) {
     // AItextgraphStart()
+} else if (AISelect.value == 10.4) {
+    AIMindmapStart()
 }
 
 

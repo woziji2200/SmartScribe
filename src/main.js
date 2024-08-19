@@ -25,7 +25,9 @@ library.add(faCog, faClipboardList,faBars,faTrashAlt, faPlus,faAngleLeft,faAngle
     faArrowLeft, faArrowRight, faArrowUp, faArrowDown, faMinus, faSquare, faWindowRestore, faTimes, faCaretDown)
 
 
-createApp(App).use(pinia).use(router).use(ContextMenu).use(ElementPlus,{
+let app = createApp(App)
+
+app.use(pinia).use(router).use(ContextMenu).use(ElementPlus,{
     locale: zhCn,
   }).use(Chat).component('font-awesome-icon', FontAwesomeIcon)
     .mount('#app')

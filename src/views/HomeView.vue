@@ -331,7 +331,7 @@
                             </div>
                         </div>
 
-                        <div v-if="todo.todo.length == 0" style="" class="todo-nodata">
+                        <div v-if="todo.todo?.filter(i => i.status != 'done').length == 0" style="" class="todo-nodata">
                             <img src="./../assets/no data.png" alt="" srcset="" style="width: 50%;">
                             <div style="color: #666;font-size: 16px;">今天没有要做的任务哦！</div>
                             <div style="color: #999;font-size: 12px;margin-top: 20px;">Tips: 您可以新建任意一个任务时间轴来添加今天的待办事项</div>
@@ -355,13 +355,13 @@
                     <div class="home-main-right-file-1"
                         style="margin-top: 20px; color: #666;font-size: 16px;font-weight: bold">
                         <div>文件名</div>
-                        <div>最后修改时间</div>
-                        <div>操作</div>
+                        <div  style="text-align: center">最后修改时间</div>
+                        <div style="text-align: center">操作</div>
                     </div>
                     <div v-for="(i, index) in filesShow.files" class="home-main-right-file-1">
                         <div class="file-name" @click="openFile(i.id)">{{ i.name }}</div>
-                        <div>{{ formatDate(i.time) }}</div>
-                        <div>
+                        <div style="text-align: center">{{ formatDate(i.time) }}</div>
+                        <div style="text-align: center">
                             <button @click="openFile(i.id)">打开</button>
                             <button
                                 @click="renameDialogVisible = true; renameId = i.id; renameName = i.name">重命名</button>
@@ -398,16 +398,24 @@
 
                 <div class="home-main-right-file">
 
-                    <div class="home-main-right-file-1"
+                    <div class="home-main-right-file-1 home-main-right-task-1"
                         style="margin-top: 20px; color: #666;font-size: 16px;font-weight: bold">
-                        <div>文件名</div>
-                        <div>最后修改时间</div>
-                        <div>操作</div>
+                        <div>任务名</div>
+                        <div style="text-align: center">完成进度</div>
+                        <div style="text-align: center">最后修改时间</div>
+                        <div style="text-align: center">操作</div>
                     </div>
-                    <div v-for="(i, index) in tasksShow.tasks" class="home-main-right-file-1">
+                    <div v-for="(i, index) in tasksShow.tasks" class="home-main-right-file-1 home-main-right-task-1">
                         <div class="file-name" @click="openTask(i.task_id)">{{ i.title }}</div>
-                        <div>{{ formatDate(i.updated_at) }}</div>
-                        <div>
+                        
+                        <el-tooltip :content="'进度：'+i.status + '%'" placement="bottom">
+                            <div class="progress-1">
+                                <div class="progress" :style="`--progress: ${i.status}%; --last: ${100-i.status}%; margin-right: 0px;background:${getColor(i.status)}`"></div>
+                            </div>
+                        </el-tooltip>
+
+                        <div  style="text-align: center">{{ formatDate(i.updated_at) }}</div>
+                        <div  style="text-align: center">
                             <button @click="openTask(i.task_id)">打开</button>
                             <button
                                 @click="renameDialogVisible = true; renameMode = 'task'; renameId = i.task_id; renameName = i.title">重命名</button>
@@ -505,7 +513,7 @@
                 </div>
             </div>
             
-            <div v-if="reportShow">
+            <div v-if="reportShow" style="width: 100%;">
                 <div class="report-main" id="report-main">
                     <!-- <div class="report-avatar">
                         <img src="./../assets/logo.png" alt="" srcset="">
@@ -629,10 +637,10 @@
         </div>
 
 
-
         <!-- <button @click="test">test</button> -->
     </div>
 </template>
+
 <script setup>
 import { getCurrentInstance, nextTick, onActivated, onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -646,6 +654,7 @@ import { UploadFilled } from '@element-plus/icons-vue'
 import { Base64 } from "js-base64";
 import echarts from './../components/EchartsExport';
 import { marked } from "marked";
+import eventBus from "@/store/mitt";
 
 const store = useStore();
 const cardSelected = ref('home')
@@ -1207,6 +1216,10 @@ const reportData = ref('')
 const reportDataHtml = ref('')
 let reportCtrl = null
 function reportGet(type){
+    if(!store.UserInfo.name === ''){
+        store.isLogin = true
+        return
+    }
     if(reportLoading.value){
         reportCtrl.abort()
         reportLoading.value = false
@@ -1220,6 +1233,7 @@ function reportGet(type){
         url: `/api/ai/report/${type}/`,
         method: 'get',
         isEventSource: true,
+        AbortController: reportCtrl,
         signal: reportCtrl.signal,
         headers: {
             'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7`,
@@ -1253,10 +1267,29 @@ function reportEdit(){
     store.OCRDoc = reportDataHtml.value
     openMode('?template=ocr')
 }
+
+function getColor(status){
+    if(status >=75){
+        return `conic-gradient(#66FA74 var(--progress), #dddddd var(--progress));`
+    } else if(status >= 50){
+        return `conic-gradient(#E6BF00 var(--progress), #dddddd var(--progress));`
+    } else if(status >= 25){
+        return `conic-gradient(#ffb266 var(--progress), #dddddd var(--progress));`
+    } else {
+        return `conic-gradient(#ff6666 var(--progress), #dddddd var(--progress));`
+    }
+}
+
+
+eventBus.on('openMode', (e)=>{
+    openMode(e.url)
+})
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
+
+
 .report{
     display: flex;
 }
@@ -1468,6 +1501,9 @@ function reportEdit(){
     color: #939393;
     font-size: 15px;
     transition: all 0.2s;
+}
+.home-main-right-task-1{
+    grid-template-columns: 2fr 1fr 2fr 2fr;
 }
 
 .home-main-right-file-1:last-child {
@@ -1963,7 +1999,9 @@ function reportEdit(){
     /* display: flex; */
     /* flex: 1; */
     height: 100%;
+    width: 100%;
     overflow: auto;
+    position: relative;
 }
 .report-avatar img{
     width: 100%;
@@ -1996,6 +2034,7 @@ function reportEdit(){
     box-shadow: 0 0 5px 0 #d8d8d86b;
     /* height: auto; */
     overflow: visible;
+    // width: 100%;
 }
 .report-data-button{
     margin-left: 80px;
@@ -2017,6 +2056,33 @@ function reportEdit(){
     background-color: #636363;
     color: #fff;
 }
+.progress-1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress {
+    // transform: translateX(50%);
+	width: 20px;
+	height: 20px;
+	// background: conic-gradient(green var(--progress), #dddddd var(--progress));
+	border-radius: 50%;
+	position: relative;
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 3px;
+		background-color: #fff;
+		width: 14px;
+		height: 14px;
+		text-align: center;
+		line-height: 10px;
+		border-radius: 50%;
+	}
+}
+
+
 @media screen and (max-width: 768px) {
     .home-main-left {
         display: none !important;
@@ -2204,6 +2270,37 @@ function reportEdit(){
     .settings-item span{
         margin-left: 0;
         margin-top: 10px;
+    }
+
+    .report{
+        flex-direction: column;
+        overflow: auto !important;
+    }
+    .echarts{
+        // width: 40%;
+        // height: 200px;
+    }
+    .report-left-item{
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .report-data{
+        margin-left: 20px;
+        margin-right: 20px;
+        padding: 20px;
+    }
+    .report-data-button{
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+    :deep(.el-drawer){
+        width: 100% !important;
+    }
+    .input{
+        margin-bottom: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
     }
 }
 </style>

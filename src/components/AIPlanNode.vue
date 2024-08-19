@@ -143,6 +143,7 @@ function AIPlanToday() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIPlanTodayCtrl, // AbortController
         signal: AIPlanTodayCtrl.signal, // AbortSignal
         body: {
             system:
@@ -184,41 +185,7 @@ function AIPlanToday() {
 
                 }
             } else {
-                AIPlanTodayLoading.value = false
-                AIPlanTodayData.value = AIPlanTodayDataTemp.value.match(/```json(.*)```/s)[1]
-                    .replace(/\/\/.*$/gm, '')
-                    .replace(/\/\*[\s\S]*?\*\//g, '')
-                    .replace(/'([^']*)'/g, '"$1"')
-                    .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
-                    .replace(/(\d+(\s*[\+\-\*\/]\s*\d+)+)/g, match => eval(match))
-                    .replace("```json", "")
-                    .replace("```", "")
 
-                function isValidTaskFormat(jsonString) {
-                    let json;
-                    try { json = JSON.parse(jsonString); } catch (e) { return false; }
-                    if (!Array.isArray(json)) { return false; }
-                    const isValidTask = (task) => {
-                        return (
-                            typeof task.title === 'string' &&
-                            typeof task.desc === 'string' &&
-                            typeof task.content === 'string'
-                        );
-                    };
-                    return json.every(isValidTask);
-                }
-                console.log(AIPlanTodayData.value);
-
-                if (!isValidTaskFormat(AIPlanTodayData.value)) {
-                    ElNotification({ title: '错误', message: '生成失败了，您可以重新尝试', type: 'error' })
-                    AIPlanTodayData.value = ''
-                } else {
-                    ElNotification({ title: '成功', message: '生成成功！已将日程添加到任务项', type: 'success' })
-                    eventBus.emit('ai-plan', {
-                        type: 'insert-today',
-                        data: JSON.parse(AIPlanTodayData.value)
-                    });
-                }
             }
         },
         onerror: (ev) => {
@@ -227,7 +194,40 @@ function AIPlanToday() {
             throw ev
         },
         onclose: () => {
+            AIPlanTodayLoading.value = false
+            AIPlanTodayData.value = AIPlanTodayDataTemp.value.match(/```json(.*)```/s)[1]
+                .replace(/\/\/.*$/gm, '')
+                .replace(/\/\*[\s\S]*?\*\//g, '')
+                .replace(/'([^']*)'/g, '"$1"')
+                .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
+                .replace("```json", "")
+                .replace("```", "")
 
+            function isValidTaskFormat(jsonString) {
+                let json;
+                try { json = JSON.parse(jsonString); } catch (e) { return false; }
+                if (!Array.isArray(json)) { return false; }
+                const isValidTask = (task) => {
+                    return (
+                        typeof task.title === 'string' &&
+                        typeof task.desc === 'string' &&
+                        typeof task.content === 'string'
+                    );
+                };
+                return json.every(isValidTask);
+            }
+            console.log(AIPlanTodayData.value);
+
+            if (!isValidTaskFormat(AIPlanTodayData.value)) {
+                ElNotification({ title: '错误', message: '生成失败了，您可以重新尝试', type: 'error' })
+                AIPlanTodayData.value = ''
+            } else {
+                ElNotification({ title: '成功', message: '生成成功！已将日程添加到任务项', type: 'success' })
+                eventBus.emit('ai-plan', {
+                    type: 'insert-today',
+                    data: JSON.parse(AIPlanTodayData.value)
+                });
+            }
         }
     })
 }
@@ -264,6 +264,7 @@ function AIPlanNext() {
         url: '/api/ai/mysystem/',
         method: 'POST',
         isEventSource: true,
+        AbortController: AIPlanNextCtrl, // AbortController
         signal: AIPlanNextCtrl.signal, // AbortSignal
         body: {
             system:
@@ -327,43 +328,6 @@ function AIPlanNext() {
                 } catch (error) {
 
                 }
-            } else {
-                AIPlanNextLoading.value = false
-                AIPlanNextData.value = AIPlanNextDataTemp.value.match(/```json(.*)```/s)[1]
-                    .replace(/\/\/.*$/gm, '')
-                    .replace(/\/\*[\s\S]*?\*\//g, '')
-                    .replace(/'([^']*)'/g, '"$1"')
-                    .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
-                    .replace("```json", "")
-                    .replace("```", "")
-                function isValidTaskFormat(jsonString) {
-                    try {
-                        const jsonObj = JSON.parse(jsonString);
-                        if (!Array.isArray(jsonObj)) { return false; }
-                        for (let i = 0; i < jsonObj.length; i++) {
-                            const item = jsonObj[i];
-                            if (typeof item.time !== "string") { return false; }
-                            if (!Array.isArray(item.task)) { return false; }
-                            for (let task of item.task) {
-                                if (typeof task.title !== "string" ||
-                                    typeof task.desc !== "string" ||
-                                    typeof task.content !== "string") { return false; }
-                            }
-                        }
-                        return true;
-                    } catch (e) { return false; }
-                }
-                console.log(AIPlanNextData.value);
-                if (!isValidTaskFormat(AIPlanNextData.value)) {
-                    ElNotification({ title: '错误', message: '生成失败了，您可以重新尝试', type: 'error' })
-                    AIPlanNextData.value = ''
-                } else {
-                    ElNotification({ title: '成功', message: '生成成功！已将日程添加到任务项', type: 'success' })
-                    eventBus.emit('ai-plan', {
-                        type: 'insert-next',
-                        data: JSON.parse(AIPlanNextData.value)
-                    });
-                }
             }
         },
         onerror: (ev) => {
@@ -373,7 +337,42 @@ function AIPlanNext() {
             throw ev
         },
         onclose: () => {
-
+            AIPlanNextLoading.value = false
+            AIPlanNextData.value = AIPlanNextDataTemp.value.match(/```json(.*)```/s)[1]
+                .replace(/\/\/.*$/gm, '')
+                .replace(/\/\*[\s\S]*?\*\//g, '')
+                .replace(/'([^']*)'/g, '"$1"')
+                .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
+                .replace("```json", "")
+                .replace("```", "")
+            function isValidTaskFormat(jsonString) {
+                try {
+                    const jsonObj = JSON.parse(jsonString);
+                    if (!Array.isArray(jsonObj)) { return false; }
+                    for (let i = 0; i < jsonObj.length; i++) {
+                        const item = jsonObj[i];
+                        if (typeof item.time !== "string") { return false; }
+                        if (!Array.isArray(item.task)) { return false; }
+                        for (let task of item.task) {
+                            if (typeof task.title !== "string" ||
+                                typeof task.desc !== "string" ||
+                                typeof task.content !== "string") { return false; }
+                        }
+                    }
+                    return true;
+                } catch (e) { return false; }
+            }
+            console.log(AIPlanNextData.value);
+            if (!isValidTaskFormat(AIPlanNextData.value)) {
+                ElNotification({ title: '错误', message: '生成失败了，您可以重新尝试', type: 'error' })
+                AIPlanNextData.value = ''
+            } else {
+                ElNotification({ title: '成功', message: '生成成功！已将日程添加到任务项', type: 'success' })
+                eventBus.emit('ai-plan', {
+                    type: 'insert-next',
+                    data: JSON.parse(AIPlanNextData.value)
+                });
+            }
         }
     })
 }
