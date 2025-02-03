@@ -249,7 +249,7 @@ function AIPlanNext() {
     }
     const text = AIPlanNextGoal.value
     if (!text) {
-        ElNotification({ title: '错误', message: '请先输入今日任务', type: 'error' })
+        ElNotification({ title: '错误', message: '请先输入未来任务', type: 'error' })
         AIPlanNextLoading.value = false
         return
     }

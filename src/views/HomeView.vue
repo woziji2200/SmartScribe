@@ -58,6 +58,8 @@
         </div>
 
         <div v-if="cardSelected == 'home'" key="home" class="home-main-right">
+
+
             <div class="ms-title">
                 <img style="" src="../assets/logo.png" alt="" srcset="">
                 <div>智慧笔匠</div>
@@ -197,7 +199,7 @@
                     </div>
                     <div class="home-main-right-title2" style="margin-top: 50px;">打开本地文件</div>
                     <div class="home-main-right-content-2">
-                        <a class="link" @click="openMode('?template=doc')">
+                        <a class="link" @click="openMode('?template=open')">
                             <div class="link-image">
                                 <svg t="1716992970392" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg" p-id="12401">
@@ -963,7 +965,7 @@ function getTasks() {
         tasks.tasks = res.data
         //按照time排序
         tasks.tasks.sort((a, b) => {
-            return new Date(b.time) - new Date(a.time)
+            return new Date(b.updated_at) - new Date(a.updated_at)
         })
         tasksShow.tasks = tasks.tasks.slice((tasksPage.value - 1) * tasksPageSize.value, tasksPage.value * tasksPageSize.value)
         // 如果删这一页的最后一个，就要往前一页跳
@@ -1163,7 +1165,7 @@ function initEcharts(){
                         left: 'center'
                     },
                     title: {
-                        text: '本周任务项分布状态',
+                        text: '本周工作项分布状态',
                         left: 'center',
                         top: 0,
                         textStyle: {
@@ -1673,6 +1675,7 @@ eventBus.on('openMode', (e)=>{
     border-radius: 100px;
     cursor: pointer;
     transition: all 0.3s;
+    background-color: #fff;
 }
 
 .nologin span:hover {

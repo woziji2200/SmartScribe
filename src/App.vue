@@ -15,6 +15,7 @@
                     <font-awesome-icon :icon="'user'" />
                     <span>{{ store.UserInfo.name === '' ? '匿名用户' : (store.UserInfo.name || '登录') }}</span>
                 </button> -->
+
                 <el-dropdown size="large" :hide-timeout="300">
                     <button class="title-right-login" @click="login"
                         :style="{ color: route.path == '/' ? 'rgb(96,96,98)' : 'white' }">

@@ -767,6 +767,13 @@
                         语音转文字
                     </span>
 
+                    <span class="top-button" 
+                        style="width: auto; flex-direction: row;padding: 0 6px;"
+                        @click="InsertAINode({ type: 12 })">
+                        <svg style="margin-right: 8px;" t="1724036531489" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5328" width="200" height="200"><path d="M230.4 409.6h588.8c43.52 0 76.8 33.28 76.8 76.8v358.4c0 43.52-33.28 76.8-76.8 76.8H256c-43.52 0-76.8-33.28-76.8-76.8V460.8c0-28.16 23.04-51.2 51.2-51.2z" fill="#C5DDFB" p-id="5329"></path><path d="M307.2 588.8h51.2v51.2h-51.2v-51.2z m409.6 0h51.2v51.2h-51.2v-51.2z m-409.6 102.4h51.2v51.2h-51.2v-51.2z m409.6 0h51.2v51.2h-51.2v-51.2z m-107.52 0l-81.92 53.76c-12.8 7.68-28.16 5.12-35.84-7.68-2.56-5.12-5.12-10.24-5.12-15.36V614.4c0-15.36 10.24-25.6 25.6-25.6 5.12 0 10.24 2.56 15.36 5.12l81.92 53.76c12.8 7.68 15.36 23.04 7.68 35.84l-7.68 7.68zM176.64 314.88L793.6 148.48c12.8-2.56 28.16 5.12 30.72 17.92l12.8 48.64c2.56 12.8-5.12 28.16-17.92 30.72L202.24 414.72c-12.8 2.56-28.16-5.12-30.72-17.92l-12.8-51.2c-2.56-12.8 5.12-28.16 17.92-30.72z" fill="#2589FF" p-id="5330"></path></svg>
+                        视频字幕识别
+                    </span>
+
                     <span class="top-button" :class="''" style="width: auto; flex-direction: row;padding: 0 6px;"
                         @click="InsertAINode({ type: 10.1, needSelectText: true })">
                         <svg style="margin-right: 8px;" t="1723560697516" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4309" width="200" height="200"><path d="M964.608 658.285714h-118.930286V484.571429a9.142857 9.142857 0 0 0-9.069714-9.142858H553.106286V365.714286H676.571429a18.285714 18.285714 0 0 0 18.285714-18.285715V18.285714A18.285714 18.285714 0 0 0 676.571429 0h-329.142858a18.285714 18.285714 0 0 0-18.285714 18.285714v329.142857c0 10.093714 8.192 18.285714 18.285714 18.285715h123.465143v109.714285H187.465143a9.142857 9.142857 0 0 0-9.216 9.142858V658.285714H59.465143a18.285714 18.285714 0 0 0-18.285714 18.285715v329.142857c0 10.020571 8.192 18.285714 18.285714 18.285714h329.142857a18.285714 18.285714 0 0 0 18.285714-18.285714v-329.142857a18.285714 18.285714 0 0 0-18.285714-18.285715h-128V557.714286h502.784V658.285714h-128a18.285714 18.285714 0 0 0-18.285714 18.285715v329.142857c0 10.020571 8.265143 18.285714 18.285714 18.285714h329.142857a18.285714 18.285714 0 0 0 18.285714-18.285714v-329.142857a18.285714 18.285714 0 0 0-18.285714-18.285715z m-644.608 86.893715v191.926857H128v-191.926857h192z m96.036571-466.358858V86.893714h192v192H415.963429z m479.963429 658.285715H704v-191.926857h192v191.926857z" fill="#2C6DD2" p-id="4310"></path></svg>
@@ -1113,6 +1120,7 @@ import GlobalDragHandle from 'tiptap-extension-global-drag-handle'
 import { TrailingNode } from "@/components/TrailingNode.js";
 import { Hyperlink, previewHyperlinkModal, setHyperlinkModal } from "@docs.plus/extension-hyperlink";
 import MindMapNode from "@/components/MindMapNode.js";
+
 // import TimelineNode from "@/components/TimelineNode.js";
 // console.log(common.map(item => { return function(hljs){
 //     return hljs.highlight('javascript', item).value
