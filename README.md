@@ -38,7 +38,7 @@
 
 ### 项目展示
 
-<video src="doc/媒体1.mp4" controls="controls"></video>
+项目展示视频有点大 https://github.com/woziji2200/SmartScribe/blob/master/doc/%E5%AA%92%E4%BD%931.mp4
 
 #### 两种编辑模式随心换
 
@@ -125,4 +125,6 @@ npm run build
 
 参考了 [Umo Editor](https://editor.umodoc.com/cn/docs) 的部分插件
 
-**感谢企业方百度出题老师和软件杯组委会给予的这次机会！**
+展示视频BGM [Misty Memory (Day Version)](https://monster-siren.hypergryph.com/music/048708)
+
+**特别感谢企业方百度出题老师和软件杯组委会给予的这次参赛机会！**
