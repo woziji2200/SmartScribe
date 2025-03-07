@@ -31,6 +31,7 @@
     - [作者](#作者)
       - [前端](#前端)
       - [后端](#后端)
+    - [其它](#其它)
     - [版权说明](#版权说明)
     - [鸣谢](#鸣谢)
 
@@ -108,9 +109,13 @@ npm run build
  [博客 道宣的窝](https://daoxuan.cc/)
 
 
+### 其它
+
+本次备赛过程比较仓促，几乎所有的核心功能都只在两个星期内完成，项目中代码质量还需要改进，欢迎大家提出意见！
+
 ### 版权说明
 
-该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/shaojintian/Best_README_template/blob/master/LICENSE.txt)
+该项目签署了MIT 授权许可
 
 ### 鸣谢
 
