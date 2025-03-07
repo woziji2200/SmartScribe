@@ -2570,13 +2570,7 @@ code .search-result {
     }
 }
 
-/* .tiptap p.is-empty:last-child::before {
-  color: #adb5bd;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-} */
+
 .drag-handle {
     position: fixed;
     opacity: 1;
@@ -3012,7 +3006,6 @@ ul[data-type="taskList"] li p {
 
     .editor-space {
         display: none !important;
-
     }
 
     .editview {
